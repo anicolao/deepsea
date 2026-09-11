@@ -17,7 +17,7 @@ afterAll(async () => { for (const close of closers) await close(); await environ
 const payload = (gameId: string) => ({ ...VERSIONS, type: 'game/created', actorUid: 'mira', clientId: 'tab1', clientSeq: 1, payload: { gameId, hostName: 'Mira' }, createdAt: serverTimestamp() });
 it('allows a bounded self-attributed creation, read, and no mutation', async () => {
   const db = environment.authenticatedContext('mira').firestore();
-  const reference = doc(db, 'games/valid/events/created');
+  const reference = doc(db, 'environments/local/games/valid/events/created');
   await assertSucceeds(setDoc(reference, payload('valid')));
   await assertSucceeds(getDoc(reference));
   await assertFails(updateDoc(reference, { 'payload.hostName': 'Changed' }));
@@ -25,10 +25,10 @@ it('allows a bounded self-attributed creation, read, and no mutation', async () 
 });
 it('denies unauthenticated access, impersonation and unrelated paths', async () => {
   const anonymous = environment.unauthenticatedContext().firestore();
-  await assertFails(getDoc(doc(anonymous, 'games/valid/events/created')));
-  await assertFails(setDoc(doc(anonymous, 'games/unauth/events/created'), payload('unauth')));
+  await assertFails(getDoc(doc(anonymous, 'environments/local/games/valid/events/created')));
+  await assertFails(setDoc(doc(anonymous, 'environments/local/games/unauth/events/created'), payload('unauth')));
   const db = environment.authenticatedContext('sol').firestore();
-  await assertFails(setDoc(doc(db, 'games/impersonated/events/created'), payload('impersonated')));
+  await assertFails(setDoc(doc(db, 'environments/local/games/impersonated/events/created'), payload('impersonated')));
   await assertFails(setDoc(doc(db, 'unrelated/example'), payload('other')));
 });
 it('rejects missing or fabricated timestamps, oversized or malformed envelopes and wrong event IDs', async () => {
@@ -37,10 +37,10 @@ it('rejects missing or fabricated timestamps, oversized or malformed envelopes a
     { createdAt: Timestamp.fromMillis(1) }, { injected: true }, { clientSeq: -1 },
     { type: 'unknown' }, { schemaVersion: 1.5 }, { clientId: '../invalid' },
     { payload: { gameId: 'bad', hostName: 'a'.repeat(41) } }, { payload: { gameId: 'bad', hostName: 'Mira', extra: true } }
-  ].entries()) await assertFails(setDoc(doc(db, `games/bad${index}/events/created`), { ...payload(`bad${index}`), ...changes }));
+  ].entries()) await assertFails(setDoc(doc(db, `environments/local/games/bad${index}/events/created`), { ...payload(`bad${index}`), ...changes }));
   const { createdAt: _at, ...missing } = payload('missing');
-  await assertFails(setDoc(doc(db, 'games/missing/events/created'), missing));
-  await assertFails(setDoc(doc(db, 'games/wrong/events/other'), payload('wrong')));
+  await assertFails(setDoc(doc(db, 'environments/local/games/missing/events/created'), missing));
+  await assertFails(setDoc(doc(db, 'environments/local/games/wrong/events/other'), payload('wrong')));
 });
 it('real anonymous SDK clients replay the same creation and immutable retries keep its timestamp', async () => {
   const a = await connectBackend(local, 'integration-a'); closers.push(a.close);
@@ -67,4 +67,18 @@ it('real anonymous SDK clients replay the same creation and immutable retries ke
   });
   stop(); expect(reread).toEqual(original);
   await expect(b.transport.create({ ...pending, envelope: { ...pending.envelope, actorUid: b.uid } })).rejects.toThrow('collision');
+});
+
+it('allows bounded lobby actions while rejecting malformed lobby payloads', async () => {
+  const db = environment.authenticatedContext('mira').firestore();
+  const actions = [
+    { type: 'lobby/joined', payload: { name: 'Mira' } },
+    { type: 'lobby/left', payload: {} },
+    { type: 'lobby/ready', payload: { ready: true, rosterRevision: 'created' } },
+    { type: 'game/started', payload: { seed: 2026, starterUid: 'mira', expectedActionId: 'created' } }
+  ];
+  for (const [index, action] of actions.entries()) {
+    await assertSucceeds(setDoc(doc(db, `environments/local/games/lobby/events/action${index}`), { ...payload('lobby'), ...action }));
+    await assertFails(setDoc(doc(db, `environments/local/games/lobby/events/bad${index}`), { ...payload('lobby'), ...action, payload: { ...action.payload, extra: true } }));
+  }
 });

@@ -6,6 +6,7 @@ export interface EventTransport {
 export interface Store { getItem(key: string): string | null; setItem(key: string, value: string): void; removeItem(key: string): void }
 export type RoomState = Projection & { synchronized: boolean; pending: boolean; error: string | null };
 export class RoomRepository {
+  private submitted = new Map<string, PendingEvent>();
   private clientId: string;
   private sequence: number;
   private prefix: string;
@@ -30,18 +31,30 @@ export class RoomRepository {
     this.storage.setItem(`${this.prefix}pending:${gameId}`, JSON.stringify(pending));
     return pending;
   }
+  prepareAction(gameId: string, type: string, payload: Record<string, unknown>): PendingEvent {
+    if (!validId(gameId)) throw new Error('Invalid room');
+    if (this.pending(gameId)) throw new Error('Confirm the pending action first.');
+    const clientSeq = ++this.sequence;
+    const id = eventId(this.clientId, clientSeq);
+    this.storage.setItem(`${this.prefix}sequence:${this.clientId}`, String(clientSeq));
+    const pending = { gameId, id, envelope: { ...VERSIONS, type, payload, actorUid: this.actorUid, clientId: this.clientId, clientSeq } };
+    if (!validEnvelope(pending.envelope)) throw new Error('Invalid action');
+    this.storage.setItem(`${this.prefix}pending:${gameId}`, JSON.stringify(pending));
+    return pending;
+  }
   pending(gameId: string): PendingEvent | null {
     const raw = this.storage.getItem(`${this.prefix}pending:${gameId}`);
     if (!raw) return null;
     const pending = JSON.parse(raw) as PendingEvent;
-    if (pending.gameId !== gameId || pending.id !== 'created' || !validEnvelope(pending.envelope) || pending.envelope.actorUid !== this.actorUid || !supported(pending.envelope)) throw new Error('Saved room action is incompatible. Reload with a compatible app.');
+    if (pending.gameId !== gameId || !validId(pending.id) || !validEnvelope(pending.envelope) || pending.envelope.actorUid !== this.actorUid || !supported(pending.envelope)) throw new Error('Saved room action is incompatible. Reload with a compatible app.');
     return pending;
   }
   async submit(pending: PendingEvent) {
-    if (!validId(pending.gameId) || pending.id !== 'created' || pending.envelope.payload.gameId !== pending.gameId || pending.envelope.actorUid !== this.actorUid || !supported(pending.envelope) || !validEnvelope(pending.envelope)) throw new Error('Invalid pending action');
+    if (!validId(pending.gameId) || !validId(pending.id) || (pending.envelope.type === 'game/created' && pending.envelope.payload.gameId !== pending.gameId) || pending.envelope.actorUid !== this.actorUid || !supported(pending.envelope) || !validEnvelope(pending.envelope)) throw new Error('Invalid pending action');
     const saved = this.pending(pending.gameId);
     if (saved && !sameEnvelope(saved.envelope, pending.envelope)) throw new Error('A different creation is already pending for this room.');
     this.storage.setItem(`${this.prefix}pending:${pending.gameId}`, JSON.stringify(pending));
+    this.submitted.set(pending.gameId, pending);
     await this.transport.create(pending);
     const current = this.pending(pending.gameId);
     if (current && sameEnvelope(current.envelope, pending.envelope)) this.storage.removeItem(`${this.prefix}pending:${pending.gameId}`);
@@ -52,7 +65,7 @@ export class RoomRepository {
       const projection = replay(gameId, events);
       last = projection;
       let pending: PendingEvent | null;
-      try { pending = this.pending(gameId); }
+      try { pending = this.pending(gameId) ?? this.submitted.get(gameId) ?? null; }
       catch {
         next({ ...projection, blocked: true, synchronized, pending: true, error: 'Saved room action is incompatible. Reload with a compatible app.' });
         return;
@@ -62,7 +75,8 @@ export class RoomRepository {
       if (pending && confirmed && validStamp(confirmed.createdAt)) {
         const { id: _id, createdAt: _time, ...envelope } = confirmed;
         if (sameEnvelope(envelope, pending.envelope)) {
-          this.storage.removeItem(`${this.prefix}pending:${gameId}`); pending = null;
+          if (!projection.acceptedIds.includes(confirmed.id) && !projection.blocked) error = 'The room changed before your action was accepted. Check the room and try again.';
+          this.storage.removeItem(`${this.prefix}pending:${gameId}`); this.submitted.delete(gameId); pending = null;
         } else error = 'Room ID collision: the saved action differs from the confirmed room.';
       }
       next({ ...projection, synchronized, pending: !!pending, error });

@@ -90,3 +90,8 @@ test('baseline review must cover the exact bytes, with notes and no orphan entri
   assert.ok(reviewErrors(files, { 'splash.png': { ...review['splash.png'], review: '' } }).length);
   assert.ok(reviewErrors({}, review).length);
 });
+
+test('only the exact clipboard-read fixture expression may evaluate browser code', () => {
+  assert.deepEqual(policyErrors('await page.evaluate(() => navigator.clipboard.readText());', 'tests/e2e/helpers/fixture.ts'), []);
+  for (const expression of ['page.evaluate(() => localStorage.clear())', 'page.evaluate(() => window.seedGame())']) assert.notDeepEqual(policyErrors(expression, 'tests/e2e/helpers/fixture.ts'), []);
+});

@@ -67,7 +67,7 @@ export function policyErrors(source, filename) {
       if (!trusted && (forbiddenCalls.has(name) || name?.startsWith('waitFor'))) report(node, `Forbidden E2E member: ${name}`);
       if (name === 'toHaveScreenshot' && !helper) report(node, 'Only TestSteps may access screenshot assertions.');
       if (ts.isElementAccessExpression(node) && !helper && !assertions) report(node, 'Use named APIs, not computed member access.');
-      if (['evaluate', 'route', 'on', 'once', 'off', 'removeAllListeners'].includes(name) && !(helper && name === 'evaluate') && !(fixture && ['route', 'on'].includes(name))) {
+      if (['evaluate', 'route', 'on', 'once', 'off', 'removeAllListeners'].includes(name) && !(helper && name === 'evaluate') && !(fixture && (['route', 'on'].includes(name) || (name === 'evaluate' && node.parent.getText(file) === 'page.evaluate(() => navigator.clipboard.readText())')))) {
         report(node, `Only the shared infrastructure may use ${name}.`);
       }
     }

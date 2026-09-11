@@ -12,7 +12,7 @@
         let pkgs = import nixpkgs { inherit system; };
         in {
           default = pkgs.mkShell {
-            packages = with pkgs; [ git gh openssh nodejs_22 jdk21_headless curl ripgrep ];
+            packages = with pkgs; [ git gh openssh nodejs_22 jdk21_headless curl ripgrep actionlint ];
             PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
             PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
             PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";

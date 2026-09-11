@@ -5,7 +5,7 @@ const event = (overrides = {}): ConfirmedEvent => ({ ...VERSIONS, type: 'game/cr
 describe('chronological room projection', () => {
   it('creates one host and ignores illegal later events without partial changes', () => {
     const accepted = replay('room', [event()]);
-    expect(accepted.room).toEqual({ gameId: 'room', hostName: 'Mira', hostUid: 'mira', phase: 'lobby', lastActionId: 'created' });
+    expect(accepted.room).toEqual({ gameId: 'room', hostName: 'Mira', hostUid: 'mira', phase: 'lobby', lastActionId: 'created', rosterRevision: 'created', members: [{ uid: 'mira', name: 'Mira', seat: 1, ready: false }] });
     expect(replay('room', [event({ id: 'other', actorUid: 'other' }), event()]).room).toEqual(accepted.room);
   });
   it('preserves nanoseconds and uses bytewise IDs at equal timestamps', () => {
@@ -31,7 +31,7 @@ describe('chronological room projection', () => {
     }
   });
   it('blocks incompatible versions without treating them as supported actions', () => {
-    for (const changed of [{ schemaVersion: 2 }, { reducerVersion: 2 }, { rulesetVersion: 'base-2' }]) expect(replay('room', [event(changed)]).blocked).toBe(true);
+    for (const changed of [{ schemaVersion: 2 }, { reducerVersion: 3 }, { rulesetVersion: 'base-2' }]) expect(replay('room', [event(changed)]).blocked).toBe(true);
   });
   it('compares every immutable field independent of map insertion order', () => {
     const { id: _id, createdAt: _at, ...envelope } = event();

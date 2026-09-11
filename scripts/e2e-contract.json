@@ -39,7 +39,11 @@
     "timezoneId": "UTC",
     "colorScheme": "dark",
     "contextOptions": {
-      "reducedMotion": "reduce"
+      "reducedMotion": "reduce",
+      "permissions": [
+        "clipboard-read",
+        "clipboard-write"
+      ]
     },
     "serviceWorkers": "block",
     "actionTimeout": 2000,

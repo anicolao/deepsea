@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { onMount } from 'svelte';
   import '@fontsource/atkinson-hyperlegible/400.css';
   import '@fontsource/atkinson-hyperlegible/700.css';
@@ -9,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>Deep Sea — Coming soon</title>
+  <title>Deep Sea — Gather your crew</title>
   <meta name="description" content="A multiplayer treasure-diving game for your browser. Gather your crew. Share the oxygen. Know when to turn back." />
 </svelte:head>
 
@@ -45,7 +46,7 @@
     <h1 id="title">Deep Sea</h1>
     <p class="tagline">One ocean. One oxygen tank.<br />How far will you go?</p>
     <p class="description">Gather your crew for a treasure hunt in your browser.<br class="desktop-break" /> Dive together, push your luck, and make it back aboard.</p>
-    <div class="status"><span aria-hidden="true"></span>Coming soon</div>
+    <a class="status" href={`${base}/rooms/`}>Create room</a>
     <button class="brief-button" disabled={!ready} onclick={() => brief.showModal()} aria-haspopup="dialog">About the game <span aria-hidden="true">↗</span></button>
   </section>
 
@@ -62,7 +63,7 @@
   <h2 id="brief-title">Treasure is only yours<br />if you make it back.</h2>
   <p>Play with 2–6 friends, each on their own device. Head deeper for treasure, or turn back toward the submarine.</p>
   <p>Everyone shares one oxygen supply. The treasure you carry slows you down and uses more air. Bring back the most value over three dives to win.</p>
-  <p class="availability">The game is still being built. Room creation and play will arrive later.</p>
+  <p class="availability">Create a room, invite friends, ready up, and choose your first diver. Taking turns is the next feature being built.</p>
   <form method="dialog"><button class="close-button">Back to the surface</button></form>
 </dialog>
 
@@ -83,7 +84,8 @@
   .tagline { font-size: 26px; line-height: 1.25; margin: 0 0 20px; }
   .description { color: #c0d3d9; font-size: 17px; line-height: 1.5; margin: 0 0 24px; }
   .status { display: flex; width: fit-content; align-items: center; gap: 9px; margin: auto; border: 1px solid #608785; border-radius: 30px; padding: 9px 18px; background: #173e49; font-weight: 700; color: #d7e9db; }
-  .status span { width: 7px; height: 7px; border-radius: 50%; background: #c4dbb4; }
+  .status { min-height: 44px; text-decoration: none; background: #e7b96d; color: #092c40; }
+  a:focus-visible { outline: 3px solid #e7b96d; outline-offset: 5px; }
   .brief-button { color: #f7f1e5; background: none; border: none; padding: 13px 18px; min-height: 44px; cursor: pointer; margin: 9px 0 22px; text-decoration: underline; text-underline-offset: 5px; }
   .brief-button span { margin-left: 9px; }
   .brief-button:disabled { cursor: progress; }

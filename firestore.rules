@@ -8,20 +8,28 @@ service cloud.firestore {
         && e.schemaVersion is int && e.schemaVersion > 0 && e.schemaVersion <= 9007199254740991
         && e.reducerVersion is int && e.reducerVersion > 0 && e.reducerVersion <= 9007199254740991
         && e.rulesetVersion is string && e.rulesetVersion.size() > 0 && e.rulesetVersion.size() <= 32
-        && e.type == 'game/created'
         && e.actorUid == request.auth.uid
         && e.actorUid.matches('[A-Za-z0-9_-]{1,128}')
         && e.clientId is string && e.clientId.matches('[A-Za-z0-9_-]{1,128}')
         && e.clientSeq is int && e.clientSeq >= 0 && e.clientSeq <= 9007199254740991
-        && e.payload is map && e.payload.keys().hasAll(['gameId', 'hostName'])
-        && e.payload.keys().hasOnly(['gameId', 'hostName'])
-        && e.payload.hostName is string && e.payload.hostName.size() > 0 && e.payload.hostName.size() <= 40
+        && e.payload is map
         && e.createdAt is timestamp && e.createdAt == request.time;
     }
-    match /games/{gameId}/events/{eventId} {
+    function action(gameId, eventId) {
+      let e = request.resource.data;
+      let p = e.payload;
+      return (e.type == 'game/created' && eventId == 'created' && p.keys().hasOnly(['gameId', 'hostName']) && p.gameId == gameId && p.hostName is string && p.hostName.size() > 0 && p.hostName.size() <= 40)
+        || (eventId != 'created' && (
+          (e.type == 'lobby/joined' && p.keys().hasOnly(['name']) && p.name is string && p.name.size() > 0 && p.name.size() <= 40)
+          || (e.type == 'lobby/left' && p.keys().size() == 0)
+          || (e.type == 'lobby/ready' && p.keys().hasOnly(['ready', 'rosterRevision']) && p.ready is bool && p.rosterRevision is string && p.rosterRevision.size() <= 128)
+          || (e.type == 'game/started' && p.keys().hasOnly(['seed', 'starterUid', 'expectedActionId']) && p.seed is int && p.seed >= 0 && p.seed <= 4294967295 && p.starterUid is string && p.starterUid.size() <= 128 && p.expectedActionId is string && p.expectedActionId.size() <= 128)
+        ));
+    }
+    match /environments/{environment}/games/{gameId}/events/{eventId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && gameId.matches('[A-Za-z0-9_-]{1,128}')
-        && eventId == 'created' && envelope() && request.resource.data.payload.gameId == gameId;
+        && eventId.matches('[A-Za-z0-9_-]{1,128}') && envelope() && action(gameId, eventId);
       allow update, delete: if false;
     }
   }

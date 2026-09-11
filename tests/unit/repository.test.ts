@@ -82,3 +82,17 @@ it('blocks a corrupt or incompatible saved action without throwing from a snapsh
     expect(state?.blocked).toBe(true); expect(state?.pending).toBe(true);
   }
 });
+
+it('reports a confirmed but rejected lobby action and preserves its identity across retry', async () => {
+  const f = fixture(); let state: RoomState | undefined;
+  await f.repository.submit(f.repository.prepareCreation('room', 'Mira'));
+  f.repository.watch('room', value => { state = value; }); f.publish();
+  const pending = f.repository.prepareAction('room', 'game/started', { seed: 1, starterUid: 'mira', expectedActionId: 'created' });
+  expect(pending.id).not.toBe('created');
+  f.loseAck(); await expect(f.repository.submit(pending)).rejects.toThrow();
+  expect(new RoomRepository(f.transport, f.storage, 'mira', 'tab2', 'demo-test').pending('room')).toEqual(pending);
+  f.publish();
+  expect(state?.error).toContain('before your action was accepted');
+  expect(state?.room?.phase).toBe('lobby');
+  expect(state?.pending).toBe(false);
+});
