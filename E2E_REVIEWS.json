@@ -1,0 +1,26 @@
+{
+  "tests/e2e/001-coming-soon/screenshots/000-splash-desktop.png": {
+    "sha256": "1fb6b7cf9cc5c9ba73bb8be2244611a35e7f9d1f415606e38165797131e0fa44",
+    "review": "Reviewed the existing baseline: heading, submarine, coming-soon status, game facts, attribution, and About control are readable and fit this viewport."
+  },
+  "tests/e2e/001-coming-soon/screenshots/000-splash-phone.png": {
+    "sha256": "ca274a3093c67315ac19dcaf7edf50f0accd7cc6b160c62594115d3564d5a4be",
+    "review": "Reviewed the existing baseline: heading, submarine, coming-soon status, game facts, attribution, and About control are readable and fit this viewport."
+  },
+  "tests/e2e/001-coming-soon/screenshots/001-game-brief-desktop.png": {
+    "sha256": "eb299e64b0e83287ca6cfb75a5bc808b1d8bd5d00ff81d0175648e971cc3508e",
+    "review": "Reviewed the existing baseline: dialog copy is readable, the close button has visible keyboard focus, and all content fits this viewport."
+  },
+  "tests/e2e/001-coming-soon/screenshots/001-game-brief-phone.png": {
+    "sha256": "e54e7047cbba753231afe8634a62c61432a83dc109c4d3f40ebe7f6a52d68c6d",
+    "review": "Reviewed the existing baseline: dialog copy is readable, the close button has visible keyboard focus, and all content fits this viewport."
+  },
+  "tests/e2e/001-coming-soon/screenshots/002-return-desktop.png": {
+    "sha256": "aca13226cf74cafdf96a6faebdb8eb6af226b82edb39916b84c8f0bc678a493b",
+    "review": "Reviewed the existing baseline: the dialog is closed, the coming-soon content fits, and focus is visibly restored to About the game."
+  },
+  "tests/e2e/001-coming-soon/screenshots/002-return-phone.png": {
+    "sha256": "ca338c4a4be2bcc8555070e225366789be07491b1f3ce72a28cc0ed834ba7359",
+    "review": "Reviewed the existing baseline: the dialog is closed, the coming-soon content fits, and focus is visibly restored to About the game."
+  }
+}
