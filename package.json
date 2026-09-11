@@ -16,7 +16,8 @@
     "test:e2e:update": "node scripts/run-e2e.mjs --update-snapshots",
     "verify": "npm run check && npm test && npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
-    "emulators": "firebase emulators:start --project demo-deepsea --only auth,firestore"
+    "emulators": "firebase emulators:start --project demo-deepsea --only auth,firestore",
+    "test:preview": "node scripts/run-e2e.mjs --live-preview"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "5.0.2",

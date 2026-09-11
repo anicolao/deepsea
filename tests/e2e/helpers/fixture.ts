@@ -2,9 +2,10 @@ import { test as base, type BrowserContext, type Page } from '@playwright/test';
 import { expect } from './assertions';
 import { assertStepsFinished } from './test-steps';
 
-type Players = { create: () => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
+type Players = { readInvite: (page: Page) => Promise<string>; create: () => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
 async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], reloading = new Set<Page>()) {
-  const origins = new Set([new URL(baseURL).origin, 'http://127.0.0.1:9099', 'http://127.0.0.1:8080']);
+  const hosted = new URL(baseURL).origin === 'https://anicolao.github.io';
+  const origins = new Set([new URL(baseURL).origin, ...(hosted ? ['https://identitytoolkit.googleapis.com', 'https://securetoken.googleapis.com', 'https://firestore.googleapis.com'] : ['http://127.0.0.1:9099', 'http://127.0.0.1:8080'])]);
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
     if (!origins.has(url.origin)) { problems.push(`Unexpected network request: ${url.origin}`); await route.abort(); }
@@ -18,7 +19,7 @@ async function monitor(context: BrowserContext, page: Page, baseURL: string, pro
     const failure = request.failure()?.errorText;
     // Reload intentionally cancels an open streaming subscription. Only that
     // endpoint, that Chromium cancellation code, and that navigation qualify.
-    const reloadCancellation = reloading.has(page) && url.origin === 'http://127.0.0.1:8080' && url.pathname === '/google.firestore.v1.Firestore/Listen/channel' && failure === 'net::ERR_ABORTED';
+    const reloadCancellation = reloading.has(page) && url.origin === (hosted ? 'https://firestore.googleapis.com' : 'http://127.0.0.1:8080') && url.pathname === '/google.firestore.v1.Firestore/Listen/channel' && failure === 'net::ERR_ABORTED';
     if (!reloadCancellation) problems.push(`Failed request: ${request.url()} (${failure})`);
   });
   context.on('page', () => problems.push('Unexpected extra page: use the shared players fixture.'));
@@ -47,6 +48,13 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
         pages.push(page);
         await monitor(context, page, baseURL!, problems, reloading);
         return page;
+      },
+      readInvite: async page => {
+        if (!pages.includes(page)) throw new Error('Unknown player page');
+        const invite = await page.evaluate(() => navigator.clipboard.readText());
+        const url = new URL(invite);
+        if (url.origin !== new URL(baseURL!).origin || url.pathname !== new URL('rooms/', baseURL!).pathname || !url.searchParams.get('room')) throw new Error('Clipboard does not contain an invite to this preview.');
+        return invite;
       },
       reload: async page => {
         if (!pages.includes(page)) throw new Error('Unknown player page');

@@ -37,6 +37,11 @@ jobs:
           JS
       - run: nix develop -c npm run verify
       - run: git diff --exit-code
+      - name: Stamp the reviewed revision
+        env:
+          PREVIEW_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          nix develop -c node --input-type=module -e 'import { writeFileSync } from "node:fs"; writeFileSync("build/revision.json", JSON.stringify({ revision: process.env.PREVIEW_REVISION }));'
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -77,11 +82,48 @@ jobs:
         with:
           script: |
             // GITHUB_TOKEN pushes do not automatically trigger a Pages build.
-            await github.request('POST /repos/{owner}/{repo}/pages/builds', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
+            const parameters = { owner: context.repo.owner, repo: context.repo.repo };
+            const build = await github.request('POST /repos/{owner}/{repo}/pages/builds', parameters);
+            // Deployment infrastructure awaits this build, never delaying browser steps.
+            for (let attempt = 0; attempt < 60; attempt++) {
+              const result = await github.request('GET /repos/{owner}/{repo}/pages/builds/{build_id}', { ...parameters, build_id: build.data.url.split('/').pop() });
+              if (result.data.status === 'built') return;
+              if (result.data.status === 'errored') throw new Error('Pages build failed');
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            throw new Error('Pages build did not finish within five minutes');
       - name: Preview link
         env:
           SITE_PATH: ${{ github.event_name == 'pull_request' && format('/deepsea/pr{0}/', github.event.number) || '/deepsea/' }}
         run: echo "Preview https://anicolao.github.io${SITE_PATH}" >> "$GITHUB_STEP_SUMMARY"
+
+  preview-smoke:
+    needs: publish
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    env:
+      LIVE_PREVIEW_URL: https://anicolao.github.io/deepsea/pr${{ github.event.number }}/
+      PREVIEW_REVISION: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Require a published preview
+        if: needs.publish.result != 'success'
+        run: |
+          echo 'A working same-repository PR preview is required. Publish this change on a review branch before merging.'
+          exit 1
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: cachix/install-nix-action@v31
+      - run: nix develop -c npm ci
+      - name: Exercise the deployed preview through real user actions
+        run: nix develop -c npm run test:preview
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: deployed-preview-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+      - name: Manual preview
+        run: echo "Verified preview $LIVE_PREVIEW_URL — create a room, copy its invite into another browser, join, ready both players, select a first diver, and start." >> "$GITHUB_STEP_SUMMARY"

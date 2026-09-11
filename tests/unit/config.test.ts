@@ -13,6 +13,8 @@ it('requires distinct explicitly configured live environments', () => {
   const hosted = { projectId: 'preview', apiKey: 'public-key', appId: 'app', authDomain: 'preview.firebaseapp.com' };
   const configured: DeploymentConfig = { ...config, preview: hosted, production: { ...hosted, projectId: 'production' } };
   expect(selectConfig(configured, new URL('https://anicolao.github.io/deepsea/pr5/rooms/')).projectId).toBe('preview');
+  expect(selectConfig(configured, new URL('https://anicolao.github.io/deepsea/pr5/rooms/')).namespace).toBe('pr5');
+  expect(selectConfig(configured, new URL('https://anicolao.github.io/deepsea/pr6/rooms/')).namespace).toBe('pr6');
   expect(selectConfig(configured, new URL('https://anicolao.github.io/deepsea/rooms/')).projectId).toBe('production');
   expect(() => selectConfig({ ...configured, production: hosted }, new URL('https://anicolao.github.io/deepsea/pr5/rooms/'))).toThrow();
 });

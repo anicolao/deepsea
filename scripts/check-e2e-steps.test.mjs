@@ -160,3 +160,20 @@ test('reload cancellation classification is restricted to the exact stream, code
     if (allowed) await run; else await assert.rejects(run, /any player context/);
   }
 });
+
+test('live browser health allows only Firebase endpoints and excludes local emulators', async () => {
+  const { health } = infrastructure();
+  for (const [url, allowed] of [
+    ['https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel', true],
+    ['https://identitytoolkit.googleapis.com/v1/accounts:signUp', true],
+    ['https://securetoken.googleapis.com/v1/token', true],
+    ['http://127.0.0.1:8080/', false],
+    ['https://unrelated.googleapis.com/', false]
+  ]) {
+    let route;
+    const run = health[0]({ context: { route: async (_pattern, handler) => { route = handler; }, on() {} }, page: { on() {} }, baseURL: 'https://anicolao.github.io/deepsea/pr5/' }, async () => {
+      await route({ request: () => ({ url: () => url }), abort: async () => {}, continue: async () => {} });
+    }, {});
+    if (allowed) await run; else await assert.rejects(run, /No browser errors/);
+  }
+});

@@ -1,50 +1,106 @@
 {
   "tests/e2e/001-coming-soon/screenshots/000-splash-desktop.png": {
-    "sha256": "1fb6b7cf9cc5c9ba73bb8be2244611a35e7f9d1f415606e38165797131e0fa44",
-    "review": "Reviewed the existing baseline: heading, submarine, coming-soon status, game facts, attribution, and About control are readable and fit this viewport."
+    "sha256": "dbb0bc5339d50cd6edda7c73a7fceb3117320f044cff3e577bc15eb6c34f8ed1",
+    "review": "Visually inspected desktop baseline: Create room is the clear primary action; submarine, game facts and attribution fit the viewport."
   },
   "tests/e2e/001-coming-soon/screenshots/000-splash-phone.png": {
-    "sha256": "ca274a3093c67315ac19dcaf7edf50f0accd7cc6b160c62594115d3564d5a4be",
-    "review": "Reviewed the existing baseline: heading, submarine, coming-soon status, game facts, attribution, and About control are readable and fit this viewport."
+    "sha256": "cfd4e7d12298c40766c77a49500cde0059615470c1a708e163d505e9a6482429",
+    "review": "Visually inspected phone baseline: Create room is the clear primary action; submarine, game facts and attribution fit the viewport."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-desktop.png": {
-    "sha256": "eb299e64b0e83287ca6cfb75a5bc808b1d8bd5d00ff81d0175648e971cc3508e",
-    "review": "Reviewed the existing baseline: dialog copy is readable, the close button has visible keyboard focus, and all content fits this viewport."
+    "sha256": "d6cc61f55c1b9e4243c307092dd1bccfa6352faeef2b3cd7a02d332a0968510e",
+    "review": "Visually inspected desktop baseline: The dialog describes the working lobby and forthcoming turns; text fits and the close button has visible keyboard focus."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-phone.png": {
-    "sha256": "e54e7047cbba753231afe8634a62c61432a83dc109c4d3f40ebe7f6a52d68c6d",
-    "review": "Reviewed the existing baseline: dialog copy is readable, the close button has visible keyboard focus, and all content fits this viewport."
+    "sha256": "565b1d3d799296cfbc72a88ac2f721a11e0e526fa045f131c2b695a672ce8a2a",
+    "review": "Visually inspected phone baseline: The dialog describes the working lobby and forthcoming turns; text fits and the close button has visible keyboard focus."
   },
   "tests/e2e/001-coming-soon/screenshots/002-return-desktop.png": {
-    "sha256": "aca13226cf74cafdf96a6faebdb8eb6af226b82edb39916b84c8f0bc678a493b",
-    "review": "Reviewed the existing baseline: the dialog is closed, the coming-soon content fits, and focus is visibly restored to About the game."
+    "sha256": "44429e5c44bc1209d5ff9ca9bdfa86dc1736083939f55741e2a1a60e9112b4c7",
+    "review": "Visually inspected desktop baseline: Closing the brief restores visible focus to About; the create-room link and game facts remain readable."
   },
   "tests/e2e/001-coming-soon/screenshots/002-return-phone.png": {
-    "sha256": "ca338c4a4be2bcc8555070e225366789be07491b1f3ce72a28cc0ed834ba7359",
-    "review": "Reviewed the existing baseline: the dialog is closed, the coming-soon content fits, and focus is visibly restored to About the game."
+    "sha256": "10c1e5590fd910e377db606d143f169d72d8a1d05f71656be010324df822ab3e",
+    "review": "Visually inspected phone baseline: Closing the brief restores visible focus to About; the create-room link and game facts remain readable."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-desktop.png": {
-    "sha256": "b1741bfe8d5b2072293d6ea708c0da81bf111c8012c3b36644521e10106b3181",
-    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+    "sha256": "7fe7bda5e399d971baed9478cf01c2f9c2cfa83f104d417e8532d2428a09bf02",
+    "review": "Visually inspected desktop baseline: Mira is labelled You and Host; the first-diver selector and disabled start have a readable invitation explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-phone.png": {
-    "sha256": "c3ffdb7f4068b4ed34c55240197556d641476477f88cfedb0442cf542259e91a",
-    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+    "sha256": "734979d5a5500e7d636e792f15e8baf7ae2df11ae194f394782c8c4f118e7fe4",
+    "review": "Visually inspected phone baseline: Mira is labelled You and Host; the first-diver selector and disabled start have a readable invitation explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
-  "tests/e2e/002-room-foundation/screenshots/000-observed-guest-desktop.png": {
-    "sha256": "b5fe37d35f5758934d7d5777ff811c7378577603a6a5fcfb4f39ca2a49822029",
-    "review": "Inspected the guest view: Mira’s saved room is readable, the not-seated state distinguishes the second identity, and the whole card fits the viewport."
+  "tests/e2e/002-room-foundation/screenshots/000-joined-guest-desktop.png": {
+    "sha256": "0a10363762fca553656e6e26dbde4a7a5b300f0ea76af8b7c4c4062ed5a6d31d",
+    "review": "Visually inspected desktop baseline: Sol has a clearly labelled seat and ready status; the guest has no start control and the host-start explanation fits. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
-  "tests/e2e/002-room-foundation/screenshots/000-observed-guest-phone.png": {
-    "sha256": "b76c543c58ff7413d4a994431250fb335ae72e823369e91597cbdb91f6bb4e09",
-    "review": "Inspected the guest view: Mira’s saved room is readable, the not-seated state distinguishes the second identity, and the whole card fits the viewport."
+  "tests/e2e/002-room-foundation/screenshots/000-joined-guest-phone.png": {
+    "sha256": "65a77557cdef36268b4cfd4c3fdc8e740a39b4958a755749f7d78490e22793c6",
+    "review": "Visually inspected phone baseline: Sol has a clearly labelled seat and ready status; the guest has no start control and the host-start explanation fits. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
-  "tests/e2e/002-room-foundation/screenshots/001-reloaded-host-desktop.png": {
-    "sha256": "b1741bfe8d5b2072293d6ea708c0da81bf111c8012c3b36644521e10106b3181",
-    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+  "tests/e2e/002-room-foundation/screenshots/000-joined-third-desktop.png": {
+    "sha256": "9b7256e2ee63cbf37db5313754191a3ea67bfd0e0500c383b2780182442962ab",
+    "review": "Visually inspected desktop baseline: All three names fit; Ada is labelled You and the roster visibly resets readiness for all three players. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
-  "tests/e2e/002-room-foundation/screenshots/001-reloaded-host-phone.png": {
-    "sha256": "c3ffdb7f4068b4ed34c55240197556d641476477f88cfedb0442cf542259e91a",
-    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+  "tests/e2e/002-room-foundation/screenshots/000-joined-third-phone.png": {
+    "sha256": "dc3b142ab5b27f6b7977b42a43cb6491312e52d199bd15e6bd6b8c6b8514d76c",
+    "review": "Visually inspected phone baseline: All three names fit; Ada is labelled You and the roster visibly resets readiness for all three players. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-desktop.png": {
+    "sha256": "31970df9f1047f4095280cd234929cacb09c23ed1f8d4445196d937c8cc3fb64",
+    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-phone.png": {
+    "sha256": "5b2f352d682e6925efa763ca4aea05ee25937c6076386119f583d2abedf2b26d",
+    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-started-host-desktop.png": {
+    "sha256": "1b242eb3c9cf6cf76893945b43d92f0d835f2688d7f550e6ee6bcafd91caf32e",
+    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-started-host-phone.png": {
+    "sha256": "4100802ecf4ae7f373b022abfd3e44a532bd0e056ad58eac714051193bdf702c",
+    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-desktop.png": {
+    "sha256": "7845a4719d39d2ffac8b693d86ca63859646f08b1997953f8091bbf38b214082",
+    "review": "Visually inspected desktop baseline: The late-invite explanation is readable, offers another room, and contains no join control. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-phone.png": {
+    "sha256": "b963cbd6d4e42ed0c00862d6bf9bd7889f083e0019d3a606f87889b8d6aa5651",
+    "review": "Visually inspected phone baseline: The late-invite explanation is readable, offers another room, and contains no join control. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-left-guest-desktop.png": {
+    "sha256": "60d5afe0a02bb477b6de7ff5649000ed34079147b6aac02395b20e872179fa19",
+    "review": "Visually inspected desktop baseline: The released guest seat is absent and the rejoin form retains Sol’s name with a clear leave explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-left-guest-phone.png": {
+    "sha256": "57220a294a49fd85fe9043f48c23611bf5d65c36ba78d6f962d264fe0fd701f2",
+    "review": "Visually inspected phone baseline: The released guest seat is absent and the rejoin form retains Sol’s name with a clear leave explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-started-host-desktop.png": {
+    "sha256": "02860d91a34fb0925b7dccbfea681a25ed26036fc7d022dc9d012602ae5a284a",
+    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/003-two-player-start/screenshots/000-started-host-phone.png": {
+    "sha256": "50dd5c53bb9d0c4dda15025bd2aea8717580d4030bc7a7269cb8af2801ee8899",
+    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/004-closed-room/screenshots/000-closed-guest-desktop.png": {
+    "sha256": "c0b40f6d129198168e75eb246ad6a546dd7dba97d83f8f3d5075989bde25c7e7",
+    "review": "Visually inspected desktop baseline: The closed-room explanation and new-room link are readable with no stale join or ready controls. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/004-closed-room/screenshots/000-closed-guest-phone.png": {
+    "sha256": "be3e339e4e9765762e75936feabfa261864a4523d2d79ca04d3131d5e5d4d483",
+    "review": "Visually inspected phone baseline: The closed-room explanation and new-room link are readable with no stale join or ready controls. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/004-closed-room/screenshots/000-confirm-host-desktop.png": {
+    "sha256": "bfc80bb21c839744cdb6014c051009ee5f686e6fd01e8636efbbea2513e0480e",
+    "review": "Visually inspected desktop baseline: The host can clearly choose Close room or Stay; closure consequences and controls fit within the viewport. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/004-closed-room/screenshots/000-confirm-host-phone.png": {
+    "sha256": "af1225029e7ad4f6721ecd2350c00833ba51e17ad4e2a819d64793a6b551b02b",
+    "review": "Visually inspected phone baseline: The host can clearly choose Close room or Stay; closure consequences and controls fit within the viewport. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   }
 }

@@ -2,11 +2,11 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. Steps 1–3 are now implemented on the foundation branch stacked on this plan; steps 4–10 remain proposed work under review.
+This plan starts from the implementation merged in PR #3. Steps 1–4 have local implementation and browser coverage on the multiplayer branch. Step 4 is not deliverable until its live preview is configured and the deployed browser journeys pass. Steps 5–10 remain proposed work under review.
 
-Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a minimal saved-room view with phone/desktop multi-context tests. The full game engine, joining, readiness, and gameplay are not implemented. Hosted room backends remain unconfigured until the deployment step.
+Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The full game engine and gameplay turns are not implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
 
-Evidence for steps 1–3: [BASE_1.md](docs/protocol/BASE_1.md), the protocol/repository unit suites under `tests/unit/`, real SDK and rules checks under `tests/integration/`, and the [room-foundation browser walkthrough](tests/e2e/002-room-foundation/README.md). Rules edge-case fixtures are accepted expected outcomes for subsequent engine work, not executable proof of unimplemented gameplay.
+Evidence for steps 1–4: [BASE_1.md](docs/protocol/BASE_1.md), the protocol/repository unit suites under `tests/unit/`, real SDK and rules checks under `tests/integration/`, and the [multiplayer browser walkthrough](tests/e2e/002-room-foundation/README.md). Rules edge-case fixtures are accepted expected outcomes for subsequent engine work, not executable proof of unimplemented gameplay.
 
 The completed MVP lets 2–6 friends, each using their own browser, create and join a room, ready up, play three dives, recover from reloads and connection interruptions, understand the result, and create another game. It follows [MVP_DESIGN.md](MVP_DESIGN.md), [RULES_SUMMARY.md](RULES_SUMMARY.md), and [UX_DESIGN.md](UX_DESIGN.md). [E2E_GUIDE.md](E2E_GUIDE.md) governs verification throughout.
 
@@ -14,14 +14,14 @@ Keep the existing trusted-group architecture: client-side deterministic rules, i
 
 ## Delivery sequence
 
-Each step has an observable exit condition. Implement steps in order unless their dependencies explicitly allow otherwise. A step is a reviewable delivery goal, not a requirement to fit all its work into one large PR. Once multiplayer infrastructure exists, ship UI, rules, persistence, and verification together for each behavior rather than building those layers in isolation.
+Every PR must expose its implemented behavior on a retained preview, include reproducible manual steps, and pass browser journeys on that deployed revision. Provision any required backend in the same PR. Each step has an observable exit condition. Implement steps in order unless their dependencies explicitly allow otherwise. A step is a reviewable delivery goal, not a requirement to fit all its work into one large PR. Once multiplayer infrastructure exists, ship UI, rules, persistence, and verification together for each behavior rather than building those layers in isolation.
 
 | Step | Result | Depends on |
 | --- | --- | --- |
 | 1 (implemented) | Resolved rules and versioned protocol decisions | Existing documents |
 | 2 (implemented) | Repeatable emulator and multiplayer test environment | Existing verification; protocol decisions from 1 |
 | 3 (implemented) | Reliable immutable event repository | 2 |
-| 4 | Friends can create, join, ready, and start a room | 3 |
+| 4 (local implementation; live verification required) | Friends can create, join, ready, and start a room | 3 |
 | 5 | A complete turn is visible in every browser | 4; movement rules from 1 |
 | 6 | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
 | 7 | Three dives produce final results and a new-game flow | 6; starter/tie rules from 1 |
@@ -43,9 +43,9 @@ Define the initial `rulesetVersion`, `schemaVersion`, and `reducerVersion`, even
 
 Add the Firebase SDK, pinned CLI, rules-testing dependencies, and Vitest through npm; add the compatible emulator JDK and any other system tools through the Nix flake. Check compatibility when selecting versions. Keep the existing Node guard tests and add the engine/repository test suites to the normal verification pipeline.
 
-Create local Auth/Firestore emulator configuration, isolated data per scenario, and one command that starts the required services, verifies observable readiness, runs the production-build tests, and shuts services down even on failure. Keep credentials and live Firebase data out of automated tests. Define explicit local, preview, and production configuration boundaries now; missing or inconsistent configuration must fail visibly rather than silently selecting production.
+Create local Auth/Firestore emulator configuration, isolated data per scenario, and one command that starts the required services, verifies observable readiness, runs the production-build tests, and shuts services down even on failure. Keep credentials and production Firebase data out of tests. Local verification uses emulators; deployed browser verification uses isolated preview data created only through real UI actions. Define explicit local, preview, and production configuration boundaries now; missing or inconsistent configuration must fail visibly rather than silently selecting production.
 
-Extend the shared browser fixture to own multiple independent player contexts. Each context must receive the same network allowlist, browser/resource error checks, deterministic rendering settings, and lifecycle cleanup. Allow only the app and configured local emulator endpoints. Provision reproducible identities and random input at the environment boundary, without injecting board state or adding a test-only route around real actions. Provide controlled connection and acknowledgement fault injection in this infrastructure for later recovery tests.
+Extend the shared browser fixture to own multiple independent player contexts. Each context must receive the same network allowlist, browser/resource error checks, deterministic rendering settings, and lifecycle cleanup. Allow only the app and the configured environment’s Auth/Firestore endpoints. Provision reproducible identities and random input at the environment boundary, without injecting board state or adding a test-only route around real actions. Provide controlled connection and acknowledgement fault injection in this infrastructure for later recovery tests.
 
 Extend TestSteps so one scenario can assert and capture named player views without filename collisions; require semantic checks and walkthrough completion for every documented view. Add explicit layout checks for the game's intentionally scrollable path and persistent action area while retaining the splash-specific checks.
 

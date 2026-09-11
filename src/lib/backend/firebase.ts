@@ -5,7 +5,7 @@ import { sameEnvelope, type ConfirmedEvent, type PendingEvent } from '../game/pr
 import type { BackendConfig } from './config';
 import type { EventTransport } from './repository';
 
-export async function connectBackend(config: BackendConfig, instanceName = config.projectId) {
+export async function connectBackend(config: BackendConfig, instanceName = `${config.projectId}-${config.namespace ?? 'local'}`) {
   const app = initializeApp({ projectId: config.projectId, apiKey: config.apiKey, appId: config.appId, authDomain: config.authDomain }, instanceName);
   const auth = initializeAuth(app, { persistence: browserLocalPersistence });
   const db = initializeFirestore(app, {});
@@ -18,14 +18,14 @@ export async function connectBackend(config: BackendConfig, instanceName = confi
   const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
   const transport: EventTransport = {
     watch(gameId, next, error) {
-      return onSnapshot(collection(db, 'games', gameId, 'events'), { includeMetadataChanges: true }, snapshot => {
+      return onSnapshot(collection(db, 'environments', config.namespace ?? 'local', 'games', gameId, 'events'), { includeMetadataChanges: true }, snapshot => {
         const events = snapshot.docs.filter(entry => !entry.metadata.hasPendingWrites && entry.data().createdAt != null)
           .map(entry => ({ ...entry.data(), id: entry.id, createdAt: { seconds: entry.data().createdAt.seconds, nanoseconds: entry.data().createdAt.nanoseconds } }) as ConfirmedEvent);
         next(events, !snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites);
       }, error);
     },
     async create(pending: PendingEvent) {
-      const reference = doc(db, 'games', pending.gameId, 'events', pending.id);
+      const reference = doc(db, 'environments', config.namespace ?? 'local', 'games', pending.gameId, 'events', pending.id);
       await runTransaction(db, async transaction => {
         const existing = await transaction.get(reference);
         if (existing.exists()) {
