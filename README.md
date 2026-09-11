@@ -12,7 +12,7 @@ Read [VISION.md](VISION.md) for the project's north star.
 
 ## MVP direction
 
-The MVP will be a multiplayer game on the web. [MVP_DESIGN.md](MVP_DESIGN.md) proposes its scope and implementation strategy based on a review of `anicolao/jaipur`. [RULES_SUMMARY.md](RULES_SUMMARY.md) describes the base-game rules and identifies details that need rulebook confirmation.
+The MVP will be a multiplayer game on the web. [MVP_DESIGN.md](MVP_DESIGN.md) proposes its scope, architecture, and implementation strategy. [RULES_SUMMARY.md](RULES_SUMMARY.md) describes the base-game rules and identifies details that need rulebook confirmation.
 
 Game installation and run instructions will be added when an implementation exists.
 

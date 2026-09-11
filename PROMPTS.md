@@ -37,3 +37,7 @@ for future prompts, let's always write a 2-3 word summary of the prompt, so for 
 ## Prompt 9: Define Multiplayer MVP
 
 OK this is rebased nad merged. Let's write a RULES_SUMMARY.md for the game, and review github.com:anicolao/jaipur for implementation strategy and write an MVP_DESIGN.md for that, adn put that up as the next branch/PR
+
+## Prompt 10: Standalone Game Design
+
+let's write the design from first principles: yes, we're learning from Jaipur but the reader doesn't need that, theyjustneed conclusions/design for this game.
