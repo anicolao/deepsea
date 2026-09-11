@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const initial = '# Project prompts\n\n## Prompt 1\n\nFirst user prompt.\n';
-const next = '\n## Prompt 2\n\nNext user prompt.\n';
+const initial = '# Project prompts\n\n## Prompt 1: First Prompt\n\nFirst user prompt.\n';
+const next = '\n## Prompt 2: Next User Prompt\n\nNext user prompt.\n';
 
 function fixture(t) {
   const cwd = mkdtempSync(join(tmpdir(), 'deepsea-prompts-'));
@@ -91,8 +91,18 @@ test('deleting the prompt log is rejected', (t) => {
 test('whitespace or an empty prompt entry is rejected', (t) => {
   const f = fixture(t);
   f.seed();
-  for (const addition of ['\n  \n', '\n## Prompt 2\n\n   \n']) {
+  for (const addition of ['\n  \n', '\n## Prompt 2: Empty Prompt\n\n   \n']) {
     f.write(initial + addition);
+    f.git('add', 'PROMPTS.md');
+    rejected(f.commit());
+  }
+});
+
+test('missing, short, or long summaries are rejected', (t) => {
+  const f = fixture(t);
+  f.seed();
+  for (const heading of ['## Prompt 2', '## Prompt 2: Summary', '## Prompt 2: This Has Four Words']) {
+    f.write(initial + `\n${heading}\n\nVerbatim prompt.\n`);
     f.git('add', 'PROMPTS.md');
     rejected(f.commit());
   }

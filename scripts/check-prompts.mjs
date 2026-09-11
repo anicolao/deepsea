@@ -26,8 +26,8 @@ try {
     fail('Existing prompt history must remain unchanged; append new entries.');
   }
   const added = staged.slice(previous.length);
-  if (!/(?:^|\n)## Prompt [1-9][0-9]*\n\n\S[\s\S]*/.test(added)) {
-    fail('Append the new verbatim prompt under a new "## Prompt N" heading and stage PROMPTS.md.');
+  if (!/(?:^|\n)## Prompt [1-9][0-9]*: \S+(?: \S+){1,2}\n\n\S[\s\S]*/.test(added)) {
+    fail('Append the verbatim prompt under "## Prompt N: Summary" with a 2–3 word summary and stage PROMPTS.md.');
   }
   console.log('Prompt log check passed.');
 } catch (error) {
