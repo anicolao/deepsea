@@ -18,7 +18,7 @@ Game installation and run instructions will be added when an implementation exis
 
 ## Prompt log and development hooks
 
-Record every project prompt verbatim in [PROMPTS.md](PROMPTS.md), following [AGENTS.md](AGENTS.md). Append a numbered prompt entry without changing earlier entries, then stage it with the related work.
+Record every project prompt verbatim in [PROMPTS.md](PROMPTS.md), following [AGENTS.md](AGENTS.md). Use `## Prompt N: Summary` with a 2–3 word summary, then a blank line and the verbatim prompt. Append new entries without changing earlier entries, then stage them with the related work.
 
 Use Nix with flakes enabled to enter the pinned development environment, then install JavaScript dependencies and activate the hook:
 

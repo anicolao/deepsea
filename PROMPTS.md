@@ -29,3 +29,7 @@ this looks godo enough. we are on a nix system and will need gh to create a repo
 ## Prompt 7
 
 oops. This reepo should be empty with our initial commit for the docs as a PR. Fix it
+
+## Prompt 8: Write Prompt Summaries
+
+for future prompts, let's always write a 2-3 word summary of the prompt, so for example for this promptyou might write Prompt N: Write Prompt Summaries and then have the verbatim prompt. This will amke the prompts more sacnnable.
