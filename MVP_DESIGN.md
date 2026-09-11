@@ -2,30 +2,19 @@
 
 ## Status and scope
 
-Proposed implementation design for a **web multiplayer game**, informed by a source review of `anicolao/jaipur`. This document defines the proposed MVP; the application has not been implemented. [VISION.md](VISION.md) remains solely the north star, and [RULES_SUMMARY.md](RULES_SUMMARY.md) owns game rules and unresolved rule details.
+Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design; the application has not been implemented. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the game rules and identifies details awaiting confirmation.
 
 Support 2–6 human players, each using their own browser. Players create a room, invite friends, ready up, play three dives, review scores, and start another game. Include reload/reconnection, understandable turn history, and keyboard/touch operation on phones and desktops.
 
 Exclude bots, matchmaking, accounts beyond anonymous sessions, chat, spectators as a product feature, shared-table controllers, Boost rules, and ranked play. These exclusions are MVP design proposals, not restrictions on the long-term vision.
 
-## Jaipur review and what to reuse
-
-Reviewed on 2026-09-11 at commit [`76cc8bc`](https://github.com/anicolao/jaipur/tree/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a). Findings below come from source inspection; Jaipur's test suite was not executed for this review.
-
-| Evidence in Jaipur | Deep Sea recommendation |
-| --- | --- |
-| [Static SvelteKit configuration](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/svelte.config.js) and [dependencies](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/package.json) | Use SvelteKit, TypeScript, Vite, and the static adapter. Retain Deep Sea's existing npm lockfile rather than adding Jaipur's Bun package manager. |
-| [Event types and lobby reducer](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/src/lib/game-events.ts), [game reducer](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/src/lib/jaipur-rules.ts) | Use immutable events and pure deterministic replay. Replace Jaipur's two-player assumptions with ordered seats and a variable active-diver set. |
-| [Firestore repository](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/src/lib/game-repository.ts) | Reuse the subscription/cache/replay separation. Strengthen timestamp ordering and retry identity as described below. |
-| [Firestore rules](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/firestore.rules) | Understand the actual boundary: any authenticated user can read a known game's stream and append events attributed to themselves. Game legality is client-enforced. |
-| [Browser scenarios](https://github.com/anicolao/jaipur/tree/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/tests/e2e), [step helper](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/tests/e2e/helpers/test-step-helper.ts) | Adopt independent browser contexts, emulator-backed user journeys, screenshots, and generated walkthroughs. Extend concurrency coverage to six seats. |
-| [Verifier](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/scripts/verify-change.sh), [deployment workflow](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/.github/workflows/ci-and-deploy.yml) | Run verification inside Nix; publish static builds with retained PR previews after checks pass. |
-
-Read code over aspirational documentation when they disagree: Jaipur's plan specifies two-second waits and zero-pixel screenshots, but its Playwright configuration uses 30-second action/expectation limits and its step helper overrides screenshot tolerance to two pixels. Deep Sea should define one tested configuration without contradictory helper overrides. [Actual configuration](https://github.com/anicolao/jaipur/blob/76cc8bcaa8d4f111c2ebc26b67162ca646b4576a/playwright.config.ts).
-
 ## Architecture and trust
 
-Use Firebase anonymous Authentication and a Firestore event collection, with a static browser application hosted on GitHub Pages. This follows Jaipur's trusted-player architecture: suitable for invited friends, with no claim of adversarial fairness or confidential hidden state.
+A game consists of a small sequence of player decisions. Store those decisions as immutable events and derive the board by replaying them in a defined order. This gives every browser the same source of truth, makes interrupted games recoverable, and allows rule failures to be reproduced from their history.
+
+Use SvelteKit with TypeScript, Vite, and the static adapter for the browser application. Separate the interface, event repository, pure rules reducer, and player-view selectors. The reducer owns legality and state transitions; components render its output and submit actions. An ordered roster supports 2–6 seats, while the active-diver set changes as players return.
+
+Firebase anonymous Authentication identifies a browser's seat without account registration. Firestore stores and distributes events, and GitHub Pages serves the static application. This MVP assumes trusted players in invited groups. Game legality runs in the clients; confidential hidden state and adversarial fairness are outside that trust model.
 
 ```mermaid
 flowchart LR
@@ -55,13 +44,13 @@ If a player cannot return, the group can start a new room; the MVP has no host-c
 
 Canonical data lives at `games/{gameId}/events/{eventId}`. No mutable score or board document is required. Maintain a single chronological reducer for lobby and gameplay so future membership events cannot retroactively change earlier turns.
 
-Each envelope contains `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. Use a per-tab random client ID plus monotonic sequence for event IDs; persist the exact ID and payload before submission and reuse both on retry. Jaipur's UID-plus-localStorage sequence alone can collide across tabs.
+Each envelope contains `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. Use a per-tab random client ID plus monotonic sequence for event IDs; persist the exact ID and payload before submission and reuse both on retry. Separate client IDs prevent two tabs sharing a player identity from allocating the same sequence of event IDs.
 
-Every gameplay action asserts `diveNumber`, `turnNumber`, `phase`, and `expectedActionId` (the last accepted state-changing event). Compare confirmed events by the full timestamp's seconds and nanoseconds, then bytewise document ID. Avoid Jaipur's millisecond truncation and locale-dependent string comparison. Unacknowledged timestamps never establish canonical order; rebuild from confirmed history when late events arrive. First valid event at its replay position wins; stale competitors produce a visible conflict with no partial mutation.
+Every gameplay action asserts `diveNumber`, `turnNumber`, `phase`, and `expectedActionId` (the last accepted state-changing event). Compare confirmed events by the full timestamp's seconds and nanoseconds, then bytewise document ID. Preserving timestamp precision and using locale-independent comparison gives every browser the same ordering. Unacknowledged timestamps never establish canonical order; rebuild from confirmed history when late events arrive. First valid event at its replay position wins; stale competitors produce a visible conflict with no partial mutation.
 
 If a retry finds its immutable event already present, compare the stored actor, versions, type, and payload with the persisted submission and acknowledge the match. Never overwrite it to refresh its timestamp; report an ID collision if the contents differ.
 
-Invalid envelopes, duplicate IDs, wrong actors, and illegal actions produce diagnostics. Unsupported versions block further local interaction and request a reload/update. Cached projections are disposable; cache keys include game and protocol versions. For the bounded MVP, replay the full room stream on reconnect rather than introducing a partially implemented cursor cache.
+Invalid envelopes, duplicate IDs, wrong actors, and illegal actions produce diagnostics. Unsupported versions block further local interaction and request a reload/update. Cached projections are disposable; cache keys include game and protocol versions. Replay the full room stream on reconnect; the short, bounded game does not require incremental replay checkpoints.
 
 | Event | Payload and reducer responsibility |
 | --- | --- |
@@ -91,11 +80,11 @@ Selectors expose the public board, cargo quantities and visible levels, directio
 
 Provide a room screen, shared dive board, dive summary, and final results. Keep oxygen, turn status, and available actions easy to find. A clear return/continue choice precedes the roll; show the outcome and then offer legal landing actions. Display cargo units distinctly from their constituent tile counts.
 
-Use original simple graphics, labeled controls, visible focus, color-independent diver markers, and reduced-motion support. On small screens, allow a controlled scrollable path with a persistent turn/action area rather than shrinking 32 spaces until they cannot be read. Do not inherit Jaipur's absolute no-scroll rule for a different board geometry. No artwork generation or final visual theme is part of this documentation PR.
+Use original simple graphics, labeled controls, visible focus, color-independent diver markers, and reduced-motion support. On small screens, use a controlled scrollable path with a persistent turn/action area so all 32 spaces remain readable and actions stay within reach.
 
 ## Implementation and verification strategy
 
-Build small playable slices, following Jaipur's browser-to-replay-to-emulator testing approach. Each slice includes its UI, rules, persistence, and tests in the same PR:
+Build small playable slices that exercise a real browser action through persistence and replay to a visible result on another device. Each slice includes its UI, rules, persistence, and tests in the same PR:
 
 1. Static shell, Nix-managed verification, emulator connection, anonymous identity, and two-browser room creation/join/readiness.
 2. Initial dive setup and one complete turn observed by both browsers.
@@ -107,7 +96,7 @@ Resolve the rulebook checks in `RULES_SUMMARY.md` before coding affected edge ca
 
 Use Vitest for reducer legality, conservation, exact seed fixtures, phase transitions, zero movement, oxygen exhaustion, lost stacks, starter selection, and ties. Firestore emulator tests cover allowed attribution and denied mutation/unauthenticated access. Repository tests cover full-precision ordering, duplicate retries, multi-tab IDs, cache recovery, and malformed events.
 
-Playwright uses isolated browser contexts against Auth/Firestore emulators. Prove both the actor's result and other players' converged view. Include two-player complete games, a six-player game, a race for the sixth seat, conflicting turn submissions, lost acknowledgements, reconnect during cleanup, hidden-value rendering checks, and wrong-version blocking. Use semantic assertions before screenshots, fixed seeds/locale/fonts/viewports, and no production data. Generate scenario walkthroughs from test steps; pin the browser and rendering environment before choosing screenshot tolerances.
+Playwright uses isolated browser contexts against Auth/Firestore emulators. Prove both the actor's result and other players' converged view. Include two-player complete games, a six-player game, a race for the sixth seat, conflicting turn submissions, lost acknowledgements, reconnect during cleanup, hidden-value rendering checks, and wrong-version blocking. Use semantic assertions before screenshots, fixed seeds/locale/fonts/viewports, and no production data. Generate scenario walkthroughs from test steps; pin the browser and rendering environment before choosing screenshot tolerances. Keep timeouts and screenshot tolerances in one shared configuration so helpers cannot silently change the verification contract.
 
 Retain the existing prompt hook. Add game verification alongside it as code arrives: type checks, unit tests, emulator rules tests, browser scenarios, and production build. CI runs the same commands. Prompt logging is checked against the staged index by the local hook; CI should compare the PR's prompt log with its base rather than expecting a staged local change.
 
@@ -115,6 +104,6 @@ Retain the existing prompt hook. Add game verification alongside it as code arri
 
 Continue using `flake.nix`, `flake.lock`, npm, and `package-lock.json`. Add required system tools such as the emulator JDK and Nix-compatible browser dependencies through the flake when the corresponding implementation arrives. Pin Firebase CLI and test libraries in npm; do not install tools globally. The current Node version must be checked against selected dependencies before scaffolding, and any upgrade belongs in the flake.
 
-Adapt Jaipur's GitHub Pages paths to `/deepsea/` and `/deepsea/pr<N>/`. Handle base paths for invites, assets, and navigation. Build and publish the exact tested PR head for same-repository branches; retain other previews and serialize publication to avoid concurrent overwrites. Fork PRs run checks without deployment credentials.
+Publish the main build at `/deepsea/` and retained PR previews at `/deepsea/pr<N>/`. Handle base paths for invites, assets, and navigation. Build and publish the exact tested PR head for same-repository branches; retain other previews and serialize publication to avoid concurrent overwrites. Fork PRs run checks without deployment credentials.
 
-Use a new Deep Sea Firebase project and separate preview/production game namespaces or projects; never connect to Jaipur's database. Firebase provisioning, production settings, and deployment workflows are subsequent implementation work. This PR creates documentation only and does not provision a backend or publish a playable site.
+Use a dedicated Deep Sea Firebase project with isolated preview and production game namespaces or projects. Emulator tests run against local data. Provisioning and deployment configuration must preserve those boundaries so testing and preview play cannot alter production games.
