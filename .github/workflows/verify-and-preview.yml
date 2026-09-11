@@ -1,0 +1,87 @@
+name: Verify and preview
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    env:
+      PUBLIC_BASE_PATH: ${{ github.event_name == 'pull_request' && format('/deepsea/pr{0}', github.event.number) || '/deepsea' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: cachix/install-nix-action@v31
+      - run: nix develop -c npm ci
+      - name: Check PR prompt history
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          nix develop -c node --input-type=module <<'JS'
+          import { execFileSync } from 'node:child_process';
+          import { readFileSync } from 'node:fs';
+          const base = execFileSync('git', ['show', `${process.env.PR_BASE_SHA}:PROMPTS.md`], { encoding: 'utf8' });
+          const current = readFileSync('PROMPTS.md', 'utf8');
+          if (!current.startsWith(base) || !/(?:^|\n)## Prompt [1-9][0-9]*: \S+(?: \S+){1,2}\n\n\S/.test(current.slice(base.length))) {
+            throw new Error('PR must preserve prompt history and append a summarized verbatim prompt.');
+          }
+          JS
+      - run: nix develop -c npm run verify
+      - run: git diff --exit-code
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: browser-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        with:
+          name: static-site
+          path: build/
+          include-hidden-files: true
+
+  publish:
+    needs: verify
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pages: write
+    concurrency:
+      group: publish-retained-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: static-site
+          path: build
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
+          destination_dir: ${{ github.event_name == 'pull_request' && format('pr{0}', github.event.number) || '' }}
+          keep_files: true
+      - name: Request Pages build
+        uses: actions/github-script@v9
+        with:
+          script: |
+            // GITHUB_TOKEN pushes do not automatically trigger a Pages build.
+            await github.request('POST /repos/{owner}/{repo}/pages/builds', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+      - name: Preview link
+        env:
+          SITE_PATH: ${{ github.event_name == 'pull_request' && format('/deepsea/pr{0}/', github.event.number) || '/deepsea/' }}
+        run: echo "Preview https://anicolao.github.io${SITE_PATH}" >> "$GITHUB_STEP_SUMMARY"

@@ -1,1 +1,5 @@
+if [ -z "${IN_NIX_SHELL:-}" ]; then
+  exec nix develop -c sh .husky/pre-commit
+fi
 node scripts/check-prompts.mjs
+npm run verify
