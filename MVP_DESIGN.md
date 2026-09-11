@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design. A tested coming-soon screen is implemented; multiplayer and gameplay are not yet implemented. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the game rules and identifies details awaiting confirmation.
+Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design. The coming-soon screen, local anonymous authentication, immutable room creation/replay, and multi-browser verification are implemented; joining, readiness, and gameplay are not. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the accepted `base-1` rules conventions.
 
 Support 2–6 human players, each using their own browser. Players create a room, invite friends, ready up, play three dives, review scores, and start another game. Include reload/reconnection, understandable turn history, and keyboard/touch operation on phones and desktops.
 
@@ -86,7 +86,7 @@ Use original simple graphics, labeled controls, visible focus, color-independent
 
 Build small playable slices that exercise a real browser action through persistence and replay to a visible result on another device. Each slice includes its UI, rules, persistence, and tests in the same PR. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) defines the delivery sequence, dependencies, and acceptance checks from the current implementation; the static shell and retained previews already exist.
 
-Resolve the rulebook checks in `RULES_SUMMARY.md` before coding affected edge cases. Freeze their decisions under `rulesetVersion`; do not silently change how existing rooms replay.
+The user has accepted the proposed rulebook resolutions under `rulesetVersion: "base-1"`; [BASE_1.md](docs/protocol/BASE_1.md) freezes their decisions and the initial protocol/randomness contracts. Do not silently change how existing rooms replay.
 
 Use Vitest for reducer legality, conservation, exact seed fixtures, phase transitions, zero movement, oxygen exhaustion, lost stacks, starter selection, and ties. Firestore emulator tests cover allowed attribution and denied mutation/unauthenticated access. Repository tests cover full-precision ordering, duplicate retries, multi-tab IDs, cache recovery, and malformed events.
 

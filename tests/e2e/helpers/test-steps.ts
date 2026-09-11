@@ -5,33 +5,42 @@ import { dirname, join } from 'node:path';
 
 type Check = { description: string; assert: () => Promise<unknown> };
 type CompletedStep = { id: string; title: string; checks: string[] };
-const scenarios = new WeakMap<TestInfo, TestSteps>();
+const scenarios = new WeakMap<TestInfo, Map<string, TestSteps>>();
 
-export function assertStepsFinished(info: TestInfo) {
+export function assertStepsFinished(info: TestInfo, pages: Page[] = []) {
   const steps = scenarios.get(info);
-  if (!steps || !steps.finished) throw new Error('Every scenario must construct TestSteps, run semantic steps, and call finish().');
+  if (!steps || [...steps.values()].some(view => !view.finished)) throw new Error('Every scenario must construct TestSteps, run semantic steps, and call finish().');
+  if (pages.some(page => ![...steps.values()].some(view => view.uses(page)))) throw new Error('Every player context needs a completed named view.');
 }
 
 export class TestSteps {
   private completed: CompletedStep[] = [];
+  private ids = new Set<string>();
   finished = false;
+  uses(page: Page) { return this.page === page; }
 
   constructor(
     private page: Page,
     private info: TestInfo,
     private title: string,
-    private description: string
+    private description: string,
+    private viewId = 'primary',
+    private layout: 'splash' | 'room' | 'game' = 'splash'
   ) {
-    if (scenarios.has(info)) throw new Error('Use one TestSteps walkthrough per scenario.');
-    scenarios.set(info, this);
+    if (!/^[a-z][a-z0-9-]*$/.test(viewId)) throw new Error('Use a stable named player view.');
+    const views = scenarios.get(info) ?? new Map<string, TestSteps>();
+    if (views.has(viewId)) throw new Error('Use one TestSteps walkthrough per named player view.');
+    views.set(viewId, this);
+    scenarios.set(info, views);
   }
 
   async step(id: string, title: string, checks: Check[]) {
     if (this.finished || !title.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || !checks.length) {
       throw new Error('Each step needs a stable kebab-case ID and semantic checks.');
     }
-    if (this.completed.some((step) => step.id.endsWith(`-${id}`))) throw new Error('Duplicate step ID');
-    const numberedId = `${String(this.completed.length).padStart(3, '0')}-${id}`;
+    if (this.ids.has(id)) throw new Error('Duplicate step ID');
+    this.ids.add(id);
+    const numberedId = `${String(this.completed.length).padStart(3, '0')}-${id}${this.viewId === 'primary' ? '' : `-${this.viewId}`}`;
     await test.step(title, async () => {
       for (const check of checks) await test.step(check.description, async () => {
         if (!check.description.trim()) throw new Error('Semantic checks require a description.');
@@ -43,14 +52,24 @@ export class TestSteps {
       // Readiness is a condition on local fonts, not a delay or screenshot-only style change.
       await expect(this.page.locator('html')).toHaveJSProperty('lang', 'en');
       expect(await this.page.evaluate(() => document.fonts.status)).toBe('loaded');
-      const layoutProblems = await this.page.evaluate(() => {
+      const layoutProblems = await this.page.evaluate((layout) => {
         const errors: string[] = [];
         const root = document.documentElement;
         if (root.scrollWidth > innerWidth || root.scrollHeight > innerHeight) errors.push('Splash overflows viewport');
         const modal = document.querySelector('dialog[open]');
         const scope = modal ?? document.querySelector('main')!;
-        for (const element of scope.querySelectorAll<HTMLElement>('h1, h2, p, li, button, footer')) {
+        if (layout === 'game') {
+          for (const selector of ['[data-game-path]', '[data-game-actions]']) {
+            const region = document.querySelector<HTMLElement>(selector);
+            if (!region || !region.checkVisibility()) { errors.push(`Missing visible ${selector}`); continue; }
+            const bounds = region.getBoundingClientRect();
+            if (bounds.top < 0 || bounds.left < 0 || bounds.bottom > innerHeight || bounds.right > innerWidth || bounds.height <= 0) errors.push(`Unreachable ${selector}`);
+            if (selector === '[data-game-path]' && !['auto', 'scroll'].includes(getComputedStyle(region).overflowY)) errors.push('Game path needs its own scroll container');
+          }
+        }
+        for (const element of scope.querySelectorAll<HTMLElement>('h1, h2, p, li, button, footer, input, label, dt, dd')) {
           if (!element.checkVisibility()) continue;
+          if (layout === 'game' && element.closest('[data-game-path]')) continue;
           const rect = element.getBoundingClientRect();
           if (rect.left < 0 || rect.top < 0 || rect.right > innerWidth || rect.bottom > innerHeight) {
             errors.push(`Clipped ${element.tagName}: ${element.textContent?.trim()}`);
@@ -66,7 +85,7 @@ export class TestSteps {
           }
         }
         return errors;
-      });
+      }, this.layout);
       expect(layoutProblems, 'Splash content fits and controls remain reachable').toEqual([]);
       await expect(this.page).toHaveScreenshot(`${numberedId}.png`);
     });
@@ -76,19 +95,23 @@ export class TestSteps {
   finish() {
     if (this.finished || !this.completed.length) throw new Error('Finish exactly once, after at least one completed step.');
     this.finished = true;
-    if (this.info.project.name !== 'desktop') return;
+    const views = [...scenarios.get(this.info)!.values()];
+    if (this.info.project.name !== 'desktop' || views.some(view => !view.finished)) return;
+    const first = views[0];
     const content = [
-      `# ${this.title}`,
+      `# ${first.title}`,
       '',
       '> Generated by TestSteps from the passing browser scenario. Do not edit manually.',
       '',
-      this.description,
-      ...this.completed.flatMap((step) => [
+      first.description,
+      ...views.flatMap(view => [
+      ...(views.length > 1 ? ['', `## ${view.viewId}`, '', view.description] : []),
+      ...view.completed.flatMap((step) => [
         '', `## ${step.title}`, '',
         ...step.checks.map((check) => `- ${check}`),
         '', `![Desktop: ${step.title}](screenshots/${step.id}-desktop.png)`,
         '', `![Phone: ${step.title}](screenshots/${step.id}-phone.png)`
-      ]),
+      ])]),
       ''
     ].join('\n');
     const path = join(dirname(this.info.file), 'README.md');

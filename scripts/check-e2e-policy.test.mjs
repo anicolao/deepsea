@@ -40,7 +40,7 @@ test('every canonical configuration field is checked, including nested overrides
     ['timeout: 30_000', 'timeout: 60_000'], ['timeout: 60_000', 'timeout: 120_000'],
     ["updateSnapshots: 'none'", "updateSnapshots: 'all'"],
     ['reuseExistingServer: false', 'reuseExistingServer: true'],
-    ["command: 'npm run preview'", "command: 'npm run dev'"],
+    ["command: 'node scripts/start-test-services.mjs'", "command: 'npm run dev'"],
     ["testMatch: '**/*.spec.ts'", "testMatch: '**/selected.spec.ts'"],
     ["name: 'phone', use:", "name: 'phone', retries: 2, use:"],
     ['headless: true', 'headless: false'], ["browserName: 'chromium'", "browserName: 'firefox'"],

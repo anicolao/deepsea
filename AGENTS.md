@@ -4,7 +4,7 @@ Use the project's Nix flake for development tools. Add any newly needed tools to
 
 Keep `VISION.md` exclusively about the end state and north star. Do not include design principles, visual direction, success criteria, milestones, implementation plans, release scope, or open planning decisions.
 
-The MVP will be a multiplayer game on the web. `MVP_DESIGN.md` records the proposed design and scope; `RULES_SUMMARY.md` records the game rules and outstanding rulebook checks. Do not describe it as a shared-device game or treat proposals and unresolved rules as verified implementation facts.
+The MVP will be a multiplayer game on the web. `MVP_DESIGN.md` records the design and scope; `RULES_SUMMARY.md` and `docs/protocol/BASE_1.md` record the user's accepted base-1 conventions. Do not describe it as a shared-device game or treat project conventions as publisher verification. Distinguish implemented foundation features from future gameplay.
 
 Write design documents as standalone designs for Deep Sea. Explain decisions from this game's needs; omit reviews of reference projects, comparisons, and the history of how a decision was reached.
 

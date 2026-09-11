@@ -46,9 +46,11 @@ export default defineConfig({
     { name: 'desktop', use: { viewport: { width: 1280, height: 900 } } }
   ],
   webServer: {
-    command: 'npm run preview',
+    command: 'node scripts/start-test-services.mjs',
     url: `http://127.0.0.1:4173${basePath}/`,
     reuseExistingServer: false,
+    gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
+    stdout: 'pipe',
     timeout: 60_000
   }
 });

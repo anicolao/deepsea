@@ -32,6 +32,7 @@ const env = {
 };
 for (const [command, commandArgs] of [
   ['node', ['scripts/check-e2e-policy.mjs']],
+  ['node', ['node_modules/firebase-tools/lib/bin/firebase.js', 'setup:emulators:firestore']],
   ['npm', ['run', 'build']],
   ['node', ['node_modules/@playwright/test/cli.js', 'test', ...args]]
 ]) {

@@ -57,3 +57,7 @@ I didn't hceck that there are precommit hook checks for each rule in the e2e gui
 ## Prompt 14: Plan MVP Implementation
 
 ok that's merged, let's make a new branch and write IMPLEMENTATION_PLAN.md to lay out ht esteps to get from here to a completed MVP.
+
+## Prompt 15: Implement Foundation Steps
+
+Let's implement 1-3 on a stacked PR while we continue reviewing the rest of the impleementation plan. for #1 assume that all open decisions have been made reasonably and accept the current proposed solution/resolution.

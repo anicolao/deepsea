@@ -41,7 +41,8 @@ export function configErrors(source, contract) {
 export function checkConfig() {
   const scripts = JSON.parse(readFileSync('package.json', 'utf8')).scripts;
   const required = {
-    verify: 'npm run check && npm test && npm run test:e2e',
+    verify: 'npm run check && npm test && npm run test:unit && npm run test:e2e',
+    'test:unit': 'vitest run',
     test: 'node --test scripts/*.test.mjs',
     'test:e2e': 'node scripts/run-e2e.mjs',
     'test:e2e:update': 'node scripts/run-e2e.mjs --update-snapshots',

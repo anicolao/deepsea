@@ -2,9 +2,11 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. It is a sequence of proposed work, not a record of completed gameplay features.
+This plan starts from the implementation merged in PR #3. Steps 1–3 are now implemented on the foundation branch stacked on this plan; steps 4–10 remain proposed work under review.
 
-Already implemented: a static SvelteKit coming-soon screen and keyboard-accessible game brief; pinned Nix/npm tooling; a production build; phone and desktop E2E scenarios with six reviewed screenshots; enforced testing rules and prompt logging; GitHub CI and retained Pages previews. There is no game engine, anonymous authentication, room repository, or Firebase integration yet.
+Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a minimal saved-room view with phone/desktop multi-context tests. The full game engine, joining, readiness, and gameplay are not implemented. Hosted room backends remain unconfigured until the deployment step.
+
+Evidence for steps 1–3: [BASE_1.md](docs/protocol/BASE_1.md), the protocol/repository unit suites under `tests/unit/`, real SDK and rules checks under `tests/integration/`, and the [room-foundation browser walkthrough](tests/e2e/002-room-foundation/README.md). Rules edge-case fixtures are accepted expected outcomes for subsequent engine work, not executable proof of unimplemented gameplay.
 
 The completed MVP lets 2–6 friends, each using their own browser, create and join a room, ready up, play three dives, recover from reloads and connection interruptions, understand the result, and create another game. It follows [MVP_DESIGN.md](MVP_DESIGN.md), [RULES_SUMMARY.md](RULES_SUMMARY.md), and [UX_DESIGN.md](UX_DESIGN.md). [E2E_GUIDE.md](E2E_GUIDE.md) governs verification throughout.
 
@@ -16,9 +18,9 @@ Each step has an observable exit condition. Implement steps in order unless thei
 
 | Step | Result | Depends on |
 | --- | --- | --- |
-| 1 | Resolved rules and versioned protocol decisions | Existing documents |
-| 2 | Repeatable emulator and multiplayer test environment | Existing verification; protocol decisions from 1 |
-| 3 | Reliable immutable event repository | 2 |
+| 1 (implemented) | Resolved rules and versioned protocol decisions | Existing documents |
+| 2 (implemented) | Repeatable emulator and multiplayer test environment | Existing verification; protocol decisions from 1 |
+| 3 (implemented) | Reliable immutable event repository | 2 |
 | 4 | Friends can create, join, ready, and start a room | 3 |
 | 5 | A complete turn is visible in every browser | 4; movement rules from 1 |
 | 6 | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
@@ -27,11 +29,11 @@ Each step has an observable exit condition. Implement steps in order unless thei
 | 9 | All required journeys work on phones, desktop, and keyboard | 7–8, with accessibility built into every UI step |
 | 10 | The verified MVP works on its deployed URLs | 8–9; environment configuration prepared in 2 |
 
-Rulebook research need not block emulator or repository work. It does block implementing affected gameplay behavior as settled rules. Do not replace a missing rule decision with an undocumented guess.
+The user accepted all proposed open rule resolutions as reasonable project conventions for step 1. There are no remaining `base-1` decision blockers. Any later correction requires a documented version change, not a silent reinterpretation of existing games.
 
 ### 1. Resolve rules and freeze replay decisions
 
-Confirm the outstanding cases in RULES_SUMMARY against a publisher-issued base-game rulebook: occupied deep-end overshoot, already-stacked treasure lost again, an empty path between dives, next-dive starter selection, and the exact tiebreak. Record the source and resulting decision. If a source remains ambiguous, obtain an explicit project convention and label it as such before implementing that case; do not claim publisher confirmation.
+Adopt the user's accepted conventions in RULES_SUMMARY for occupied deep-end overshoot, already-stacked treasure lost again, an empty path between dives, next-dive starter selection, and the exact tiebreak. Record them as project decisions without claiming new publisher confirmation. This acceptance satisfies the original rules-decision gate.
 
 Define the initial `rulesetVersion`, `schemaVersion`, and `reducerVersion`, event validation boundaries, PRNG/shuffle algorithm, and component identity scheme. Specify how incompatible versions block interaction. Keep opaque identities separate from treasure values. Record representative rules fixtures, including movement with cargo, the final oxygen-exhausting turn, stack conservation, and tied results.
 
@@ -131,7 +133,7 @@ Run automated verification only against emulators. Separately perform a named li
 
 ## MVP acceptance checklist
 
-- [ ] All rulebook blockers are closed; any project conventions are explicitly documented and versioned.
+- [x] All rulebook blockers are closed by accepted project conventions, explicitly documented and versioned.
 - [ ] Two through six players can join, ready, and play three dives from separate browsers.
 - [ ] Rules fixtures cover movement, oxygen, treasure conservation, stacks, cleanup, starter selection, scoring, and ties.
 - [ ] Event ordering, attribution, immutable retries, stale conflicts, and version handling pass repository and emulator-rules tests.
