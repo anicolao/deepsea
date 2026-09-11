@@ -153,3 +153,15 @@ test('hook stops on verification failure even when the final tree check would pa
   f.git('add', 'PROMPTS.md', 'package.json');
   assert.notEqual(f.commit().status, 0);
 });
+
+test('explicit continuation references the latest exact prompt without duplicating it', async (t) => {
+  const { createHash } = await import('node:crypto');
+  const f = fixture(t); f.seed();
+  const hash = createHash('sha256').update(initial).digest('hex');
+  writeFileSync(join(f.cwd, 'PROMPT_WORK.md'), `Prompt 1 | ${hash} | Implement the next logical step\n`);
+  f.git('add', 'PROMPT_WORK.md');
+  assert.equal(f.commit().status, 0);
+  rejected(f.commit());
+  writeFileSync(join(f.cwd, 'PROMPT_WORK.md'), `Prompt 1 | ${hash} | Implement the next logical step\nPrompt 1 | wrong-hash | Another logical implementation step\n`);
+  f.git('add', 'PROMPT_WORK.md'); rejected(f.commit());
+});

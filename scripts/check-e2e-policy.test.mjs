@@ -95,3 +95,8 @@ test('only the exact clipboard-read fixture expression may evaluate browser code
   assert.deepEqual(policyErrors('await page.evaluate(() => navigator.clipboard.readText());', 'tests/e2e/helpers/fixture.ts'), []);
   for (const expression of ['page.evaluate(() => localStorage.clear())', 'page.evaluate(() => window.seedGame())']) assert.notDeepEqual(policyErrors(expression, 'tests/e2e/helpers/fixture.ts'), []);
 });
+
+test('random initialization never permits scenario response fulfillment', () => {
+  assert.ok(policyErrors("route.fulfill({ json: { board: 'fake' } });", 'tests/e2e/helpers/fixture.ts').length);
+  assert.ok(policyErrors("route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: 2026 }, preview: config.preview ? { ...config.preview, initialSeed: 2026 } : null } });", 'tests/e2e/example.spec.ts').length);
+});

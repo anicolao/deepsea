@@ -14,15 +14,15 @@ A visitor opens the production-built splash screen, reads the game brief with th
 
 ![Phone: The game is clearly marked as ready for room creation](screenshots/000-splash-phone.png)
 
-## A keyboard user can read what is being built
+## A keyboard user can learn the game
 
 - An accessible dialog explains separate-device play and the shared oxygen supply.
-- The brief explicitly says room setup works and taking turns is next.
+- The brief explains treasure risk in player language.
 - The close control receives focus and is keyboard operable.
 
-![Desktop: A keyboard user can read what is being built](screenshots/001-game-brief-desktop.png)
+![Desktop: A keyboard user can learn the game](screenshots/001-game-brief-desktop.png)
 
-![Phone: A keyboard user can read what is being built](screenshots/001-game-brief-phone.png)
+![Phone: A keyboard user can learn the game](screenshots/001-game-brief-phone.png)
 
 ## Closing the brief restores the visitor’s place
 

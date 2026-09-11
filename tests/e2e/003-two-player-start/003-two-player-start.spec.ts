@@ -27,10 +27,11 @@ test('two players can leave, rejoin and start while late invites are rejected', 
   await guest.getByRole('button', { name: 'Ready up' }).click();
   await host.getByRole('button', { name: 'Ready up' }).click();
   await host.getByRole('button', { name: 'Start dive' }).click();
+  hostSteps.gameLayout();
   await hostSteps.step('started', 'Two ready friends start', [{ description: 'The saved start contains both seats and Mira as first diver.', assert: async () => {
-    await expect(host.getByRole('heading', { name: 'First diver: Mira' })).toBeVisible();
-    await expect(host.getByRole('list', { name: 'Crew' }).getByRole('listitem')).toHaveCount(2);
-    await expect(guest.getByRole('heading', { name: 'First diver: Mira' })).toBeVisible();
+    await expect(host.getByRole('heading', { name: 'Your turn', exact: true })).toBeVisible();
+    await expect(host.getByRole('button', { name: 'Roll dice' })).toBeEnabled();
+    await expect(guest.getByRole('heading', { name: 'Mira’s turn', exact: true })).toBeVisible();
   } }]);
   await late.goto(host.url());
   await lateSteps.step('late-invite', 'Late arrivals get a clear explanation', [{ description: 'The started room rejects a new player and offers a new room.', assert: async () => {

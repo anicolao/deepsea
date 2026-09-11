@@ -75,7 +75,10 @@ it('allows bounded lobby actions while rejecting malformed lobby payloads', asyn
     { type: 'lobby/joined', payload: { name: 'Mira' } },
     { type: 'lobby/left', payload: {} },
     { type: 'lobby/ready', payload: { ready: true, rosterRevision: 'created' } },
-    { type: 'game/started', payload: { seed: 2026, starterUid: 'mira', expectedActionId: 'created' } }
+    { type: 'game/started', payload: { seed: 2026, starterUid: 'mira', expectedActionId: 'created' } },
+    { type: 'turn/rolled', payload: { direction: 'out', expectedActionId: 'started' } },
+    { type: 'turn/landed', payload: { choice: 'pickup', expectedActionId: 'rolled' } },
+    { type: 'turn/landed', payload: { choice: 'drop', unitId: 'opaque', expectedActionId: 'rolled' } }
   ];
   for (const [index, action] of actions.entries()) {
     await assertSucceeds(setDoc(doc(db, `environments/local/games/lobby/events/action${index}`), { ...payload('lobby'), ...action }));

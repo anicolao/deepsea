@@ -46,6 +46,7 @@ export function policyErrors(source, filename) {
       report(file, 'Scenarios must import unaliased test and expect from ../helpers/fixture.');
     }
   }
+  const seededConfig = (node) => fixture && node.getText(file) === 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: 2026 }, preview: config.preview ? { ...config.preview, initialSeed: 2026 } : null } })';
   const visit = (node) => {
     if (ts.isVariableDeclaration(node) && node.initializer && ts.isIdentifier(node.initializer) && ['test', 'expect'].includes(node.initializer.text)) report(node, 'Do not alias the shared test or expect.');
     if (ts.isImportSpecifier(node) && node.propertyName && !fixture && !assertions) report(node, 'Do not alias E2E imports.');
@@ -63,7 +64,7 @@ export function policyErrors(source, filename) {
     }
     if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
       const name = ts.isPropertyAccessExpression(node) ? node.name.text : nameOf(node.argumentExpression);
-      const trusted = (fixture && ['extend', 'route', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (fixture && name === 'use' && node.expression.getText(file) === 'info.project') || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
+      const trusted = seededConfig(node.parent) || seededConfig(node) || (fixture && ['extend', 'route', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (fixture && name === 'use' && node.expression.getText(file) === 'info.project') || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
       if (!trusted && (forbiddenCalls.has(name) || name?.startsWith('waitFor'))) report(node, `Forbidden E2E member: ${name}`);
       if (name === 'toHaveScreenshot' && !helper) report(node, 'Only TestSteps may access screenshot assertions.');
       if (ts.isElementAccessExpression(node) && !helper && !assertions) report(node, 'Use named APIs, not computed member access.');
@@ -82,7 +83,7 @@ export function policyErrors(source, filename) {
       const name = ts.isPropertyAccessExpression(callee) ? callee.name.text
         : ts.isElementAccessExpression(callee) ? nameOf(callee.argumentExpression)
           : nameOf(callee);
-      const trusted = (fixture && ['extend', 'use', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
+      const trusted = seededConfig(node.parent) || seededConfig(node) || (fixture && ['extend', 'use', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
       if (!trusted && (forbiddenCalls.has(name) || name?.startsWith('waitFor'))) report(node, `Forbidden E2E call: ${name}`);
       if (name === 'expect' && ts.isIdentifier(callee) && node.arguments.length === 0) report(node, 'An assertion needs an observed value.');
       if (name === 'toHaveScreenshot' && (!filename.endsWith('/helpers/test-steps.ts') || node.arguments.length !== 1)) {

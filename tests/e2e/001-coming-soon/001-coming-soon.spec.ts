@@ -28,15 +28,15 @@ test('visitors see the home screen and can read the game brief', async ({ page }
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'About the game' })).toBeFocused();
   await page.keyboard.press('Enter');
-  await steps.step('game-brief', 'A keyboard user can read what is being built', [
+  await steps.step('game-brief', 'A keyboard user can learn the game', [
     { description: 'An accessible dialog explains separate-device play and the shared oxygen supply.', assert: async () => {
       const dialog = page.getByRole('dialog', { name: 'Treasure is only yours if you make it back.' });
       await expect(dialog).toBeVisible();
       await expect(dialog).toContainText('each on their own device');
       await expect(dialog).toContainText('Everyone shares one oxygen supply');
     } },
-    { description: 'The brief explicitly says room setup works and taking turns is next.', assert: async () => {
-      await expect(page.getByRole('dialog')).toContainText('Taking turns is the next feature being built.');
+    { description: 'The brief explains treasure risk in player language.', assert: async () => {
+      await expect(page.getByRole('dialog')).toContainText('Carry only what you can bring home.');
     } },
     { description: 'The close control receives focus and is keyboard operable.', assert: async () => {
       await expect(page.getByRole('button', { name: 'Back to the surface' })).toBeFocused();
