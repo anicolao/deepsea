@@ -6,9 +6,10 @@
   export let room: Room;
   export let uid: string;
   export let enabled: boolean;
+  export let connected = true;
   export let act: (type: string, payload: Record<string, unknown>) => Promise<void>;
   let locatedRoll = '';
-  afterUpdate(() => { const address = `${room.dive?.number}:${room.dive?.turn}:${room.dive?.roll?.to}`; if (view.roll?.uid === uid && address !== locatedRoll) { locatedRoll = address; locate(view.roll.to); } });
+  afterUpdate(() => { if (view.roll?.uid === uid && view.phase === 'landing' && view.active === uid && room.lastActionId !== locatedRoll) { locatedRoll = room.lastActionId; locate(view.roll.to); } });
   let direction = 'out', selected = '', revision = '';
   let help: HTMLDialogElement, helpButton: HTMLButtonElement;
   $: view = playerView(room.dive!);
@@ -19,17 +20,29 @@
   const name = (id: string) => room.members.find(m => m.uid === id)?.name ?? '';
   const symbol = (id: string) => ['●', '◆', '▲', '■', '★', '⬟'][(room.members.find(m => m.uid === id)?.seat ?? 1) - 1];
   function send(type: string, payload: Record<string, unknown>) { return act(type, { ...payload, expectedActionId: room.lastActionId }); }
-  function locate(position: number) { document.getElementById(`space-${position}`)?.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+  let path: HTMLDivElement, anchor = 0;
+  function locate(position: number) {
+    anchor = position;
+    const target = document.getElementById(`space-${position}`);
+    if (!path || !target) return;
+    path.scrollTo({ top: path.scrollTop + target.getBoundingClientRect().top - path.getBoundingClientRect().top - (path.clientHeight - target.getBoundingClientRect().height) / 2, behavior: 'instant' });
+  }
+  function keepAnchor(node: HTMLDivElement) {
+    path = node; anchor = me.position;
+    const observer = new ResizeObserver(() => locate(anchor));
+    observer.observe(node);
+    return { destroy: () => observer.disconnect() };
+  }
 </script>
 <div class="game">
-  <header><div><p class="eyebrow">DEEP SEA · DIVE {view.number} OF 3</p><h1>{mine ? 'Your turn' : `${name(view.active)}’s turn`}</h1></div><div class="oxygen"><span>Oxygen</span><strong>{view.oxygen} <small>/ 25</small></strong></div></header>
+  <header><div><p class="eyebrow">DEEP SEA · DIVE {view.number} OF 3</p><h1>{mine ? 'Your turn' : `${name(view.active)}’s turn`}</h1></div><div class="oxygen"><span>{connected ? 'Oxygen' : 'Last known oxygen'}</span><strong>{view.oxygen} <small>/ 25</small></strong></div></header>
   <div class="meter" role="meter" aria-label="Shared oxygen" aria-valuenow={Math.max(0,view.oxygen)} aria-valuemin="0" aria-valuemax="25"><span style={`width:${Math.max(0,view.oxygen)*4}%`}></span></div>
   <div class="board-grid">
     <section class="sea" aria-label="Ocean path" style={`background-image:url(${base}/art/ocean.png);background-size:cover`}>
       <nav aria-label="Find your way"><button on:click={() => locate(me.position)}>Find my diver</button><button on:click={() => locate(0)}>Show submarine</button></nav>
       <!-- A named scroll region needs keyboard focus for native arrow-key scrolling. -->
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-      <div class="path" data-game-path role="region" tabindex="0" aria-label="Scrollable treasure path">
+      <div class="path" use:keepAnchor data-game-path role="region" tabindex="0" aria-label="Scrollable treasure path">
         <div class="submarine" id="space-0"><svg viewBox="0 0 160 70" width="120" height="53" aria-hidden="true"><path d="M24 25h92a20 20 0 0 1 0 40H24a20 20 0 0 1 0-40M60 25V12h28v13M73 12V3h22" fill="#edcc61" stroke="#edcc61" stroke-width="5"/><circle cx="37" cy="45" r="10" fill="#163e4a"/><circle cx="72" cy="45" r="10" fill="#163e4a"/><circle cx="107" cy="45" r="10" fill="#163e4a"/></svg><strong>Submarine</strong><span>{view.divers.filter(d => d.position === 0).map(d => `${symbol(d.uid)} ${name(d.uid)}`).join(' · ')}</span></div>
         <ol>{#each view.path as unit, i}<li id={`space-${i+1}`} class:occupied={view.divers.some(d => d.position === i+1)}><span class="depth">{String(i+1).padStart(2,'0')}</span><div class="treasure" class:blank={!unit} style={`--level:${unit?.levels[0] ?? 0}`} aria-label={unit ? `Space ${i+1}, concealed level ${unit.levels.join(', ')} treasure, ${unit.count} tiles` : `Space ${i+1}, empty`}><span aria-hidden="true">{unit ? ['','△','◇','⬟','⬡'][unit.levels[0]] : '○'}</span>{#if unit}<small>{unit.count > 1 ? `${unit.count} tiles` : ['','I','II','III','IV'][unit.levels[0]]}</small>{/if}</div><div class="divers">{#each view.divers.filter(d => d.position === i+1) as diver}<strong>{symbol(diver.uid)} {name(diver.uid)}<small>{diver.direction === 'home' ? '↑ Returning' : '↓ Diving'}</small></strong>{/each}</div></li>{/each}</ol>
         <p class="seabed">THE DEEP · What will you bring home?</p>

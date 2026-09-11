@@ -67,10 +67,16 @@ Only a completed turn can end a dive, even after oxygen reaches zero. Returning 
 
 Stranded divers are ordered deepest first, with frozen seat order as a deterministic fallback. `dive/ordered {order, expectedActionId}` accepts an exact permutation of the current cleanup owner's unit IDs. Up to three whole units form each new deep-end stack; no existing stack is split. Empty and single-unit choices resolve automatically. Once all owners finish, blanks are removed and review becomes available. Conservation includes all path, carried, and banked tiles after every transition.
 
-Browser connections explicitly select the SDK's long-poll WebChannel transport. Responses close after delivering data, avoiding buffering-driven transport switching on proxied connections; this does not poll game state from tests or add waits to scenarios. Node emulator integration clients use the SDK's native transport. See [Firestore transport settings](https://firebase.google.com/docs/reference/js/firestore.firestoresettings#firestoresettingsexperimentalforcelongpolling).
+Browser connections use the SDK’s streaming transport with automatic proxy detection. Native offline/online events disable and resume its network connection. Each tab retains its last confirmed view in memory while disconnected; identity and exact pending submissions are persisted. Reload uses the full confirmed server stream before enabling moves.
 
 ## Continuation and results (reducer 5)
 
 `dive/continued {expectedActionId}` accepts any seated actor exactly once from a completed review. It resets oxygen, positions, directions and turn address, retains banked tiles and the compacted path without reshuffling, and uses the derived next starter. After the third cleanup the game finishes automatically. An empty path finishes early with zero gains recorded for remaining dives.
 
 Final results sum individual banked tile values. Points ties compare the number of individual banked level-IV tiles, then share victory. Play again creates a separate immutable room with the player's existing name and identity; it never resets or deletes the old game.
+
+## Atomic event creation and acknowledgement recovery
+
+Auth and subscriptions use the Firebase SDK. An append uses Firestore’s REST commit with `currentDocument.exists: false` and a server `REQUEST_TIME` transform for `createdAt`. This creates a new immutable event in one round trip, without a preliminary read. Firebase ID tokens enforce the same Firestore rules. A lost reply or existing-ID conflict triggers a read of exactly that event, comparing every immutable envelope field; it never rewrites the timestamp or allocates another ID. An unresolved read remains pending. See [Firestore REST authentication](https://firebase.google.com/docs/firestore/use-rest-api) and [atomic writes](https://firebase.google.com/docs/firestore/reference/rest/v1/Write).
+
+Pending notification reaches repository observers before the network operation. A successful write reply alone does not enable a second move: the confirmed projection must first reconcile the submitted ID. Tests cover a reply arriving before the subscription, lost replies, competing turns/continuations, exact-ID conflicts, and forty complete six-player games with conservation checked at every action.

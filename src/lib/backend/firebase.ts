@@ -1,20 +1,25 @@
 import { initializeApp, deleteApp } from 'firebase/app';
 import { initializeAuth, browserLocalPersistence, connectAuthEmulator, signInAnonymously } from 'firebase/auth';
-import { initializeFirestore, connectFirestoreEmulator, collection, doc, onSnapshot, runTransaction, serverTimestamp, terminate } from 'firebase/firestore';
-import { sameEnvelope, type ConfirmedEvent, type PendingEvent } from '../game/protocol';
+import { initializeFirestore, disableNetwork, enableNetwork, connectFirestoreEmulator, collection, onSnapshot, terminate } from 'firebase/firestore';
+import { type ConfirmedEvent, type PendingEvent } from '../game/protocol';
+import {appendEvent} from './rest';
 import type { BackendConfig } from './config';
 import type { EventTransport } from './repository';
 
 export async function connectBackend(config: BackendConfig, instanceName = `${config.projectId}-${config.namespace ?? 'local'}`) {
   const app = initializeApp({ projectId: config.projectId, apiKey: config.apiKey, appId: config.appId, authDomain: config.authDomain }, instanceName);
   const auth = initializeAuth(app, { persistence: browserLocalPersistence });
-  // A bounded-response transport avoids buffering-proxy stream switching in browsers.
-  // Node integration clients retain the SDK's native transport.
-  const db = initializeFirestore(app, typeof window === 'undefined' ? {} : { experimentalForceLongPolling: true });
+  // Keep the SDK’s streaming transport and automatic proxy detection.
+  const db = initializeFirestore(app, {});
   if (config.mode === 'local') {
     connectAuthEmulator(auth, `http://${config.authHost}`, { disableWarnings: true });
     const [host, port] = config.firestoreHost!.split(':');
     connectFirestoreEmulator(db, host, Number(port));
+  }
+  const updateConnection = () => { void (navigator.onLine ? enableNetwork(db) : disableNetwork(db)); };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online',updateConnection); window.addEventListener('offline',updateConnection);
+    updateConnection();
   }
   await auth.authStateReady();
   const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
@@ -27,17 +32,8 @@ export async function connectBackend(config: BackendConfig, instanceName = `${co
       }, error);
     },
     async create(pending: PendingEvent) {
-      const reference = doc(db, 'environments', config.namespace ?? 'local', 'games', pending.gameId, 'events', pending.id);
-      await runTransaction(db, async transaction => {
-        const existing = await transaction.get(reference);
-        if (existing.exists()) {
-          const { createdAt: _time, ...envelope } = existing.data();
-          if (!sameEnvelope(envelope as PendingEvent['envelope'], pending.envelope)) throw new Error('Room ID collision: another creation already exists.');
-          return;
-        }
-        transaction.set(reference, { ...pending.envelope, createdAt: serverTimestamp() });
-      });
+      await appendEvent(config, await user.getIdToken(), pending);
     }
   };
-  return { uid: user.uid, isAnonymous: user.isAnonymous, transport, close: async () => { await terminate(db); await deleteApp(app); } };
+  return { uid: user.uid, isAnonymous: user.isAnonymous, transport, close: async () => { if (typeof window !== 'undefined') { window.removeEventListener('online',updateConnection); window.removeEventListener('offline',updateConnection); } await terminate(db); await deleteApp(app); } };
 }

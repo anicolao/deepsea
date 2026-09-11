@@ -2,7 +2,7 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. Steps 1–7 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 8–10 are being implemented in logical commits on the complete-MVP branch.
+This plan starts from the implementation merged in PR #3. Steps 1–8 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 9–10 are being implemented in logical commits on the complete-MVP branch.
 
 Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The shared board and atomic turns are implemented; dive resolution, lost-cargo ordering and scoring at dive review are implemented; three-dive completion, tiebreaks and a fresh-room replay flow are implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
 
@@ -25,7 +25,7 @@ Every PR must expose its implemented behavior on a retained preview, include rep
 | 5 (implemented; deployed verification required per PR) | A complete turn is visible in every browser | 4; movement rules from 1 |
 | 6 (implemented; deployed verification required per PR) | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
 | 7 (implemented; deployed verification required per PR) | Three dives produce final results and a new-game flow | 6; starter/tie rules from 1 |
-| 8 | Interrupted and competing clients recover consistently | 7, with recovery checks added from 3 onward |
+| 8 (implemented; deployed verification required per PR) | Interrupted and competing clients recover consistently | 7, with recovery checks added from 3 onward |
 | 9 | All required journeys work on phones, desktop, and keyboard | 7–8, with accessibility built into every UI step |
 | 10 | The verified MVP works on its deployed URLs | 8–9; environment configuration prepared in 2 |
 
@@ -110,6 +110,8 @@ Add deterministic repository and browser fault scenarios for duplicate clicks, s
 Exercise six distinct players through a complete short game, plus two contenders for the final seat. A losing contender must not appear seated. Prove all clients converge after races and that stale actions make no partial changes. A missing active player retains their seat and turn; oxygen does not tick down with elapsed time. Explain the new-room option when a player cannot return.
 
 **Done when:** all listed scenarios pass with one accepted action per expected state, stable dice, no duplicated oxygen/score effects, and matching player views. Unsupported versions block moves. The game can finish with the original host disconnected when that host has no outstanding required action; nobody substitutes for a missing player's turn or cleanup choice.
+
+Recovery evidence: scenarios 006 and 009 exercise reconnect during cleanup and landing, lost acknowledgements and same-identity tabs; 008 completes a six-player game; 010 races for the last seat. Atomic REST retries, repository pending observations and 40 complete six-player reducer games have dedicated unit coverage. Cached offline views are disposable in-memory projections; identity and pending event envelopes persist.
 
 ### 9. Close the UX and accessibility acceptance checklist
 
