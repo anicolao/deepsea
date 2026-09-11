@@ -2,7 +2,7 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. Steps 1–4 have local implementation and browser coverage on the multiplayer branch. Step 4 is not deliverable until its live preview is configured and the deployed browser journeys pass. Steps 5–10 remain proposed work under review.
+This plan starts from the implementation merged in PR #3. Steps 1–4 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 5–10 remain proposed work under review.
 
 Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The full game engine and gameplay turns are not implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
 
@@ -21,7 +21,7 @@ Every PR must expose its implemented behavior on a retained preview, include rep
 | 1 (implemented) | Resolved rules and versioned protocol decisions | Existing documents |
 | 2 (implemented) | Repeatable emulator and multiplayer test environment | Existing verification; protocol decisions from 1 |
 | 3 (implemented) | Reliable immutable event repository | 2 |
-| 4 (local implementation; live verification required) | Friends can create, join, ready, and start a room | 3 |
+| 4 (implemented; deployed verification required per PR) | Friends can create, join, ready, and start a room | 3 |
 | 5 | A complete turn is visible in every browser | 4; movement rules from 1 |
 | 6 | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
 | 7 | Three dives produce final results and a new-game flow | 6; starter/tie rules from 1 |

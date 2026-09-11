@@ -65,3 +65,7 @@ Let's implement 1-3 on a stacked PR while we continue reviewing the rest of the 
 ## Prompt 16: Deliver Usable Previews
 
 PR4 was ok and got merged. but PR5 is a mess. It looks like you've just put data into the emulator and then navigated to the URL to see it. FUCK THAT. you are supposed to bre showing me tracer-bullet scenarios that a real user can test against the PR preview, not faked data wthat displays web pages. Fix it by doing step 4 from the implementation plan on teh same PR so that we can actually test it, and ensure that every PR comes with a PR preview that enalbes me to manually verify the funcitonality. never violate this rule. You're done when ti is fixed and the PR on github says it can be merged automatically with no conflicts.
+
+## Prompt 17: Activate Preview Backend
+
+logged in, let's get the test PR working.

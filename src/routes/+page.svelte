@@ -46,7 +46,7 @@
     <h1 id="title">Deep Sea</h1>
     <p class="tagline">One ocean. One oxygen tank.<br />How far will you go?</p>
     <p class="description">Gather your crew for a treasure hunt in your browser.<br class="desktop-break" /> Dive together, push your luck, and make it back aboard.</p>
-    <a class="status" href={`${base}/rooms/`}>Create room</a>
+    <a class="status" role={ready ? undefined : 'link'} aria-disabled={!ready} tabindex={ready ? 0 : -1} href={ready ? `${base}/rooms/` : undefined}>Create room</a>
     <button class="brief-button" disabled={!ready} onclick={() => brief.showModal()} aria-haspopup="dialog">About the game <span aria-hidden="true">↗</span></button>
   </section>
 
