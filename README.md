@@ -16,6 +16,8 @@ The MVP will be a multiplayer game on the web. [MVP_DESIGN.md](MVP_DESIGN.md) pr
 
 [UX_DESIGN.md](UX_DESIGN.md) describes player journeys, screen behavior, and interaction states with generated mockups.
 
+[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) sequences the work from the tested coming-soon screen to the complete multiplayer MVP, with dependencies and acceptance checks for each step.
+
 ## Run and verify
 
 ```sh
