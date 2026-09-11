@@ -1,0 +1,54 @@
+import { defineConfig } from '@playwright/test';
+
+const basePath = process.env.PUBLIC_BASE_PATH ?? '/deepsea/pr-e2e';
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  testMatch: '**/*.spec.ts',
+  fullyParallel: false,
+  workers: 1,
+  forbidOnly: true,
+  retries: 0,
+  timeout: 30_000,
+  updateSnapshots: 'none',
+  reporter: [['list'], ['html', { open: 'never' }]],
+  snapshotPathTemplate: '{testDir}/{testFileDir}/screenshots/{arg}-{projectName}{ext}',
+  expect: {
+    timeout: 2_000,
+    toHaveScreenshot: {
+      maxDiffPixels: 0,
+      maxDiffPixelRatio: 0,
+      threshold: 0,
+      animations: 'disabled',
+      caret: 'hide',
+      scale: 'css'
+    }
+  },
+  use: {
+    baseURL: `http://127.0.0.1:4173${basePath}/`,
+    browserName: 'chromium',
+    headless: true,
+    deviceScaleFactor: 1,
+    locale: 'en-CA',
+    timezoneId: 'UTC',
+    colorScheme: 'dark',
+    contextOptions: { reducedMotion: 'reduce' },
+    serviceWorkers: 'block',
+    actionTimeout: 2_000,
+    navigationTimeout: 2_000,
+    trace: 'retain-on-failure',
+    launchOptions: {
+      args: ['--font-render-hinting=none', '--disable-lcd-text', '--disable-gpu', '--force-device-scale-factor=1']
+    }
+  },
+  projects: [
+    { name: 'phone', use: { viewport: { width: 393, height: 852 } } },
+    { name: 'desktop', use: { viewport: { width: 1280, height: 900 } } }
+  ],
+  webServer: {
+    command: 'npm run preview',
+    url: `http://127.0.0.1:4173${basePath}/`,
+    reuseExistingServer: false,
+    timeout: 60_000
+  }
+});

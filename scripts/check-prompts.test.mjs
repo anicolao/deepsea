@@ -13,7 +13,7 @@ const next = '\n## Prompt 2: Next User Prompt\n\nNext user prompt.\n';
 function fixture(t) {
   const cwd = mkdtempSync(join(tmpdir(), 'deepsea-prompts-'));
   t.after(() => rmSync(cwd, { recursive: true, force: true }));
-  const env = { ...process.env, HUSKY: '2', XDG_CONFIG_HOME: join(cwd, 'config') };
+  const env = { ...process.env, HUSKY: '1', IN_NIX_SHELL: '1', XDG_CONFIG_HOME: join(cwd, 'config') };
   const git = (...args) => execFileSync('git', args, { cwd, env, stdio: 'pipe' });
   git('init');
   git('config', 'user.name', 'Hook Test');
@@ -21,6 +21,9 @@ function fixture(t) {
   git('config', 'commit.gpgsign', 'false');
   mkdirSync(join(cwd, '.husky'));
   mkdirSync(join(cwd, 'scripts'));
+  // These fixtures exercise prompt enforcement through the real hook. Stub the
+  // separate app verifier so its own guard tests do not recursively run themselves.
+  writeFileSync(join(cwd, 'package.json'), JSON.stringify({ scripts: { verify: 'node -e "process.exit(0)"' } }));
   for (const path of ['.husky/pre-commit', 'scripts/check-prompts.mjs']) {
     copyFileSync(join(root, path), join(cwd, path));
   }
