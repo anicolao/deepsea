@@ -7,7 +7,7 @@
   import { selectConfig, type DeploymentConfig } from '$lib/backend/config';
   import { connectBackend } from '$lib/backend/firebase';
   import { RoomRepository, type RoomState } from '$lib/backend/repository';
-  let name = '', error = '', roomId = '', uid = '', starter = '', invite = '';
+  let name = '', error = '', roomId = '', setupId = '', uid = '', starter = '', invite = '';
   let connected = false, busy = false, online = true, copied = false, closing = false, left = false;
   let state: RoomState | null = null;
   let repository: RoomRepository;
@@ -19,9 +19,13 @@
   $: reason = !room || room.members.length < 2 ? 'Invite at least one friend to start.' : !room.members.every(m => m.ready) ? 'Everyone must be ready to start.' : 'Your crew is ready.';
   $: if (room && !room.members.some(m => m.uid === starter)) starter = room.hostUid;
   function failure(value: unknown) { error = value instanceof Error ? value.message : 'Could not confirm the action. Check your connection and try again.'; }
-  function observe(id: string) {
-    unsubscribe(); roomId = id;
-    unsubscribe = repository.watch(id, next => { state = next; if (next.error) error = next.error; });
+  function observe(id: string, setup = false) {
+    unsubscribe(); roomId = setup ? '' : id;
+    unsubscribe = repository.watch(id, next => {
+      connected = next.synchronized;
+      if (!setup || roomId) state = next;
+      if (next.error) error = next.error;
+    });
   }
   onMount(() => {
     let disposed = false;
@@ -37,11 +41,13 @@
         if (disposed) { await close(); return; }
         uid = backend.uid;
         repository = new RoomRepository(backend.transport, localStorage, uid, crypto.randomUUID(), `${config.projectId}-${config.namespace ?? 'local'}`);
-        connected = true;
         const id = new URL(location.href).searchParams.get('room');
         if (id) {
           if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) throw new Error('This room link is invalid.');
           observe(id);
+        } else {
+          setupId = crypto.randomUUID();
+          observe(setupId, true);
         }
       } catch (e) { failure(e); }
     })();
@@ -51,8 +57,9 @@
     if (!enabled) return;
     busy = true; error = '';
     try {
-      const id = crypto.randomUUID(), pending = repository.prepareCreation(id, name);
-      replaceState(`${base}/rooms/?room=${id}`, {}); observe(id);
+      const id = setupId, pending = repository.prepareCreation(id, name);
+      roomId = id;
+      replaceState(`${base}/rooms/?room=${id}`, {});
       await repository.submit(pending);
     } catch (e) { failure(e); } finally { busy = false; }
   }

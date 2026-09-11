@@ -154,7 +154,7 @@ test('reload cancellation classification is restricted to the exact stream, code
     const run = players({ browser: h.browser, baseURL: 'http://localhost/' }, async factory => {
       const page = await factory.create();
       const failure = { url: () => url, failure: () => ({ errorText: code }) };
-      if (duringReload) { page.cancellation = failure; await factory.reload(page); }
+      if (duringReload) { page.emit('request', failure); page.cancellation = failure; await factory.reload(page); }
       else page.emit('requestfailed', failure);
     }, h.info);
     if (allowed) await run; else await assert.rejects(run, /any player context/);
@@ -175,5 +175,21 @@ test('live browser health allows only Firebase endpoints and excludes local emul
       await route({ request: () => ({ url: () => url }), abort: async () => {}, continue: async () => {} });
     }, {});
     if (allowed) await run; else await assert.rejects(run, /No browser errors/);
+  }
+});
+
+test('delayed reload cancellation belongs only to the exact old request, not a new stream', async () => {
+  for (const [oldRequest, code, allowed] of [[true, 'net::ERR_ABORTED', true], [false, 'net::ERR_ABORTED', false], [true, 'net::ERR_FAILED', false]]) {
+    const { players } = infrastructure(); const h = playerHarness();
+    const run = players({ browser: h.browser, baseURL: 'https://anicolao.github.io/deepsea/pr5/' }, async factory => {
+      const page = await factory.create();
+      const old = { url: () => 'https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel', failure: () => ({ errorText: code }) };
+      page.emit('request', old);
+      await factory.reload(page);
+      const current = { ...old };
+      page.emit('request', current);
+      page.emit('requestfailed', oldRequest ? old : current);
+    }, h.info);
+    if (allowed) await run; else await assert.rejects(run, /any player context/);
   }
 });

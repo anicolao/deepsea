@@ -1,9 +1,9 @@
-import { test as base, type BrowserContext, type Page } from '@playwright/test';
+import { test as base, type BrowserContext, type Page, type Request } from '@playwright/test';
 import { expect } from './assertions';
 import { assertStepsFinished } from './test-steps';
 
 type Players = { readInvite: (page: Page) => Promise<string>; create: () => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
-async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], reloading = new Set<Page>()) {
+async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], streams = new Map<Page, Set<Request>>(), cancelledByReload = new Set<Request>()) {
   const hosted = new URL(baseURL).origin === 'https://anicolao.github.io';
   const origins = new Set([new URL(baseURL).origin, ...(hosted ? ['https://identitytoolkit.googleapis.com', 'https://securetoken.googleapis.com', 'https://firestore.googleapis.com'] : ['http://127.0.0.1:9099', 'http://127.0.0.1:8080'])]);
   await context.route('**/*', async route => {
@@ -14,12 +14,21 @@ async function monitor(context: BrowserContext, page: Page, baseURL: string, pro
   page.on('pageerror', error => problems.push(error.message));
   page.on('console', message => { if (message.type() === 'error') problems.push(message.text()); });
   page.on('response', response => { if (response.status() >= 400) problems.push(`HTTP ${response.status()}: ${response.url()}`); });
-  page.on('requestfailed', request => {
+  const active = new Set<Request>();
+  streams.set(page, active);
+  const isStream = (request: Request) => {
     const url = new URL(request.url());
+    return url.origin === (hosted ? 'https://firestore.googleapis.com' : 'http://127.0.0.1:8080') && url.pathname === '/google.firestore.v1.Firestore/Listen/channel';
+  };
+  page.on('request', request => { if (isStream(request)) active.add(request); });
+  page.on('requestfinished', request => { active.delete(request); cancelledByReload.delete(request); });
+  page.on('requestfailed', request => {
+    active.delete(request);
     const failure = request.failure()?.errorText;
-    // Reload intentionally cancels an open streaming subscription. Only that
-    // endpoint, that Chromium cancellation code, and that navigation qualify.
-    const reloadCancellation = reloading.has(page) && url.origin === (hosted ? 'https://firestore.googleapis.com' : 'http://127.0.0.1:8080') && url.pathname === '/google.firestore.v1.Firestore/Listen/channel' && failure === 'net::ERR_ABORTED';
+    // Chromium can report the old document's cancellation after reload resolves.
+    // Identify the exact already-open request, never a time window or new stream.
+    const previousStream = cancelledByReload.delete(request);
+    const reloadCancellation = previousStream && isStream(request) && failure === 'net::ERR_ABORTED';
     if (!reloadCancellation) problems.push(`Failed request: ${request.url()} (${failure})`);
   });
   context.on('page', () => problems.push('Unexpected extra page: use the shared players fixture.'));
@@ -35,7 +44,8 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
   players: async ({ browser, baseURL }, use, info) => {
     const contexts: BrowserContext[] = [];
     const pages: Page[] = [];
-    const reloading = new Set<Page>();
+    const streams = new Map<Page, Set<Request>>();
+    const cancelledByReload = new Set<Request>();
     const problems: string[] = [];
     try { await use({
       create: async () => {
@@ -46,7 +56,7 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
         contexts.push(context);
         const page = await context.newPage();
         pages.push(page);
-        await monitor(context, page, baseURL!, problems, reloading);
+        await monitor(context, page, baseURL!, problems, streams, cancelledByReload);
         return page;
       },
       readInvite: async page => {
@@ -58,8 +68,8 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
       },
       reload: async page => {
         if (!pages.includes(page)) throw new Error('Unknown player page');
-        reloading.add(page);
-        try { await page.reload(); } finally { reloading.delete(page); }
+        for (const request of streams.get(page) ?? []) cancelledByReload.add(request);
+        await page.reload();
       },
       setConnected: async (page, connected) => {
         if (!contexts.includes(page.context())) throw new Error('Unknown player context');
