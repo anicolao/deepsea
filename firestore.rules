@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function envelope() {
+      let e = request.resource.data;
+      return e.keys().hasAll(['schemaVersion', 'reducerVersion', 'rulesetVersion', 'type', 'payload', 'actorUid', 'clientId', 'clientSeq', 'createdAt'])
+        && e.keys().hasOnly(['schemaVersion', 'reducerVersion', 'rulesetVersion', 'type', 'payload', 'actorUid', 'clientId', 'clientSeq', 'createdAt'])
+        && e.schemaVersion is int && e.schemaVersion > 0 && e.schemaVersion <= 9007199254740991
+        && e.reducerVersion is int && e.reducerVersion > 0 && e.reducerVersion <= 9007199254740991
+        && e.rulesetVersion is string && e.rulesetVersion.size() > 0 && e.rulesetVersion.size() <= 32
+        && e.type == 'game/created'
+        && e.actorUid == request.auth.uid
+        && e.actorUid.matches('[A-Za-z0-9_-]{1,128}')
+        && e.clientId is string && e.clientId.matches('[A-Za-z0-9_-]{1,128}')
+        && e.clientSeq is int && e.clientSeq >= 0 && e.clientSeq <= 9007199254740991
+        && e.payload is map && e.payload.keys().hasAll(['gameId', 'hostName'])
+        && e.payload.keys().hasOnly(['gameId', 'hostName'])
+        && e.payload.hostName is string && e.payload.hostName.size() > 0 && e.payload.hostName.size() <= 40
+        && e.createdAt is timestamp && e.createdAt == request.time;
+    }
+    match /games/{gameId}/events/{eventId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && gameId.matches('[A-Za-z0-9_-]{1,128}')
+        && eventId == 'created' && envelope() && request.resource.data.payload.gameId == gameId;
+      allow update, delete: if false;
+    }
+  }
+}

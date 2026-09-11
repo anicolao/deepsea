@@ -1,0 +1,17 @@
+{
+  "rulesetVersion": "base-1",
+  "status": "Accepted expected outcomes for future gameplay reducer tests; the gameplay reducer is not implemented in this slice.",
+  "cases": [
+    { "name": "cargo reduces movement", "input": { "dice": [3, 2], "carriedUnits": 2 }, "expected": { "countedSpaces": 3 } },
+    { "name": "cargo cannot cause negative movement", "input": { "dice": [1, 1], "carriedUnits": 3 }, "expected": { "countedSpaces": 0, "landingChoiceRequired": true } },
+    { "name": "oxygen-exhausting turn finishes", "input": { "oxygen": 1, "carriedUnits": 2, "landsOnTreasure": true }, "expected": { "oxygen": -1, "moveCompletes": true, "landingChoiceBeforeCleanup": true } },
+    { "name": "occupied deep-end overshoot", "input": { "position": 29, "pathLength": 32, "occupied": [32], "countedSpaces": 5 }, "expected": { "position": 31 } },
+    { "name": "no outward space available", "input": { "position": 31, "pathLength": 32, "occupied": [32], "countedSpaces": 2 }, "expected": { "position": 31 } },
+    { "name": "lost stacks stay indivisible", "input": { "orderedUnits": [["a", "b", "c"], ["d"], ["e", "f"], ["g"]] }, "expected": { "newUnits": [["a", "b", "c", "d", "e", "f"], ["g"]], "tileCount": 7, "carryingCost": 2 } },
+    { "name": "deepest stranded player starts", "input": { "strandedDepths": { "Mira": 7, "Sol": 12 } }, "expected": { "starter": "Sol", "cleanupOrder": ["Sol", "Mira"] } },
+    { "name": "everyone returned", "input": { "returnOrder": ["Mira", "Sol"] }, "expected": { "starter": "Sol" } },
+    { "name": "empty path", "input": { "nextDive": 2, "remainingTiles": 0 }, "expected": { "remainingDivePoints": [0, 0], "complete": true } },
+    { "name": "level-four tiebreak", "input": { "points": [20, 20], "bankedLevel4Tiles": [1, 2] }, "expected": { "winnerSeats": [2] } },
+    { "name": "shared victory", "input": { "points": [20, 20], "bankedLevel4Tiles": [2, 2] }, "expected": { "winnerSeats": [1, 2] } }
+  ]
+}

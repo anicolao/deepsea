@@ -22,5 +22,29 @@
   "tests/e2e/001-coming-soon/screenshots/002-return-phone.png": {
     "sha256": "ca338c4a4be2bcc8555070e225366789be07491b1f3ce72a28cc0ed834ba7359",
     "review": "Reviewed the existing baseline: the dialog is closed, the coming-soon content fits, and focus is visibly restored to About the game."
+  },
+  "tests/e2e/002-room-foundation/screenshots/000-created-host-desktop.png": {
+    "sha256": "b1741bfe8d5b2072293d6ea708c0da81bf111c8012c3b36644521e10106b3181",
+    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+  },
+  "tests/e2e/002-room-foundation/screenshots/000-created-host-phone.png": {
+    "sha256": "c3ffdb7f4068b4ed34c55240197556d641476477f88cfedb0442cf542259e91a",
+    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+  },
+  "tests/e2e/002-room-foundation/screenshots/000-observed-guest-desktop.png": {
+    "sha256": "b5fe37d35f5758934d7d5777ff811c7378577603a6a5fcfb4f39ca2a49822029",
+    "review": "Inspected the guest view: Mira’s saved room is readable, the not-seated state distinguishes the second identity, and the whole card fits the viewport."
+  },
+  "tests/e2e/002-room-foundation/screenshots/000-observed-guest-phone.png": {
+    "sha256": "b76c543c58ff7413d4a994431250fb335ae72e823369e91597cbdb91f6bb4e09",
+    "review": "Inspected the guest view: Mira’s saved room is readable, the not-seated state distinguishes the second identity, and the whole card fits the viewport."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-reloaded-host-desktop.png": {
+    "sha256": "b1741bfe8d5b2072293d6ea708c0da81bf111c8012c3b36644521e10106b3181",
+    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
+  },
+  "tests/e2e/002-room-foundation/screenshots/001-reloaded-host-phone.png": {
+    "sha256": "c3ffdb7f4068b4ed34c55240197556d641476477f88cfedb0442cf542259e91a",
+    "review": "Inspected the host view: saved status, Mira’s host identity and next-feature explanation are readable; reload retains the same visible room and all content fits."
   }
 }

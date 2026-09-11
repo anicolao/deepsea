@@ -14,7 +14,7 @@ const forbiddenCalls = new Set([
   'setContent', 'addInitScript', 'evaluateHandle', '$eval', '$$eval',
   'dispatchEvent', 'setInputFiles', 'fulfill', 'routeFromHAR', 'unroute', 'unrouteAll',
   'newContext', 'newPage', 'launch', 'launchPersistentContext', 'connect',
-  'setViewportSize', 'emulateMedia', 'setSystemTime', 'setFixedTime', 'fastForward',
+  'setViewportSize', 'setOffline', 'emulateMedia', 'setSystemTime', 'setFixedTime', 'fastForward',
   'setExtraHTTPHeaders', 'addCookies', 'clearCookies', 'extend', 'use', 'configure',
   'setTimeout', 'toMatchSnapshot', 'random', 'now', 'eval', 'Function', 'require',
   'apply', 'bind', 'call', 'remove', 'removeChild', 'replaceChildren', 'setAttribute',
@@ -63,7 +63,7 @@ export function policyErrors(source, filename) {
     }
     if (ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)) {
       const name = ts.isPropertyAccessExpression(node) ? node.name.text : nameOf(node.argumentExpression);
-      const trusted = (fixture && ['extend', 'route'].includes(name)) || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
+      const trusted = (fixture && ['extend', 'route', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (fixture && name === 'use' && node.expression.getText(file) === 'info.project') || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
       if (!trusted && (forbiddenCalls.has(name) || name?.startsWith('waitFor'))) report(node, `Forbidden E2E member: ${name}`);
       if (name === 'toHaveScreenshot' && !helper) report(node, 'Only TestSteps may access screenshot assertions.');
       if (ts.isElementAccessExpression(node) && !helper && !assertions) report(node, 'Use named APIs, not computed member access.');
@@ -71,7 +71,7 @@ export function policyErrors(source, filename) {
         report(node, `Only the shared infrastructure may use ${name}.`);
       }
     }
-    if (ts.isNewExpression(node) && !['TestSteps', 'Error', 'URL', 'Proxy', 'WeakMap', 'Set'].includes(node.expression.getText(file))) report(node, 'Unapproved E2E constructor.');
+    if (ts.isNewExpression(node) && !['TestSteps', 'Error', 'URL', 'Proxy', 'WeakMap', 'Map', 'Set'].includes(node.expression.getText(file))) report(node, 'Unapproved E2E constructor.');
     if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) report(node, 'Dynamic imports bypass E2E policy.');
     if (ts.isStringLiteral(node) && node.text === 'networkidle') report(node, 'Do not use networkidle.');
     if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
@@ -82,7 +82,7 @@ export function policyErrors(source, filename) {
       const name = ts.isPropertyAccessExpression(callee) ? callee.name.text
         : ts.isElementAccessExpression(callee) ? nameOf(callee.argumentExpression)
           : nameOf(callee);
-      const trusted = (fixture && ['extend', 'use'].includes(name)) || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
+      const trusted = (fixture && ['extend', 'use', 'newContext', 'newPage', 'setOffline', 'setDefaultTimeout', 'setDefaultNavigationTimeout'].includes(name)) || (helper && name === 'writeFileSync') || (assertions && name === 'apply');
       if (!trusted && (forbiddenCalls.has(name) || name?.startsWith('waitFor'))) report(node, `Forbidden E2E call: ${name}`);
       if (name === 'expect' && ts.isIdentifier(callee) && node.arguments.length === 0) report(node, 'An assertion needs an observed value.');
       if (name === 'toHaveScreenshot' && (!filename.endsWith('/helpers/test-steps.ts') || node.arguments.length !== 1)) {

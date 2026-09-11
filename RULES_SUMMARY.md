@@ -2,7 +2,7 @@
 
 This summary targets the base game for 2–6 players. Boost and expansion dice are excluded. Oink Games describes the original as a treasure hunt using two dice numbered 1–3 and a shared oxygen supply. [Publisher overview](https://oinkgames.com/en/games/analog/deep-sea-adventure/).
 
-This is an implementation reference, not a replacement rulebook. The full English rules located during research are community transcriptions; important differences and provisional decisions are identified below. Sources reviewed on 2026-09-11.
+This is an implementation reference, not a replacement rulebook. The full English rules located during research are community transcriptions; important differences are identified below. Sources reviewed on 2026-09-11. The user has accepted the proposed resolutions as project conventions under `base-1`; that acceptance does not establish publisher verification. [The frozen protocol](docs/protocol/BASE_1.md) records the decisions and reference fixtures.
 
 ## Setup and objective
 
@@ -44,14 +44,14 @@ For the next starter, use the deepest stranded diver, or the last successful ret
 
 The 2015 transcription linked above is **not an official manual**. Its author explicitly identifies two departures: it reverses the stranded-diver drop order, and its treasure requirement for turning home became outdated. This project permits turning home without treasure after leaving the submarine and uses deepest-first drops. Do not copy the transcription's exceptions into the engine. [Author's corrections](https://games.everybookinchina.com/deepsea.php).
 
-The compact reference specifies level-4 tiles for ties, whereas the older transcription says “high-level” tiles. Level-4 count is the proposed baseline; verify it against the physical base-game rulebook before declaring rules parity.
+The compact reference specifies level-4 tiles for ties, whereas the older transcription says “high-level” tiles. The accepted project baseline counts individual banked level-4 tiles. This resolves implementation behavior without claiming independently verified rules parity.
 
-## Explicit MVP conventions to verify
+## Accepted MVP conventions
 
-The available references do not resolve every engine edge case precisely. These are proposed deterministic conventions, not claims of publisher clarification:
+The available references do not resolve every engine edge case precisely. The user has accepted these deterministic conventions, along with the starter and tie rules above, for the first implementation. They are not claims of publisher clarification:
 
 - If the deepest space is occupied, an outward overshoot stops at the deepest available space reachable without passing the path's end; if none exists, remain in place.
 - A previously formed treasure stack remains indivisible, including when lost again. Group up to three carried units together; the resulting stack can contain more than three original tiles.
 - If no treasure remains on the path between dives, resolve the remaining dives with no additional points instead of creating an unplayable board.
 
-Confirm these conventions and the starter/tie rules against a publisher-issued base-game rulebook before implementing the affected cases. Record any resulting correction here and in the rules fixtures. The web-specific room, identity, and disconnection policies belong in [MVP_DESIGN.md](MVP_DESIGN.md).
+There are no remaining decision blockers for `base-1`. Any later correction must update this document, the reference fixtures, and the ruleset version rather than silently changing existing room replay. The web-specific room, identity, and disconnection policies belong in [MVP_DESIGN.md](MVP_DESIGN.md).

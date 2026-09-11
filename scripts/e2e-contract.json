@@ -75,9 +75,14 @@
     }
   ],
   "webServer": {
-    "command": "npm run preview",
+    "command": "node scripts/start-test-services.mjs",
     "url": "http://127.0.0.1:4173/deepsea/pr-e2e/",
     "reuseExistingServer": false,
+    "gracefulShutdown": {
+      "signal": "SIGTERM",
+      "timeout": 5000
+    },
+    "stdout": "pipe",
     "timeout": 60000
   }
 }
