@@ -98,5 +98,5 @@ test('only the exact clipboard-read fixture expression may evaluate browser code
 
 test('random initialization never permits scenario response fulfillment', () => {
   assert.ok(policyErrors("route.fulfill({ json: { board: 'fake' } });", 'tests/e2e/helpers/fixture.ts').length);
-  assert.ok(policyErrors("route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: 2026 }, preview: config.preview ? { ...config.preview, initialSeed: 2026 } : null } });", 'tests/e2e/example.spec.ts').length);
+  assert.ok(policyErrors("route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed }, preview: config.preview ? { ...config.preview, initialSeed: seed } : null } });", 'tests/e2e/example.spec.ts').length);
 });

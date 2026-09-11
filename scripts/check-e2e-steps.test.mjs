@@ -104,11 +104,22 @@ function playerHarness() {
       setDefaultNavigationTimeout: value => { context.navigationTimeout = value; },
       setOffline: async value => { context.offline = value; },
       close: async () => { context.closed = true; },
-      newPage: async () => page
+      newPage: async () => {}
     };
-    const page = { context: () => context, on: context.on, goto: async () => { if (page.cancellation) handlers.get('requestfailed')(page.cancellation); }, reload: async () => {
-      if (page.cancellation) handlers.get('requestfailed')(page.cancellation);
-    }, cancellation: null, emit: (name, value) => handlers.get(name)(value) };
+    context.newPage = async () => {
+      if (handlers.has('page')) handlers.get('page')();
+      const pageHandlers = new Map();
+      const page = {
+        context: () => context,
+        on: (name,fn) => pageHandlers.set(name,fn),
+        route: async (_pattern,fn) => { page.interception=fn; },
+        goto: async () => { if (page.cancellation) pageHandlers.get('requestfailed')(page.cancellation); },
+        reload: async () => { if (page.cancellation) pageHandlers.get('requestfailed')(page.cancellation); },
+        cancellation:null,
+        emit:(name,value)=>(pageHandlers.get(name) ?? handlers.get(name))(value)
+      };
+      return page;
+    };
     contexts.push(context);
     return context;
   } };
@@ -248,6 +259,23 @@ test('completed Fetch streams require successful same-session acknowledgement ad
  }
 });
 
+test('buffering proxy probe cancellation requires a recovered mode switch and acknowledged progress', async () => {
+ for(const mode of ['recovered','missing-response','no-advance','different-session','different-database','unchanged-mode','wrong-kind','not-initial','wrong-code']){
+  const {health}=infrastructure(), handlers=new Map();
+  const url=(aid,ci,sid='a',database='projects/demo/databases/(default)',kind='xmlhttp')=>'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel?RID=rpc&SID='+sid+'&AID='+aid+'&CI='+ci+'&TYPE='+kind+'&database='+encodeURIComponent(database);
+  const old={url:()=>url(mode==='not-initial'?3:0,0),method:()=> 'GET',failure:()=>({errorText:mode==='wrong-code'?'net::ERR_FAILED':'net::ERR_ABORTED'})};
+  const replacement={url:()=>url(0,mode==='unchanged-mode'?0:1,mode==='different-session'?'b':'a',mode==='different-database'?'projects/other/databases/(default)':'projects/demo/databases/(default)',mode==='wrong-kind'?'other':'xmlhttp'),method:()=> 'GET'};
+  const advanced={url:()=>url(6,1),method:()=> 'GET'};
+  const run=health[0]({context:{route:async()=>{},on(){}},page:{on:(name,fn)=>handlers.set(name,fn)},baseURL:'http://localhost/'},async()=>{
+   handlers.get('request')(old);handlers.get('requestfailed')(old);
+   handlers.get('request')(replacement);
+   if(mode!=='missing-response')handlers.get('response')({status:()=>200,url:replacement.url,request:()=>replacement});
+   if(mode!=='no-advance')handlers.get('request')(advanced);
+  },{});
+  if(mode==='recovered')await run;else await assert.rejects(run,/No browser errors/);
+ }
+});
+
 test('named player navigation stays on the deployment and classifies only its old stream', async () => {
  const {players}=infrastructure();const h=playerHarness();
  await players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
@@ -255,4 +283,107 @@ test('named player navigation stays on the deployment and classifies only its ol
   const old={url:()=> 'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel',failure:()=>({errorText:'net::ERR_ABORTED'})};
   page.emit('request',old);page.cancellation=old;await factory.visit(page,'http://localhost/rooms/?room=next');
  },h.info);
+});
+
+test('same-identity tabs are explicit, share one context and keep health checks',async()=>{
+ for(const noisy of [false,true]){
+  const {players}=infrastructure(),h=playerHarness();
+  const run=players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
+   const original=await factory.create();
+   await assert.rejects(factory.create(-1),/unsigned integer/);
+   await assert.rejects(factory.tab({}),/Unknown player/);
+   const tab=await factory.tab(original);
+   assert.notEqual(tab,original);assert.equal(tab.context(),original.context());assert.equal(h.contexts.length,1);
+   if(noisy)tab.emit('pageerror',new Error('new tab failure'));
+  },h.info);
+  if(noisy)await assert.rejects(run,/No browser errors/);else await run;
+  assert.ok(h.contexts.every(c=>c.closed));
+ }
+});
+test('offline classification requires the registered request and exact transport error',async()=>{
+ for(const mode of ['disconnected','cancelled-listen','delayed','unregistered','other-origin','other-code','online']){
+  const {players}=infrastructure(),h=playerHarness();
+  const run=players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
+   const page=await factory.create();
+   const request={url:()=>mode==='other-origin'?'https://elsewhere.invalid/asset':'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel',method:()=> 'GET',failure:()=>({errorText:mode==='other-code'?'net::ERR_FAILED':mode==='cancelled-listen'?'net::ERR_ABORTED':'net::ERR_INTERNET_DISCONNECTED'})};
+   if(mode!=='unregistered')page.emit('request',request);
+   if(mode!=='online')await factory.setConnected(page,false);
+   if(mode==='delayed')await factory.setConnected(page,true);
+   page.emit('requestfailed',request);
+   await factory.setConnected(page,true);
+  },h.info);
+  if(['disconnected','cancelled-listen','delayed'].includes(mode))await run;else await assert.rejects(run,/No browser errors/);
+ }
+});
+test('lost acknowledgements forward a real commit and classify exactly one induced failure',async()=>{
+ for(const mode of ['lost','unarmed','unrelated-error']){
+  const {players}=infrastructure(),h=playerHarness();let fetched=0,aborted=0,continued=0;
+  const run=players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
+   const page=await factory.create();
+   await factory.loseNextAcknowledgement(page);
+   if(mode==='unarmed')return;
+   const request={url:()=> 'http://127.0.0.1:8080/v1/projects/demo/databases/(default)/documents:commit',method:()=> 'POST',postDataJSON:()=>({writes:[{update:{name:'projects/demo/databases/(default)/documents/environments/local/games/room/events/tab_1'}}]}),failure:()=>({errorText:'net::ERR_FAILED'})};
+   const route={request:()=>request,fetch:async()=>{fetched++;return{status:()=>200};},abort:async code=>{aborted++;assert.equal(code,'failed');page.emit('requestfailed',request);page.emit('console',{type:()=> 'error',text:()=> 'Failed to load resource: net::ERR_FAILED',location:()=>({url:request.url()})});},continue:async()=>{continued++;}};
+   page.emit('request',request);await page.interception(route);
+   assert.equal(factory.faultCount(page),1);await page.interception(route);
+   if(mode==='unrelated-error')page.emit('console',{type:()=> 'error',text:()=> 'unrelated failure'});
+  },h.info);
+  if(mode==='lost')await run;else await assert.rejects(run,/No browser errors/);
+  if(mode!=='unarmed'){assert.equal(fetched,1);assert.equal(aborted,1);assert.equal(continued,1);}
+ }
+});
+
+test('navigation tracks only old-document requests until the main frame commits',async()=>{
+ for(const mode of ['old-document','new-document','other-page']){
+  const {players}=infrastructure(),h=playerHarness();
+  const run=players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
+   const page=await factory.create(),other=await factory.create(),frame={};
+   page.mainFrame=()=>frame;
+   const request=()=>({url:()=> 'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel',failure:()=>({errorText:'net::ERR_ABORTED'})});
+   page.goto=async()=>{
+    const old=request();page.emit('request',old);
+    page.emit('framenavigated',frame);
+    const fresh=request(),target=mode==='other-page'?other:page;target.emit('request',fresh);
+    target.emit('requestfailed',mode==='old-document'?old:fresh);
+   };
+   await factory.visit(page,'http://localhost/rooms/?room=next');
+  },h.info);
+  if(mode==='old-document')await run;else await assert.rejects(run,/No browser errors/);
+ }
+});
+test('a recovered create conflict needs a matching immutable document from the server read',async()=>{
+ for(const mode of ['matching','different-document','different-fields','missing-version']){
+  const {health}=infrastructure(),handlers=new Map();
+  const name='projects/demo/databases/(default)/documents/environments/local/games/room/events/tab_1';
+  const fields={payload:{mapValue:{fields:{ready:{booleanValue:true},rosterRevision:{stringValue:'created'}}}},type:{stringValue:'lobby/ready'}};
+  const commit='http://127.0.0.1:8080/v1/projects/demo/databases/(default)/documents:commit';
+  const read=commit.replace(':commit',':batchGet');
+  const found={name:mode==='different-document'?name+'other':name,fields:mode==='different-fields'?{changed:{booleanValue:true}}:{type:fields.type,payload:fields.payload,createdAt:{timestampValue:'2026-09-11T00:00:00Z'}},...(mode==='missing-version'?{}:{updateTime:'2026-09-11T00:00:00Z'})};
+  const run=health[0]({context:{route:async()=>{},on(){}},page:{on:(event,fn)=>handlers.set(event,fn)},baseURL:'http://localhost/'},async()=>{
+   handlers.get('response')({status:()=>409,url:()=>commit,request:()=>({url:()=>commit,method:()=> 'POST',postDataJSON:()=>({writes:[{update:{name,fields}}]})}),json:async()=>({error:{code:409,status:'ALREADY_EXISTS'}})});
+   handlers.get('response')({status:()=>200,url:()=>read,request:()=>({url:()=>read,method:()=> 'POST',postDataJSON:()=>({documents:[name]})}),json:async()=>[{found}]});
+  },{});
+  if(mode==='matching')await run;else await assert.rejects(run,/No browser errors/);
+ }
+});
+
+test('routing bypasses only configured backend origins while retaining the origin gate',async()=>{
+ for(const hosted of [false,true]){
+  const {health}=infrastructure();let pattern;
+  await health[0]({context:{route:async p=>{pattern=p;},on(){}},page:{on(){}},baseURL:hosted?'https://anicolao.github.io/deepsea/pr6/':'http://localhost/'},async()=>{},{});
+  const firebase='https://firestore.googleapis.com/v1/projects/demo/databases/(default)/documents:commit';
+  const emulator='http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel';
+  assert.equal(pattern.test(firebase),!hosted);assert.equal(pattern.test(emulator),hosted);
+  for(const url of ['https://firestore.googleapis.com.evil.invalid/','https://firestore.googleapis.com:444/','http://127.0.0.1:8081/','https://www.google.com/images/cleardot.gif','http://localhost/backend.json'])assert.equal(pattern.test(url),true);
+ }
+});
+
+test('concurrent screenshot checks cannot borrow another check’s assertions',async()=>{
+ const {assertionScope,expect}=infrastructure();
+ let release;const gate=new Promise(resolve=>{release=resolve;});
+ const counts=await Promise.all([
+  assertionScope(async()=>{await gate;}),
+  assertionScope(async()=>{expect(true).toBe(true);release();})
+ ]);
+ assert.deepEqual(counts,[0,1]);
 });

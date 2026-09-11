@@ -22,13 +22,13 @@
   $: enabled = connected && online && !busy && !state?.blocked && (!roomId || !!state?.synchronized) && !state?.pending;
   $: reason = !room || room.members.length < 2 ? 'Invite at least one friend to start.' : !room.members.every(m => m.ready) ? 'Everyone must be ready to start.' : 'Your crew is ready.';
   $: if (room && !room.members.some(m => m.uid === starter)) starter = room.hostUid;
-  function failure(value: unknown) { error = value instanceof Error ? value.message : 'Could not confirm the action. Check your connection and try again.'; }
+  function failure(_value: unknown) { error = 'We couldn’t confirm that move. Check your connection, then try again.'; }
   function observe(id: string, setup = false) {
     unsubscribe(); roomId = setup ? '' : id;
     unsubscribe = repository.watch(id, next => {
       connected = next.synchronized;
       if (!setup || roomId) state = next;
-      if (next.error) error = next.error;
+      if (next.error) error = next.error.includes('before your action') ? 'The game changed before your move arrived. Review the current turn.' : next.blocked ? 'This saved game needs an update. Reload, or create another room.' : 'We couldn’t confirm your last move. Check your connection, then retry.';
     });
   }
   onMount(() => {
@@ -107,7 +107,7 @@
   <a class="back" href={`${base}/`}>← Deep Sea</a>
   {#if room?.phase !== 'started' || !me}<h1>{room?.phase === 'started' && me ? 'Dive 1 is ready' : 'Gather your crew'}</h1>{/if}
   <p role="status" class="status">{!online ? 'Offline — reconnect to make changes.' : state?.blocked ? 'This room needs a different app version.' : !connected || (roomId && !state?.synchronized) ? 'Connecting…' : busy || state?.pending ? 'Confirming your action…' : 'Connected'}</p>
-  {#if error}<p role="alert" class="notice">{error}</p>{/if}
+  {#if error && !(room?.members.length === 6 && !me)}<p role="alert" class="notice">{error}</p>{/if}
   {#if !mounted}<p>Preparing your room…</p>
   {:else if !roomId}
     <form on:submit|preventDefault={create}>
@@ -118,23 +118,18 @@
   {:else if room?.phase === 'closed'}
     <section><h2>Room closed</h2><p>The host left before the dive started.</p><a href={`${base}/rooms/`}>Create another room</a></section>
   {:else if room?.phase === 'started' && !me}
-    <section><h2>This dive has already started</h2><p>The crew is fixed. Ask your friends to invite you to their next room.</p><a href={`${base}/rooms/`}>Create another room</a></section>
-  {:else if room?.phase === 'started' && me && room.dive}{#if room.dive.stage === 'playing'}<Game {room} {uid} {enabled} {act} />{:else}<Review {room} {uid} {enabled} {act} {playAgain} />{/if}
+    <section><h2>This dive has already started</h2><p>The crew is fixed. Return using the browser you joined with. If its saved identity was cleared, you cannot reclaim that seat; ask your friends to start a new room.</p><a href={`${base}/rooms/`}>Create another room</a></section>
+  {:else if room?.phase === 'started' && me && room.dive}{#if room.dive.stage === 'playing'}<Game {room} {uid} {enabled} connected={connected && online} {act} />{:else}<Review {room} {uid} {enabled} {act} {playAgain} />{/if}
   {:else if room}
     <section aria-label="Room lobby">
       <h2>{room.hostName}’s room</h2>
       <ul aria-label="Crew">{#each room.members as member}<li><span>{member.name}{member.uid === uid ? ' (You)' : ''}{member.uid === room.hostUid ? ' · Host' : ''}</span><strong>{room.phase === 'started' ? `Seat ${member.seat}` : member.ready ? 'Ready' : 'Not ready'}</strong></li>{/each}</ul>
-      {#if room.phase === 'started'}
-        <h3>First diver: {room.members.find(m => m.uid === room.starterUid)?.name}</h3>
-        <p>The crew and turn order are saved. Everyone begins in the submarine with 25 oxygen.</p>
-        <p class="muted">Room setup is complete. Taking turns will be added in the next implementation step.</p>
-      {:else if me}
+      {#if me}
         <div class="actions"><button on:click={() => act('lobby/ready', { ready: !me?.ready, rosterRevision: room.rosterRevision })} disabled={!enabled}>{me.ready ? 'Not ready' : 'Ready up'}</button><button class="secondary" on:click={copy}>Copy invite</button></div>
         {#if copied}<p role="status">Invite copied</p>{/if}
         {#if invite}<label for="invite">Copy this invite link</label><input id="invite" readonly value={invite} on:focus={event => event.currentTarget.select()} />{/if}
         {#if host}
-          <label for="starter">First diver</label><select id="starter" bind:value={starter} disabled={!enabled}>{#each room.members as member}<option value={member.uid}>{member.name}</option>{/each}</select>
-          <p class="muted">{reason}</p><button on:click={start} disabled={!enabled || room.members.length < 2 || !room.members.every(m => m.ready)}>Start dive</button>
+          <div class="start-row"><div><label for="starter">First diver</label><select id="starter" bind:value={starter} disabled={!enabled}>{#each room.members as member}<option value={member.uid}>{member.name}</option>{/each}</select></div><button on:click={start} disabled={!enabled || room.members.length < 2 || !room.members.every(m => m.ready)}>Start dive</button></div><p class="muted">{reason}</p>
         {:else}<p class="muted">{reason} {room.hostName} starts the dive.</p>{/if}
         {#if closing}<div role="group" aria-label="Confirm room closure"><p>Leaving closes this room for everyone.</p><div class="actions"><button on:click={() => act('lobby/left', {})} disabled={!enabled}>Close room</button><button class="secondary" on:click={() => closing = false}>Stay</button></div></div>
         {:else}<button class="quiet" disabled={!enabled} on:click={() => host ? closing = true : act('lobby/left', {})}>Leave room</button>{/if}
@@ -146,12 +141,14 @@
     </section>
   {:else if state?.synchronized && !state.pending && !busy}<section><h2>Room not found</h2><p>Check the invite with your host.</p><a href={`${base}/rooms/`}>Create another room</a></section>{/if}
   {#if state?.pending && !state.blocked}<button on:click={retry} disabled={busy || !online || !state.synchronized}>Retry pending action</button>{/if}
-  {#if state?.blocked}<button on:click={() => location.reload()}>Reload to update</button>{/if}
+  {#if state?.blocked}<button on:click={() => location.reload()}>Reload to update</button><a href={`${base}/rooms/`}>Create another room</a>{/if}
 </main>
 <style>
   :global(body) { margin: 0; background: #071e2a; color: #f5f1dc; font-family: 'Atkinson Hyperlegible', sans-serif; }
   :global(*) { box-sizing: border-box; }
-  main.playing { max-width: 1228px; }
+  main.playing { max-width: 1228px; height:100dvh; display:flex; flex-direction:column; }
+  main.playing :global(.game), main.playing :global(.review) {height:auto;flex:1;min-height:0}
+  .back,.status,.notice {flex-shrink:0}
   main { max-width: 650px; margin: 0 auto; padding: 16px 24px; }
   a { color: #b0eee0; display: inline-flex; align-items: center; min-height: 44px; }
   h1 { font-size: clamp(30px, 6vw, 42px); margin: 8px 0; } h2 { font-size: 25px; margin: 0 0 12px; } h3 { font-size: 20px; }
@@ -166,5 +163,6 @@
   .actions { display: flex; gap: 12px; flex-wrap: wrap; }
   :global(:focus-visible) { outline: 3px solid #91f0d8; outline-offset: 4px; }
   ul { list-style: none; padding: 0; margin: 0; } li { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; border-bottom: 1px solid #497074; } li span { overflow-wrap: anywhere; } li strong { white-space: nowrap; font-size: 14px; color: #b0eee0; }
+  .start-row {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}.start-row button{margin:0}.start-row select{min-width:0}
   .notice { border-left: 4px solid #edcc61; padding: 12px; background: #233642; }
 </style>

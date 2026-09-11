@@ -96,3 +96,16 @@ it('reports a confirmed but rejected lobby action and preserves its identity acr
   expect(state?.room?.phase).toBe('lobby');
   expect(state?.pending).toBe(false);
 });
+
+it('keeps moves pending from preparation until the confirmed projection arrives',async()=>{
+ const f=fixture();let state:RoomState|undefined;
+ await f.repository.submit(f.repository.prepareCreation('room','Mira'));
+ const stop=f.repository.watch('room',value=>{state=value;});f.publish();
+ expect(state?.pending).toBe(false);
+ const action=f.repository.prepareAction('room','lobby/ready',{ready:true,rosterRevision:'created'});
+ expect(state?.pending).toBe(true);await f.repository.submit(action);
+ expect(state?.pending).toBe(true);
+ f.publish();expect(state?.pending).toBe(false);expect(state?.room?.members[0].ready).toBe(true);
+ stop();f.repository.prepareAction('room','lobby/ready',{ready:false,rosterRevision:'created'});
+ expect(state?.pending).toBe(false);
+});

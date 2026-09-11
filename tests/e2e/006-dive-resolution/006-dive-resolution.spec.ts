@@ -22,7 +22,7 @@ test('safe return, final oxygen turn and lost cargo ordering resolve one shared 
     if (move.back) await actor.getByLabel('Turn back',{exact:true}).check();
     await actor.getByRole('button',{name:'Roll dice'}).click();
     if (move.choice !== 'return') await actor.getByRole('button',{name:move.choice === 'pickup' ? 'Pick up treasure' : 'Leave it',exact:true}).click();
-    else await expect(actor.getByRole('heading',{name:'Back aboard',exact:true})).toBeVisible();
+    else { await expect(actor.getByRole('heading',{name:'Back aboard',exact:true})).toBeVisible(); await players.setConnected(host,false); await expect(host.getByText('Offline — reconnect to make changes.',{exact:true})).toBeVisible(); }
   }
   await guest.getByRole('button',{name:'Roll dice'}).click();
   await guestSteps.step('last-turn','Finish the last oxygen-exhausting turn',[{description:'Oxygen is below zero but Sol still has the legal landing choice.',assert:async()=>{
@@ -32,6 +32,13 @@ test('safe return, final oxygen turn and lost cargo ordering resolve one shared 
     await expect(host.getByRole('heading',{name:'Back aboard',exact:true})).toBeVisible();
   }}]);
   await guest.getByRole('button',{name:'Leave it',exact:true}).click();
+  await players.setConnected(host,true);
+  await expect(guest.getByRole('button',{name:'Confirm order'})).toBeEnabled();
+  await players.setConnected(guest,false);
+  await expect(guest.getByRole('button',{name:'Confirm order'})).toBeDisabled();
+  await players.setConnected(guest,true);
+  await expect(guest.getByRole('button',{name:'Confirm order'})).toBeEnabled();
+  await players.reload(guest);
   await guestSteps.step('lost-order','Choose how lost cargo forms stacks',[{description:'Five whole units remain concealed, with grouping guidance and keyboard controls.',assert:async()=>{
     await expect(guest.getByRole('heading',{name:'Choose the order of your lost treasure',exact:true})).toBeVisible();
     await expect(guest.getByRole('list',{name:'Lost treasure order'}).getByRole('listitem')).toHaveCount(5);

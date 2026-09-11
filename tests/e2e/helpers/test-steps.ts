@@ -1,5 +1,5 @@
 import { test, type Page, type TestInfo } from '@playwright/test';
-import { expect, assertionsPerformed } from './assertions';
+import { expect, assertionScope } from './assertions';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
@@ -47,9 +47,7 @@ export class TestSteps {
     await test.step(title, async () => {
       for (const check of checks) await test.step(check.description, async () => {
         if (!check.description.trim()) throw new Error('Semantic checks require a description.');
-        const before = assertionsPerformed();
-        await check.assert();
-        if (assertionsPerformed() === before) throw new Error('Each semantic check must execute an expect matcher.');
+        if (await assertionScope(check.assert) === 0) throw new Error('Each semantic check must execute an expect matcher.');
       });
       await expect(this.page.locator('body')).toBeVisible();
       // Readiness is a condition on local fonts, not a delay or screenshot-only style change.

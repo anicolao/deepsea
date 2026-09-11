@@ -7,6 +7,8 @@ export interface Store { getItem(key: string): string | null; setItem(key: strin
 export type RoomState = Projection & { synchronized: boolean; pending: boolean; error: string | null };
 export class RoomRepository {
   private submitted = new Map<string, PendingEvent>();
+  private pendingListeners = new Map<string, Set<() => void>>();
+  private announcePending(gameId: string) { for (const notify of this.pendingListeners.get(gameId) ?? []) notify(); }
   private clientId: string;
   private sequence: number;
   private prefix: string;
@@ -29,6 +31,7 @@ export class RoomRepository {
     this.storage.setItem(`${this.prefix}sequence:${this.clientId}`, String(clientSeq));
     const pending: PendingEvent = { gameId, id: 'created', envelope: { ...VERSIONS, type: 'game/created', payload: { gameId, hostName: hostName.trim() }, actorUid: this.actorUid, clientId: this.clientId, clientSeq } };
     this.storage.setItem(`${this.prefix}pending:${gameId}`, JSON.stringify(pending));
+    this.announcePending(gameId);
     return pending;
   }
   prepareAction(gameId: string, type: string, payload: Record<string, unknown>): PendingEvent {
@@ -40,6 +43,7 @@ export class RoomRepository {
     const pending = { gameId, id, envelope: { ...VERSIONS, type, payload, actorUid: this.actorUid, clientId: this.clientId, clientSeq } };
     if (!validEnvelope(pending.envelope)) throw new Error('Invalid action');
     this.storage.setItem(`${this.prefix}pending:${gameId}`, JSON.stringify(pending));
+    this.announcePending(gameId);
     return pending;
   }
   pending(gameId: string): PendingEvent | null {
@@ -55,13 +59,18 @@ export class RoomRepository {
     if (saved && !sameEnvelope(saved.envelope, pending.envelope)) throw new Error('A different creation is already pending for this room.');
     this.storage.setItem(`${this.prefix}pending:${pending.gameId}`, JSON.stringify(pending));
     this.submitted.set(pending.gameId, pending);
+    this.announcePending(pending.gameId);
     await this.transport.create(pending);
     const current = this.pending(pending.gameId);
     if (current && sameEnvelope(current.envelope, pending.envelope)) this.storage.removeItem(`${this.prefix}pending:${pending.gameId}`);
   }
   watch(gameId: string, next: (state: RoomState) => void) {
-    let last = replay(gameId, []);
-    return this.transport.watch(gameId, (events, synchronized) => {
+    let last = replay(gameId, []), lastSynchronized = false;
+    const notify = () => next({ ...last, synchronized:lastSynchronized, pending:true, error:null });
+    const listeners = this.pendingListeners.get(gameId) ?? new Set<() => void>();
+    listeners.add(notify); this.pendingListeners.set(gameId,listeners);
+    const stop = this.transport.watch(gameId, (events, synchronized) => {
+      lastSynchronized = synchronized;
       const projection = replay(gameId, events);
       last = projection;
       let pending: PendingEvent | null;
@@ -81,6 +90,7 @@ export class RoomRepository {
       }
       next({ ...projection, synchronized, pending: !!pending, error });
     }, error => next({ ...last, synchronized: false, pending: this.storage.getItem(`${this.prefix}pending:${gameId}`) !== null, error: error.message }));
+    return () => { stop(); listeners.delete(notify); if (!listeners.size) this.pendingListeners.delete(gameId); };
   }
 }
 export const eventId = (clientId: string, sequence: number) => {

@@ -46,7 +46,7 @@ export function policyErrors(source, filename) {
       report(file, 'Scenarios must import unaliased test and expect from ../helpers/fixture.');
     }
   }
-  const seededConfig = (node) => fixture && node.getText(file) === 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: 2026 }, preview: config.preview ? { ...config.preview, initialSeed: 2026 } : null } })';
+  const seededConfig = (node) => fixture && node.getText(file) === 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed }, preview: config.preview ? { ...config.preview, initialSeed: seed } : null } })';
   const visit = (node) => {
     if (ts.isVariableDeclaration(node) && node.initializer && ts.isIdentifier(node.initializer) && ['test', 'expect'].includes(node.initializer.text)) report(node, 'Do not alias the shared test or expect.');
     if (ts.isImportSpecifier(node) && node.propertyName && !fixture && !assertions) report(node, 'Do not alias E2E imports.');
@@ -56,7 +56,7 @@ export function policyErrors(source, filename) {
         ? ['../helpers/fixture', '../helpers/test-steps']
         : helper ? ['@playwright/test', './assertions', 'node:fs', 'node:path']
           : fixture ? ['@playwright/test', './test-steps', './assertions']
-            : assertions ? ['@playwright/test'] : [];
+            : assertions ? ['@playwright/test', 'node:async_hooks'] : [];
       if (!permitted.includes(module)) report(node, `Unapproved E2E import: ${module}`);
       if (module === '@playwright/test' && helper && /\bexpect\b/.test(node.importClause?.getText(file) ?? '')) {
         report(node, 'TestSteps must use the counted assertions.');
@@ -72,7 +72,7 @@ export function policyErrors(source, filename) {
         report(node, `Only the shared infrastructure may use ${name}.`);
       }
     }
-    if (ts.isNewExpression(node) && !['TestSteps', 'Error', 'URL', 'Proxy', 'WeakMap', 'Map', 'Set'].includes(node.expression.getText(file))) report(node, 'Unapproved E2E constructor.');
+    if (ts.isNewExpression(node) && !(assertions && node.expression.getText(file) === 'AsyncLocalStorage') && !['TestSteps', 'Error', 'URL', 'Proxy', 'WeakMap', 'Map', 'Set'].includes(node.expression.getText(file))) report(node, 'Unapproved E2E constructor.');
     if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword) report(node, 'Dynamic imports bypass E2E policy.');
     if (ts.isStringLiteral(node) && node.text === 'networkidle') report(node, 'Do not use networkidle.');
     if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
