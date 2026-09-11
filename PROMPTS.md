@@ -33,3 +33,7 @@ oops. This reepo should be empty with our initial commit for the docs as a PR. F
 ## Prompt 8: Write Prompt Summaries
 
 for future prompts, let's always write a 2-3 word summary of the prompt, so for example for this promptyou might write Prompt N: Write Prompt Summaries and then have the verbatim prompt. This will amke the prompts more sacnnable.
+
+## Prompt 9: Define Multiplayer MVP
+
+OK this is rebased nad merged. Let's write a RULES_SUMMARY.md for the game, and review github.com:anicolao/jaipur for implementation strategy and write an MVP_DESIGN.md for that, adn put that up as the next branch/PR
