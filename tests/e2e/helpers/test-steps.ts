@@ -78,11 +78,21 @@ export class TestSteps {
           }
           if (element.tagName === 'BUTTON' && (rect.width < 44 || rect.height < 44)) errors.push('Touch target smaller than 44px');
         }
-        const controls = Array.from(scope.querySelectorAll<HTMLElement>('button, a, input, select')).filter((element) => element.checkVisibility());
+        const visibleBox = (element: HTMLElement) => {
+          const box = element.getBoundingClientRect();
+          const panel = layout === 'game' ? element.closest('[data-game-path]') : null;
+          if (!panel) return box;
+          const clip = panel.getBoundingClientRect();
+          return { left: Math.max(box.left,clip.left), right: Math.min(box.right,clip.right), top: Math.max(box.top,clip.top), bottom: Math.min(box.bottom,clip.bottom) };
+        };
+        const controls = Array.from(scope.querySelectorAll<HTMLElement>('button, a, input, select')).filter((element) => {
+          const box = visibleBox(element);
+          return element.checkVisibility() && box.right > box.left && box.bottom > box.top;
+        });
         for (let left = 0; left < controls.length; left++) {
           for (let right = left + 1; right < controls.length; right++) {
-            const a = controls[left].getBoundingClientRect();
-            const b = controls[right].getBoundingClientRect();
+            const a = visibleBox(controls[left]);
+            const b = visibleBox(controls[right]);
             if (Math.min(a.right, b.right) > Math.max(a.left, b.left) && Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top)) errors.push('Interactive controls overlap');
           }
         }

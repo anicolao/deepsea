@@ -15,7 +15,7 @@ The project accepts the proposed resolutions in RULES_SUMMARY under `rulesetVers
 
 ## Versions and validation
 
-The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 3`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 3 adds atomic turn rolls and landing choices; reducer-1 and reducer-2 rooms require their retained compatible app. Never reinterpret an older room with a newer reducer.
+The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 4`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 4 includes atomic turns and resolved dives; earlier reducer versions require their retained compatible app. Never reinterpret an older room with a newer reducer.
 
 Canonical event fields are `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. IDs and timestamps are added by the repository adapter to replay input. Unknown envelope fields are rejected. Payloads are bounded JSON maps; the creation payload contains only the room ID and a trimmed, nonempty host name of at most 40 characters.
 
@@ -60,3 +60,11 @@ Namespaces are local, pr followed by its numeric PR number, or production. Each 
 `turn/rolled {direction, expectedActionId}` validates the active player, roll phase, first departure and locked returning direction. It commits cargo oxygen cost, addressed dice and occupied-space-skipping movement together. `turn/landed {choice, expectedActionId, unitId?}` accepts pickup, pass, or a whole-unit drop. Only drop includes unitId. Both require the latest accepted action ID, so concurrent submissions cannot charge twice. Tile conservation is checked after every accepted transition.
 
 E2E supplies seed 2026 through the configuration-loading boundary for local and preview games only. The shared fixture does not create rooms or write events. Ordinary deployed games use browser cryptographic randomness; production rejects a configured fixed seed.
+
+## Dive resolution (reducer 4)
+
+Only a completed turn can end a dive, even after oxygen reaches zero. Returning divers sit out; divers awaiting their first departure are still eligible. Successful cargo remains concealed until dive resolution, then moves into the bank and its score breakdown is revealed. Prior banked tiles remain untouched.
+
+Stranded divers are ordered deepest first, with frozen seat order as a deterministic fallback. `dive/ordered {order, expectedActionId}` accepts an exact permutation of the current cleanup owner's unit IDs. Up to three whole units form each new deep-end stack; no existing stack is split. Empty and single-unit choices resolve automatically. Once all owners finish, blanks are removed and review becomes available. Conservation includes all path, carried, and banked tiles after every transition.
+
+Browser connections explicitly select the SDK's long-poll WebChannel transport. Responses close after delivering data, avoiding buffering-driven transport switching on proxied connections; this does not poll game state from tests or add waits to scenarios. Node emulator integration clients use the SDK's native transport. See [Firestore transport settings](https://firebase.google.com/docs/reference/js/firestore.firestoresettings#firestoresettingsexperimentalforcelongpolling).

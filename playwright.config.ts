@@ -37,7 +37,7 @@ export default defineConfig({
     serviceWorkers: 'block',
     actionTimeout: 2_000,
     navigationTimeout: 2_000,
-    trace: 'retain-on-failure',
+    trace: 'on',
     launchOptions: {
       args: ['--font-render-hinting=none', '--disable-lcd-text', '--disable-gpu', '--force-device-scale-factor=1']
     }

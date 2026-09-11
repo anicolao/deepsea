@@ -48,7 +48,7 @@
     "serviceWorkers": "block",
     "actionTimeout": 2000,
     "navigationTimeout": 2000,
-    "trace": "retain-on-failure",
+    "trace": "on",
     "launchOptions": {
       "args": [
         "--font-render-hinting=none",
