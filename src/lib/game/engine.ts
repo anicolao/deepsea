@@ -38,7 +38,13 @@ function automaticCleanup(d: Dive) {
     if (player.cargo.length > 1) break;
     placeLost(d, player);
   }
-  if (!d.cleanup.length) { d.path = d.path.filter(u => u !== null); d.stage = 'review'; }
+  if (!d.cleanup.length) {
+    d.path = d.path.filter(u => u !== null); d.stage = 'review';
+    if (d.number === 3 || !d.path.length) {
+      for (let number = d.number + 1; number <= 3; number++) d.reviews.push({ number, starter: d.nextStarter!, players: d.divers.map(p => ({ uid:p.uid, returned:true, gained:[], total:p.bank.reduce((sum,t)=>sum+t.value,0) })) });
+      d.stage = 'finished';
+    }
+  }
 }
 function resolveDive(d: Dive) {
   const stranded = d.divers.filter(p => p.status !== 'returned').sort((a,b) => b.position - a.position || d.divers.indexOf(a) - d.divers.indexOf(b));
@@ -105,4 +111,17 @@ export function turn(dive: Dive, seed: number, actor: string, type: string, payl
 export function playerView(dive: Dive) {
   const concealed = (u: Unit) => ({ id: u.id, levels: u.tiles.map(t => t.level), count: u.tiles.length });
   return { ...dive, path: dive.path.map(u => u ? concealed(u) : null), divers: dive.divers.map(d => ({ ...d, cargo: d.cargo.map(concealed), bank: d.bank.map(t => ({ level: t.level, value: t.value })), points: d.bank.reduce((sum, t) => sum + t.value, 0) })) };
+}
+
+export function continueDive(dive: Dive, actor: string): Dive | null {
+  if (dive.stage !== 'review' || !dive.divers.some(p => p.uid === actor) || dive.number >= 3 || !dive.path.length) return null;
+  return { ...structuredClone(dive), number:dive.number+1, stage:'playing', oxygen:25, turn:1, active:dive.nextStarter!, phase:'roll', roll:undefined, returnOrder:[], cleanup:[], divers:dive.divers.map(p=>({...structuredClone(p),position:0,direction:'out',status:'aboard',cargo:[]})) };
+}
+export function finalResults(dive: Dive) {
+  const rows = dive.divers.map(p => ({uid:p.uid, points:p.bank.reduce((sum,t)=>sum+t.value,0), levelFour:p.bank.filter(t=>t.level===4).length, dives:[1,2,3].map(number=>dive.reviews.find(r=>r.number===number)?.players.find(row=>row.uid===p.uid)?.gained.reduce((sum,t)=>sum+t.value,0) ?? 0)}));
+  const points = Math.max(...rows.map(p=>p.points));
+  const tied = rows.filter(p=>p.points===points);
+  const levelFour = Math.max(...tied.map(p=>p.levelFour));
+  const winners = tied.filter(p=>p.levelFour===levelFour).map(p=>p.uid);
+  return {rows,winners,tiebreak:tied.length>1 && tied.some(p=>p.levelFour!==levelFour)};
 }

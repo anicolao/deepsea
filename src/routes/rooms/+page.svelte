@@ -33,6 +33,7 @@
   }
   onMount(() => {
     roomId = new URL(location.href).searchParams.get('room') ?? '';
+    name = new URL(location.href).searchParams.get('name')?.slice(0,40) ?? '';
     mounted = true;
     let disposed = false;
     let close = async () => {};
@@ -84,6 +85,16 @@
     try { await navigator.clipboard.writeText(location.href); copied = true; }
     catch { invite = location.href; }
   }
+  async function playAgain() {
+    if (!enabled || !me) return;
+    const localName = me.name;
+    busy = true; error = ''; copied = false; invite = ''; left = false; closing = false;
+    try {
+      const id = crypto.randomUUID(), pending = repository.prepareCreation(id, localName);
+      state = null; observe(id); replaceState(`${base}/rooms/?room=${id}`, {});
+      await repository.submit(pending);
+    } catch (e) { failure(e); } finally { busy = false; }
+  }
   async function retry() {
     if (busy || !online || !state?.synchronized || state.blocked) return;
     busy = true; error = '';
@@ -108,7 +119,7 @@
     <section><h2>Room closed</h2><p>The host left before the dive started.</p><a href={`${base}/rooms/`}>Create another room</a></section>
   {:else if room?.phase === 'started' && !me}
     <section><h2>This dive has already started</h2><p>The crew is fixed. Ask your friends to invite you to their next room.</p><a href={`${base}/rooms/`}>Create another room</a></section>
-  {:else if room?.phase === 'started' && me && room.dive}{#if room.dive.stage === 'playing'}<Game {room} {uid} {enabled} {act} />{:else}<Review {room} {uid} {enabled} {act} />{/if}
+  {:else if room?.phase === 'started' && me && room.dive}{#if room.dive.stage === 'playing'}<Game {room} {uid} {enabled} {act} />{:else}<Review {room} {uid} {enabled} {act} {playAgain} />{/if}
   {:else if room}
     <section aria-label="Room lobby">
       <h2>{room.hostName}’s room</h2>

@@ -1,5 +1,5 @@
-import { initialDive, turn, orderLost, type Dive } from './engine';
-export const VERSIONS = { schemaVersion: 1, reducerVersion: 4, rulesetVersion: 'base-1' } as const;
+import { initialDive, turn, orderLost, continueDive, type Dive } from './engine';
+export const VERSIONS = { schemaVersion: 1, reducerVersion: 5, rulesetVersion: 'base-1' } as const;
 export type Stamp = { seconds: number; nanoseconds: number };
 export type Envelope = {
   schemaVersion: number; reducerVersion: number; rulesetVersion: string;
@@ -86,7 +86,8 @@ function apply(room: Room | null, gameId: string, event: ConfirmedEvent): Room |
     if (event.type === 'turn/rolled' && !keys(p, ['direction', 'expectedActionId'])) return null;
     if (event.type === 'turn/landed' && !keys(p, p.choice === 'drop' ? ['choice', 'unitId', 'expectedActionId'] : ['choice', 'expectedActionId'])) return null;
     if (event.type === 'dive/ordered' && !keys(p, ['order', 'expectedActionId'])) return null;
-    const dive = event.type === 'dive/ordered' ? orderLost(room.dive, room.seed, event.actorUid, p.order) : turn(room.dive, room.seed, event.actorUid, event.type, p);
+    if (event.type === 'dive/continued' && !keys(p, ['expectedActionId'])) return null;
+    const dive = event.type === 'dive/continued' ? continueDive(room.dive, event.actorUid) : event.type === 'dive/ordered' ? orderLost(room.dive, room.seed, event.actorUid, p.order) : turn(room.dive, room.seed, event.actorUid, event.type, p);
     return dive ? { ...room, lastActionId: event.id, dive } : null;
   }
   if (room.phase !== 'lobby') return null;

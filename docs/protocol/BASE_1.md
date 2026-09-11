@@ -15,7 +15,7 @@ The project accepts the proposed resolutions in RULES_SUMMARY under `rulesetVers
 
 ## Versions and validation
 
-The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 4`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 4 includes atomic turns and resolved dives; earlier reducer versions require their retained compatible app. Never reinterpret an older room with a newer reducer.
+The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 5`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 5 includes atomic turns, resolved dives and complete three-dive games; earlier reducer versions require their retained compatible app. Never reinterpret an older room with a newer reducer.
 
 Canonical event fields are `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. IDs and timestamps are added by the repository adapter to replay input. Unknown envelope fields are rejected. Payloads are bounded JSON maps; the creation payload contains only the room ID and a trimmed, nonempty host name of at most 40 characters.
 
@@ -68,3 +68,9 @@ Only a completed turn can end a dive, even after oxygen reaches zero. Returning 
 Stranded divers are ordered deepest first, with frozen seat order as a deterministic fallback. `dive/ordered {order, expectedActionId}` accepts an exact permutation of the current cleanup owner's unit IDs. Up to three whole units form each new deep-end stack; no existing stack is split. Empty and single-unit choices resolve automatically. Once all owners finish, blanks are removed and review becomes available. Conservation includes all path, carried, and banked tiles after every transition.
 
 Browser connections explicitly select the SDK's long-poll WebChannel transport. Responses close after delivering data, avoiding buffering-driven transport switching on proxied connections; this does not poll game state from tests or add waits to scenarios. Node emulator integration clients use the SDK's native transport. See [Firestore transport settings](https://firebase.google.com/docs/reference/js/firestore.firestoresettings#firestoresettingsexperimentalforcelongpolling).
+
+## Continuation and results (reducer 5)
+
+`dive/continued {expectedActionId}` accepts any seated actor exactly once from a completed review. It resets oxygen, positions, directions and turn address, retains banked tiles and the compacted path without reshuffling, and uses the derived next starter. After the third cleanup the game finishes automatically. An empty path finishes early with zero gains recorded for remaining dives.
+
+Final results sum individual banked tile values. Points ties compare the number of individual banked level-IV tiles, then share victory. Play again creates a separate immutable room with the player's existing name and identity; it never resets or deletes the old game.

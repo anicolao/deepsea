@@ -106,7 +106,7 @@ function playerHarness() {
       close: async () => { context.closed = true; },
       newPage: async () => page
     };
-    const page = { context: () => context, on: context.on, reload: async () => {
+    const page = { context: () => context, on: context.on, goto: async () => { if (page.cancellation) handlers.get('requestfailed')(page.cancellation); }, reload: async () => {
       if (page.cancellation) handlers.get('requestfailed')(page.cancellation);
     }, cancellation: null, emit: (name, value) => handlers.get(name)(value) };
     contexts.push(context);
@@ -246,4 +246,13 @@ test('completed Fetch streams require successful same-session acknowledgement ad
   },{});
   if(mode==='advanced')await run;else await assert.rejects(run,/No browser errors/);
  }
+});
+
+test('named player navigation stays on the deployment and classifies only its old stream', async () => {
+ const {players}=infrastructure();const h=playerHarness();
+ await players({browser:h.browser,baseURL:'http://localhost/'},async factory=>{
+  const page=await factory.create();await assert.rejects(factory.visit(page,'https://elsewhere.invalid/'),/stay on this deployment/);
+  const old={url:()=> 'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel',failure:()=>({errorText:'net::ERR_ABORTED'})};
+  page.emit('request',old);page.cancellation=old;await factory.visit(page,'http://localhost/rooms/?room=next');
+ },h.info);
 });

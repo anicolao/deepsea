@@ -2,7 +2,7 @@ import { test as base, type BrowserContext, type Page, type Request } from '@pla
 import { expect } from './assertions';
 import { assertStepsFinished } from './test-steps';
 
-type Players = { readInvite: (page: Page) => Promise<string>; create: () => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
+type Players = { visit: (page: Page, url: string) => Promise<void>; readInvite: (page: Page) => Promise<string>; create: () => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
 async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], streams = new Map<Page, Set<Request>>(), cancelledByReload = new Set<Request>()) {
   const hosted = new URL(baseURL).origin === 'https://anicolao.github.io';
   const origins = new Set([new URL(baseURL).origin, ...(hosted ? ['https://identitytoolkit.googleapis.com', 'https://securetoken.googleapis.com', 'https://firestore.googleapis.com'] : ['http://127.0.0.1:9099', 'http://127.0.0.1:8080'])]);
@@ -128,6 +128,12 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
         const url = new URL(invite);
         if (url.origin !== new URL(baseURL!).origin || url.pathname !== new URL('rooms/', baseURL!).pathname || !url.searchParams.get('room')) throw new Error('Clipboard does not contain an invite to this preview.');
         return invite;
+      },
+      visit: async (page, url) => {
+        if (!pages.includes(page)) throw new Error('Unknown player page');
+        if (new URL(url).origin !== new URL(baseURL!).origin) throw new Error('Player navigation must stay on this deployment');
+        for (const request of streams.get(page) ?? []) cancelledByReload.add(request);
+        await page.goto(url);
       },
       reload: async page => {
         if (!pages.includes(page)) throw new Error('Unknown player page');

@@ -136,11 +136,35 @@
     "review": "Visually inspected desktop: Concealed units have stack group labels and distinct earlier/later controls. The ivory panel scrolls independently above the confirm action."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-review-host-phone.png": {
-    "sha256": "547586da409ad3c0f7d1d642761d614cc02573739561ca590120e6f88e8a76ed",
-    "review": "Visually inspected phone: Returned versus lost outcomes and separate dive/total columns are readable. Saved treasure disclosure and next-starter text are visible."
+    "sha256": "6a4158ecc0015b58decf20cd594057168565c455ddfdf8f1e77921006496630d",
+    "review": "Visually inspected phone: Dive gains and total scores remain distinct; the next-starter explanation and gold continuation control are reachable."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-review-host-desktop.png": {
-    "sha256": "6e9f3354e1f6927a04474203ada8a39f05434eceef0a054637231de1adcfdc0c",
-    "review": "Visually inspected desktop: Returned versus lost outcomes and separate dive/total columns are readable. Saved treasure disclosure and next-starter text are visible."
+    "sha256": "3eee4e8e1d012b76e4f68d6f76e8fae1e487bf6c15229b80014ad3edb1c30b4d",
+    "review": "Visually inspected desktop: Dive gains and total scores remain distinct; the next-starter explanation and gold continuation control are reachable."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-first-review-host-phone.png": {
+    "sha256": "e2781d96121124427f40d102023c19c5f8ff052642850209e8f8c003f0c7e4fa",
+    "review": "Visually inspected phone: Both returned outcomes and saved-treasure disclosures fit the ivory review panel above the continuation action."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-first-review-host-desktop.png": {
+    "sha256": "e10c52b50f4624206c641978f96fd2dc133bcc8bdc915bc9e6f6f698f54b3be0",
+    "review": "Visually inspected desktop: Both returned outcomes and saved-treasure disclosures fit the ivory review panel above the continuation action."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-final-result-guest-phone.png": {
+    "sha256": "1a235a211f524000e9faf9cb67b633f81947ba62484012c806a8a422ce01bc12",
+    "review": "Visually inspected phone: All three score columns and cumulative totals fit; Sol’s victory is clear, with level-IV tiebreak counts, history disclosure and a distinct Play again action."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-final-result-guest-desktop.png": {
+    "sha256": "7d90b7a186a984ed5042dc67011b5cfc0c8fc7bc9c4a9aaf8cbdf4b06718ae56",
+    "review": "Visually inspected desktop: All three score columns and cumulative totals fit; Sol’s victory is clear, with level-IV tiebreak counts, history disclosure and a distinct Play again action."
+  },
+  "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-phone.png": {
+    "sha256": "8591d9e63d43cf3deb46e81f91f33eb2149af8070b384e30b971433111ddbcb5",
+    "review": "Visually inspected phone: The new lobby retains Mira’s name, shows two unready seats and restores the normal invite and start controls."
+  },
+  "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-desktop.png": {
+    "sha256": "6f03f49c166b57504b39bb4f6b8fef1683c9708c6ea77ed0d98fa323169b22ee",
+    "review": "Visually inspected desktop: The new lobby retains Mira’s name, shows two unready seats and restores the normal invite and start controls."
   }
 }
