@@ -2,7 +2,7 @@
 
 ## Status and scope
 
-Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design; the application has not been implemented. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the game rules and identifies details awaiting confirmation.
+Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design. A tested coming-soon screen is implemented; multiplayer and gameplay are not yet implemented. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the game rules and identifies details awaiting confirmation.
 
 Support 2–6 human players, each using their own browser. Players create a room, invite friends, ready up, play three dives, review scores, and start another game. Include reload/reconnection, understandable turn history, and keyboard/touch operation on phones and desktops.
 
@@ -84,19 +84,13 @@ Use original simple graphics, labeled controls, visible focus, color-independent
 
 ## Implementation and verification strategy
 
-Build small playable slices that exercise a real browser action through persistence and replay to a visible result on another device. Each slice includes its UI, rules, persistence, and tests in the same PR:
-
-1. Static shell, Nix-managed verification, emulator connection, anonymous identity, and two-browser room creation/join/readiness.
-2. Initial dive setup and one complete turn observed by both browsers.
-3. Full dive, all treasure choices, lost-cargo ordering, scoring, and next-dive transition.
-4. Complete three-dive game, replay/reconnection, and six-player conflicts.
-5. Phone/desktop accessibility and verified retained deployment previews.
+Build small playable slices that exercise a real browser action through persistence and replay to a visible result on another device. Each slice includes its UI, rules, persistence, and tests in the same PR. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) defines the delivery sequence, dependencies, and acceptance checks from the current implementation; the static shell and retained previews already exist.
 
 Resolve the rulebook checks in `RULES_SUMMARY.md` before coding affected edge cases. Freeze their decisions under `rulesetVersion`; do not silently change how existing rooms replay.
 
 Use Vitest for reducer legality, conservation, exact seed fixtures, phase transitions, zero movement, oxygen exhaustion, lost stacks, starter selection, and ties. Firestore emulator tests cover allowed attribution and denied mutation/unauthenticated access. Repository tests cover full-precision ordering, duplicate retries, multi-tab IDs, cache recovery, and malformed events.
 
-Playwright uses isolated browser contexts against Auth/Firestore emulators. Prove both the actor's result and other players' converged view. Include two-player complete games, a six-player game, a race for the sixth seat, conflicting turn submissions, lost acknowledgements, reconnect during cleanup, hidden-value rendering checks, and wrong-version blocking. Use semantic assertions before screenshots, fixed seeds/locale/fonts/viewports, and no production data. Generate scenario walkthroughs from test steps; pin the browser and rendering environment before choosing screenshot tolerances. Keep timeouts and screenshot tolerances in one shared configuration so helpers cannot silently change the verification contract.
+Playwright will use isolated browser contexts against Auth/Firestore emulators. Prove both the actor's result and other players' converged view. Include two-player complete games, a six-player game, a race for the sixth seat, conflicting turn submissions, lost acknowledgements, reconnect during cleanup, hidden-value rendering checks, and wrong-version blocking. Use semantic assertions before screenshots, fixed seeds/locale/fonts/viewports, and no production data. Generate scenario walkthroughs from test steps. The browser and rendering environment are already pinned; [E2E_GUIDE.md](E2E_GUIDE.md) fixes screenshot and color tolerances at zero and defines the enforced timing policy. Extend multiplayer infrastructure without weakening that contract.
 
 Retain the existing prompt hook. Add game verification alongside it as code arrives: type checks, unit tests, emulator rules tests, browser scenarios, and production build. CI runs the same commands. Prompt logging is checked against the staged index by the local hook; CI should compare the PR's prompt log with its base rather than expecting a staged local change.
 

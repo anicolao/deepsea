@@ -53,3 +53,7 @@ OK that is rebased and merged onto main. Now we need a clear e2e guide that spec
 ## Prompt 13: Audit E2E Enforcement
 
 I didn't hceck that there are precommit hook checks for each rule in the e2e guide. If there are, great, let's merge this PR onto main (that is, rebase and merge) and close the PR and delete the branch; if *not*, then fix it and update the branch for me to review.
+
+## Prompt 14: Plan MVP Implementation
+
+ok that's merged, let's make a new branch and write IMPLEMENTATION_PLAN.md to lay out ht esteps to get from here to a completed MVP.
