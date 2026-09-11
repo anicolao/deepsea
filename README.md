@@ -6,7 +6,7 @@ Dive deeper for better rewards, decide when to turn back, and try to reach the s
 
 ## Project status
 
-Room creation, invites, joining, readiness, first-diver selection, leaving, and confirmed starts are implemented. Separate browsers retain their seats after reload. Two- and three-person user journeys run on phone and desktop. Players can roll, move, collect or drop concealed treasure, and follow each other on the shared board. Dive resolution and scoring are being completed on this branch. The retained PR preview uses a dedicated live Firebase backend. A PR is ready only after its deployed-preview check passes.
+Room creation, invites, joining, readiness, first-diver selection, leaving, and confirmed starts are implemented. Separate browsers retain their seats after reload. Two- and three-person user journeys run on phone and desktop. Players can roll, move, collect or drop concealed treasure, and follow each other on the shared board. Players can finish three dives, order lost stacks, compare final scores and create another room. Recovery and final UX acceptance are being completed on this branch. The retained PR preview uses a dedicated live Firebase backend. A PR is ready only after its deployed-preview check passes.
 
 Read [VISION.md](VISION.md) for the project's north star.
 

@@ -34,6 +34,7 @@ export class TestSteps {
     scenarios.set(info, views);
   }
 
+  roomLayout() { this.layout = 'room'; }
   gameLayout() { this.layout = 'game'; }
 
   async step(id: string, title: string, checks: Check[]) {

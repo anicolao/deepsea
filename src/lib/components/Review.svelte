@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { playerView } from '$lib/game/engine';
+  import { playerView, finalResults } from '$lib/game/engine';
   import type { Room } from '$lib/game/protocol';
   export let room: Room;
   export let uid: string;
   export let enabled: boolean;
+  export let playAgain: () => Promise<void>;
   export let act: (type: string, payload: Record<string, unknown>) => Promise<void>;
   $: view = playerView(room.dive!);
+  $: result = finalResults(room.dive!);
   $: current = view.reviews.at(-1)!;
   $: owner = view.cleanup[0];
   $: mine = owner === uid;
@@ -16,20 +18,27 @@
   function move(id: string, offset: number) { const index = order.indexOf(id), next = [...order]; [next[index], next[index+offset]] = [next[index+offset], next[index]]; order = next; }
 </script>
 <div class="review">
-  <header><p class="eyebrow">BACK AT THE SURFACE · DIVE {view.number} OF 3</p><h1>{view.stage === 'cleanup' ? 'Treasure left behind' : `Dive ${view.number} complete`}</h1><p>Previously saved treasure stays safe.</p></header>
+  <header><p class="eyebrow">BACK AT THE SURFACE · DIVE {view.number} OF 3</p><h1>{view.stage === 'finished' ? 'The haul is in' : view.stage === 'cleanup' ? 'Treasure left behind' : `Dive ${view.number} complete`}</h1><p>Previously saved treasure stays safe.</p></header>
   <section class="report" data-game-path aria-label="Dive results">
-    {#if view.stage === 'cleanup' && mine}
+    {#if view.stage === 'finished'}
+      <h2>{result.winners.map(name).join(' & ')} {result.winners.length === 1 ? 'wins!' : 'share victory!'}</h2>
+      <p>{result.tiebreak ? 'Tied on points. Saved level IV tiles break the tie.' : result.winners.length > 1 ? 'Equal points and equal saved level IV tiles. A shared victory.' : 'The most treasure points after three dives.'}</p>
+      <table><caption>Final scores · three dives</caption><thead><tr><th scope="col">Diver</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">Total</th></tr></thead><tbody>{#each result.rows as p}<tr><th scope="row">{name(p.uid)}{p.uid === uid ? ' (You)' : ''}</th>{#each p.dives as score}<td>{score}</td>{/each}<td><strong>{p.points}</strong></td></tr>{/each}</tbody></table>
+      <p>Level IV tiles saved: {result.rows.map(p => name(p.uid) + ' ' + p.levelFour).join(' · ')}.</p>
+    {:else if view.stage === 'cleanup' && mine}
       <h2>Choose the order of your lost treasure</h2><p>Place units from first to last. Each group of up to three becomes one stack at the deep end. Existing stacks stay whole.</p>
       <ol aria-label="Lost treasure order">{#each order as id, index}<li><div><strong>Unit {lost.findIndex(u => u.id === id)+1}</strong><span>Level {lost.find(u => u.id === id)?.levels.join(', ')} · {lost.find(u => u.id === id)?.count} tiles</span><small>Stack {Math.floor(index/3)+1} · position {index%3+1}</small></div><button disabled={!enabled || index === 0} on:click={() => move(id,-1)} aria-label={`Move unit ${lost.findIndex(u => u.id === id)+1} earlier`}>↑ Earlier</button><button disabled={!enabled || index === order.length-1} on:click={() => move(id,1)} aria-label={`Move unit ${lost.findIndex(u => u.id === id)+1} later`}>↓ Later</button></li>{/each}</ol>
     {:else if view.stage === 'cleanup'}<h2>Waiting for {name(owner)} to order lost treasure</h2><p>The next dive begins after the lost cargo has been placed. Your friend keeps this choice if they reconnect.</p>
     {:else}<h2>Your crew’s haul</h2><table><caption>Dive {view.number} results</caption><thead><tr><th scope="col">Diver</th><th scope="col">This dive</th><th scope="col">Total</th></tr></thead><tbody>{#each current.players as p}<tr><th scope="row">{name(p.uid)}{p.uid === uid ? ' (You)' : ''}<small>{p.returned ? 'Returned' : 'Treasure lost'}</small></th><td>{p.gained.reduce((sum,t)=>sum+t.value,0)}</td><td>{p.total}</td></tr>{/each}</tbody></table>
       {#each current.players.filter(p=>p.gained.length) as p}<details><summary>{name(p.uid)}’s saved treasure</summary><p>{p.gained.map(t=>`Level ${t.level}: ${t.value} points`).join(' · ')}</p></details>{/each}
     {/if}
+    {#if view.stage !== 'cleanup'}<details><summary>View game history</summary>{#each view.reviews as review}<h3>Dive {review.number}</h3>{#each review.players as p}<p><strong>{name(p.uid)}</strong> · {p.returned ? 'Returned' : 'Treasure lost'} · {p.gained.reduce((sum,t)=>sum+t.value,0)} points this dive · {p.total} total</p>{/each}{/each}</details>{/if}
   </section>
   <section class="actions" data-game-actions aria-label="After the dive">
-    {#if view.stage === 'cleanup' && mine}<p>The first unit cannot move earlier; the last cannot move later.</p><button class="primary" disabled={!enabled} on:click={() => act('dive/ordered', { order, expectedActionId: room.lastActionId })}>Confirm order</button>
+    {#if view.stage === 'finished'}<button class="primary" disabled={!enabled} on:click={playAgain}>Play again</button><p>A fresh room and invite. Your friends join when they’re ready.</p>
+    {:else if view.stage === 'cleanup' && mine}<p>The first unit cannot move earlier; the last cannot move later.</p><button class="primary" disabled={!enabled} on:click={() => act('dive/ordered', { order, expectedActionId: room.lastActionId })}>Confirm order</button>
     {:else if view.stage === 'cleanup'}<p>Waiting for {name(owner)}. Treasure values stay concealed.</p>
-    {:else}<h2>{name(view.nextStarter!)} starts the next dive</h2><p>Take a breath. Your crew’s scores are saved.</p>{/if}
+    {:else}<h2>{name(view.nextStarter!)} starts the next dive</h2><p>Take a breath. Your crew’s scores are saved.</p><button class="primary" disabled={!enabled} on:click={() => act('dive/continued', { expectedActionId: room.lastActionId })}>Continue to dive {view.number+1}</button>{/if}
     {#if !enabled}<p>Reconnect to confirm your choice.</p>{/if}
   </section>
 </div>
