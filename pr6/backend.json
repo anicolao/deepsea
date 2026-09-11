@@ -1,0 +1,14 @@
+{
+  "local": {
+    "projectId": "demo-deepsea",
+    "authHost": "127.0.0.1:9099",
+    "firestoreHost": "127.0.0.1:8080"
+  },
+  "preview": {
+    "projectId": "deepsea-preview-anicolao",
+    "apiKey": "AIzaSyB_xWvMXki9zAlFgpUF60BK23vKCNORZeg",
+    "appId": "1:525530073386:web:a7dce8ef430509da1c3653",
+    "authDomain": "deepsea-preview-anicolao.firebaseapp.com"
+  },
+  "production": null
+}
