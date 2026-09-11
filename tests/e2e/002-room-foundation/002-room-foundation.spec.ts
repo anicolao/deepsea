@@ -44,16 +44,18 @@ test('friends create, join, ready and start a room through real browser actions'
   await third.getByRole('button', { name: 'Ready up' }).click();
   await host.getByLabel('First diver').selectOption({ label: 'Sol' });
   await host.getByRole('button', { name: 'Start dive' }).click();
+  hostSteps.gameLayout();
   await hostSteps.step('started', 'The host starts with the selected first diver', [{ description: 'The confirmed start freezes three seats and assigns Sol the first turn.', assert: async () => {
-    await expect(host.getByRole('heading', { name: 'Dive 1 is ready' })).toBeVisible();
-    await expect(host.getByRole('heading', { name: 'First diver: Sol' })).toBeVisible();
-    await expect(host.getByRole('list', { name: 'Crew' })).toContainText('Seat 3');
-    await expect(third.getByRole('heading', { name: 'First diver: Sol' })).toBeVisible();
+    await expect(host.getByRole('heading', { name: 'Sol’s turn', exact: true })).toBeVisible();
+    await expect(host.getByRole('meter', { name: 'Shared oxygen' })).toHaveAttribute('aria-valuenow', '25');
+    await expect(host.getByRole('button', { name: 'Roll dice' })).toHaveCount(0);
+    await expect(third.getByRole('heading', { name: 'Sol’s turn', exact: true })).toBeVisible();
   } }]);
   await players.reload(guest);
+  guestSteps.gameLayout();
   await guestSteps.step('reloaded', 'Reload keeps the player and confirmed start', [{ description: 'Sol returns to the same seat and the same first diver without a second join.', assert: async () => {
-    await expect(guest.getByText('Sol (You)', { exact: true })).toBeVisible();
-    await expect(guest.getByRole('heading', { name: 'First diver: Sol' })).toBeVisible();
+    await expect(guest.getByRole('heading', { name: 'Your turn', exact: true })).toBeVisible();
+    await expect(guest.getByRole('button', { name: 'Roll dice' })).toBeEnabled();
     await expect(guest.getByRole('alert')).toHaveCount(0);
   } }]);
   hostSteps.finish(); guestSteps.finish(); thirdSteps.finish();

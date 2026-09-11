@@ -15,7 +15,7 @@ The project accepts the proposed resolutions in RULES_SUMMARY under `rulesetVers
 
 ## Versions and validation
 
-The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 2`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 2 adds the lobby actions below; reducer-1 rooms require their compatible app. Future gameplay event types must be implemented and tested before enabling them in the Firestore rules.
+The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 3`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 3 adds atomic turn rolls and landing choices; reducer-1 and reducer-2 rooms require their retained compatible app. Never reinterpret an older room with a newer reducer.
 
 Canonical event fields are `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. IDs and timestamps are added by the repository adapter to replay input. Unknown envelope fields are rejected. Payloads are bounded JSON maps; the creation payload contains only the room ID and a trimmed, nonempty host name of at most 40 characters.
 
@@ -54,3 +54,9 @@ Seeds are not secrets in this architecture. The start action generates game-star
 Joining and leaving clear every readiness flag and advance rosterRevision to the accepted event ID. Separate players can ready concurrently against the same roster revision. A stale readiness or start is rejected without partial state changes. Start freezes the seated roster in seat order and records the selected first diver; later lobby actions are rejected. A confirmed but rejected submission produces an actionable conflict message.
 
 Namespaces are local, pr followed by its numeric PR number, or production. Each retained preview selects its own namespace and the dedicated preview project. These boundaries prevent accidental cross-environment writes; this trusted-group design does not make namespaces an authorization boundary.
+
+## Turn actions (reducer 3)
+
+`turn/rolled {direction, expectedActionId}` validates the active player, roll phase, first departure and locked returning direction. It commits cargo oxygen cost, addressed dice and occupied-space-skipping movement together. `turn/landed {choice, expectedActionId, unitId?}` accepts pickup, pass, or a whole-unit drop. Only drop includes unitId. Both require the latest accepted action ID, so concurrent submissions cannot charge twice. Tile conservation is checked after every accepted transition.
+
+E2E supplies seed 2026 through the configuration-loading boundary for local and preview games only. The shared fixture does not create rooms or write events. Ordinary deployed games use browser cryptographic randomness; production rejects a configured fixed seed.

@@ -2,9 +2,9 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. Steps 1–4 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 5–10 remain proposed work under review.
+This plan starts from the implementation merged in PR #3. Steps 1–5 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 6–10 are being implemented in logical commits on the complete-MVP branch.
 
-Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The full game engine and gameplay turns are not implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
+Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The shared board and atomic turns are implemented; dive resolution and scoring remain in progress. Hosted room provisioning is a current delivery requirement, not deferred work.
 
 Evidence for steps 1–4: [BASE_1.md](docs/protocol/BASE_1.md), the protocol/repository unit suites under `tests/unit/`, real SDK and rules checks under `tests/integration/`, and the [multiplayer browser walkthrough](tests/e2e/002-room-foundation/README.md). Rules edge-case fixtures are accepted expected outcomes for subsequent engine work, not executable proof of unimplemented gameplay.
 
@@ -22,7 +22,7 @@ Every PR must expose its implemented behavior on a retained preview, include rep
 | 2 (implemented) | Repeatable emulator and multiplayer test environment | Existing verification; protocol decisions from 1 |
 | 3 (implemented) | Reliable immutable event repository | 2 |
 | 4 (implemented; deployed verification required per PR) | Friends can create, join, ready, and start a room | 3 |
-| 5 | A complete turn is visible in every browser | 4; movement rules from 1 |
+| 5 (implemented; deployed verification required per PR) | A complete turn is visible in every browser | 4; movement rules from 1 |
 | 6 | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
 | 7 | Three dives produce final results and a new-game flow | 6; starter/tie rules from 1 |
 | 8 | Interrupted and competing clients recover consistently | 7, with recovery checks added from 3 onward |
@@ -146,7 +146,7 @@ Run automated verification only against emulators. Separately perform a named li
 
 ## Working rules for each delivery
 
-Record the initiating prompt before work and retain one commit per prompt as required by AGENTS. Each implementation PR states its user-visible result, dependencies, verification, and any unresolved blocker. Update this plan's status only with evidence; do not infer completion from a mockup or an isolated unit test.
+Record the initiating prompt before work and make logical step commits, recording continuations in PROMPT_WORK.md as required by AGENTS. Each implementation PR states its user-visible result, dependencies, verification, and any unresolved blocker. Update this plan's status only with evidence; do not infer completion from a mockup or an isolated unit test.
 
 Run the full `nix develop -c npm run verify` pipeline through the normal pre-commit hook and CI. Extend it with new engine, emulator, and repository suites rather than replacing existing checks. When infrastructure changes require new allowed test capabilities, update the guard, configuration contract, enforcement map, and negative tests together while preserving the testing rules. Stage the exact verified files, generated walkthroughs, reviewed screenshots, and prompt log.
 

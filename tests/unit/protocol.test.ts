@@ -31,7 +31,7 @@ describe('chronological room projection', () => {
     }
   });
   it('blocks incompatible versions without treating them as supported actions', () => {
-    for (const changed of [{ schemaVersion: 2 }, { reducerVersion: 3 }, { rulesetVersion: 'base-2' }]) expect(replay('room', [event(changed)]).blocked).toBe(true);
+    for (const changed of [{ schemaVersion: 2 }, { reducerVersion: VERSIONS.reducerVersion + 1 }, { rulesetVersion: 'base-2' }]) expect(replay('room', [event(changed)]).blocked).toBe(true);
   });
   it('compares every immutable field independent of map insertion order', () => {
     const { id: _id, createdAt: _at, ...envelope } = event();

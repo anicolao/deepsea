@@ -1,4 +1,5 @@
-export const VERSIONS = { schemaVersion: 1, reducerVersion: 2, rulesetVersion: 'base-1' } as const;
+import { initialDive, turn, type Dive } from './engine';
+export const VERSIONS = { schemaVersion: 1, reducerVersion: 3, rulesetVersion: 'base-1' } as const;
 export type Stamp = { seconds: number; nanoseconds: number };
 export type Envelope = {
   schemaVersion: number; reducerVersion: number; rulesetVersion: string;
@@ -8,7 +9,7 @@ export type Envelope = {
 export type ConfirmedEvent = Envelope & { id: string; createdAt: Stamp };
 export type PendingEvent = { gameId: string; id: string; envelope: Envelope };
 export type Member = { uid: string; name: string; seat: number; ready: boolean };
-export type Room = { gameId: string; hostUid: string; hostName: string; phase: 'lobby' | 'started' | 'closed'; lastActionId: string; rosterRevision: string; members: Member[]; starterUid?: string; seed?: number };
+export type Room = { gameId: string; hostUid: string; hostName: string; phase: 'lobby' | 'started' | 'closed'; lastActionId: string; rosterRevision: string; members: Member[]; starterUid?: string; seed?: number; dive?: Dive };
 export type Projection = { room: Room | null; blocked: boolean; diagnostics: string[]; acceptedIds: string[] };
 const fields = ['schemaVersion', 'reducerVersion', 'rulesetVersion', 'type', 'payload', 'actorUid', 'clientId', 'clientSeq'];
 const plain = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -79,7 +80,15 @@ function apply(room: Room | null, gameId: string, event: ConfirmedEvent): Room |
     if (room || event.id !== 'created' || !keys(p, ['gameId', 'hostName']) || p.gameId !== gameId || !nameValid(p.hostName)) return null;
     return { gameId, hostUid: event.actorUid, hostName: p.hostName, phase: 'lobby', lastActionId: event.id, rosterRevision: event.id, members: [{ uid: event.actorUid, name: p.hostName, seat: 1, ready: false }] };
   }
-  if (!room || room.phase !== 'lobby' || event.id === 'created') return null;
+  if (!room || event.id === 'created') return null;
+  if (room.phase === 'started' && room.dive && room.seed !== undefined) {
+    if (p.expectedActionId !== room.lastActionId) return null;
+    if (event.type === 'turn/rolled' && !keys(p, ['direction', 'expectedActionId'])) return null;
+    if (event.type === 'turn/landed' && !keys(p, p.choice === 'drop' ? ['choice', 'unitId', 'expectedActionId'] : ['choice', 'expectedActionId'])) return null;
+    const dive = turn(room.dive, room.seed, event.actorUid, event.type, p);
+    return dive ? { ...room, lastActionId: event.id, dive } : null;
+  }
+  if (room.phase !== 'lobby') return null;
   const member = room.members.find(m => m.uid === event.actorUid);
   const changed = { ...room, lastActionId: event.id };
   if (event.type === 'lobby/joined') {
@@ -97,7 +106,7 @@ function apply(room: Room | null, gameId: string, event: ConfirmedEvent): Room |
   }
   if (event.type === 'game/started') {
     if (event.actorUid !== room.hostUid || !keys(p, ['seed', 'starterUid', 'expectedActionId']) || p.expectedActionId !== room.lastActionId || room.members.length < 2 || !room.members.every(m => m.ready) || !room.members.some(m => m.uid === p.starterUid) || !Number.isInteger(p.seed) || Number(p.seed) < 0 || Number(p.seed) > 0xffffffff) return null;
-    return { ...changed, phase: 'started', starterUid: p.starterUid as string, seed: p.seed as number };
+    return { ...changed, phase: 'started', starterUid: p.starterUid as string, seed: p.seed as number, dive: initialDive(p.seed as number, room.members.map(m => m.uid), p.starterUid as string) };
   }
   return null;
 }

@@ -63,7 +63,7 @@
   <h2 id="brief-title">Treasure is only yours<br />if you make it back.</h2>
   <p>Play with 2–6 friends, each on their own device. Head deeper for treasure, or turn back toward the submarine.</p>
   <p>Everyone shares one oxygen supply. The treasure you carry slows you down and uses more air. Bring back the most value over three dives to win.</p>
-  <p class="availability">Create a room, invite friends, ready up, and choose your first diver. Taking turns is the next feature being built.</p>
+  <p class="availability">Invite friends, share one oxygen tank, and dive for treasure. Carry only what you can bring home.</p>
   <form method="dialog"><button class="close-button">Back to the surface</button></form>
 </dialog>
 

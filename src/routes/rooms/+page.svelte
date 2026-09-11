@@ -1,6 +1,7 @@
 <script lang="ts">
   import '@fontsource/atkinson-hyperlegible/400.css';
   import '@fontsource/atkinson-hyperlegible/700.css';
+  import Game from '$lib/components/Game.svelte';
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
   import { replaceState } from '$app/navigation';
@@ -8,9 +9,11 @@
   import { connectBackend } from '$lib/backend/firebase';
   import { RoomRepository, type RoomState } from '$lib/backend/repository';
   let name = '', error = '', roomId = '', setupId = '', uid = '', starter = '', invite = '';
+  let mounted = false;
   let connected = false, busy = false, online = true, copied = false, closing = false, left = false;
   let state: RoomState | null = null;
   let repository: RoomRepository;
+  let initialSeed: number | undefined;
   let unsubscribe = () => {};
   $: room = state?.room;
   $: me = room?.members.find(m => m.uid === uid);
@@ -28,6 +31,8 @@
     });
   }
   onMount(() => {
+    roomId = new URL(location.href).searchParams.get('room') ?? '';
+    mounted = true;
     let disposed = false;
     let close = async () => {};
     const connectivity = () => { online = navigator.onLine; };
@@ -37,6 +42,7 @@
         const response = await fetch(`${base}/backend.json`);
         if (!response.ok) throw new Error('Room setup is not configured on this deployment.');
         const config = selectConfig(await response.json() as DeploymentConfig, new URL(location.href));
+        initialSeed = config.initialSeed;
         const backend = await connectBackend(config); close = backend.close;
         if (disposed) { await close(); return; }
         uid = backend.uid;
@@ -71,7 +77,7 @@
   }
   async function start() {
     if (!room) return;
-    await act('game/started', { starterUid: starter, seed: crypto.getRandomValues(new Uint32Array(1))[0], expectedActionId: room.lastActionId });
+    await act('game/started', { starterUid: starter, seed: initialSeed ?? crypto.getRandomValues(new Uint32Array(1))[0], expectedActionId: room.lastActionId });
   }
   async function copy() {
     try { await navigator.clipboard.writeText(location.href); copied = true; }
@@ -85,12 +91,13 @@
   }
 </script>
 <svelte:head><title>Deep Sea — Gather your crew</title><meta name="description" content="Invite friends, ready up, and start a Deep Sea room together." /></svelte:head>
-<main>
+<main class:playing={room?.phase === 'started' && !!me}>
   <a class="back" href={`${base}/`}>← Deep Sea</a>
-  <h1>{room?.phase === 'started' && me ? 'Dive 1 is ready' : 'Gather your crew'}</h1>
+  {#if room?.phase !== 'started' || !me}<h1>{room?.phase === 'started' && me ? 'Dive 1 is ready' : 'Gather your crew'}</h1>{/if}
   <p role="status" class="status">{!online ? 'Offline — reconnect to make changes.' : state?.blocked ? 'This room needs a different app version.' : !connected || (roomId && !state?.synchronized) ? 'Connecting…' : busy || state?.pending ? 'Confirming your action…' : 'Connected'}</p>
   {#if error}<p role="alert" class="notice">{error}</p>{/if}
-  {#if !roomId}
+  {#if !mounted}<p>Preparing your room…</p>
+  {:else if !roomId}
     <form on:submit|preventDefault={create}>
       <h2>Create a room</h2><p>Bring 2–6 friends, each on their own browser.</p>
       <label for="name">Your name</label><input id="name" bind:value={name} maxlength="40" autocomplete="nickname" required />
@@ -100,6 +107,7 @@
     <section><h2>Room closed</h2><p>The host left before the dive started.</p><a href={`${base}/rooms/`}>Create another room</a></section>
   {:else if room?.phase === 'started' && !me}
     <section><h2>This dive has already started</h2><p>The crew is fixed. Ask your friends to invite you to their next room.</p><a href={`${base}/rooms/`}>Create another room</a></section>
+  {:else if room?.phase === 'started' && me && room.dive}<Game {room} {uid} {enabled} {act} />
   {:else if room}
     <section aria-label="Room lobby">
       <h2>{room.hostName}’s room</h2>
@@ -131,6 +139,7 @@
 <style>
   :global(body) { margin: 0; background: #071e2a; color: #f5f1dc; font-family: 'Atkinson Hyperlegible', sans-serif; }
   :global(*) { box-sizing: border-box; }
+  main.playing { max-width: 1228px; }
   main { max-width: 650px; margin: 0 auto; padding: 16px 24px; }
   a { color: #b0eee0; display: inline-flex; align-items: center; min-height: 44px; }
   h1 { font-size: clamp(30px, 6vw, 42px); margin: 8px 0; } h2 { font-size: 25px; margin: 0 0 12px; } h3 { font-size: 20px; }

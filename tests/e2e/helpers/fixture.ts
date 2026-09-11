@@ -9,7 +9,12 @@ async function monitor(context: BrowserContext, page: Page, baseURL: string, pro
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
     if (!origins.has(url.origin)) { problems.push(`Unexpected network request: ${url.origin}`); await route.abort(); }
-    else await route.continue();
+    else if (url.pathname === new URL('backend.json', baseURL).pathname) {
+      const response = await route.fetch();
+      const config = await response.json();
+      // Only reproducible randomness at initialization: no identities, actions or board state.
+      await route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: 2026 }, preview: config.preview ? { ...config.preview, initialSeed: 2026 } : null } });
+    } else await route.continue();
   });
   page.on('pageerror', error => problems.push(error.message));
   page.on('console', message => { if (message.type() === 'error') problems.push(message.text()); });

@@ -1,6 +1,6 @@
-export type BackendConfig = { mode: 'local' | 'preview' | 'production'; namespace?: string; projectId: string; apiKey: string; appId?: string; authDomain?: string; authHost?: string; firestoreHost?: string };
-type Hosted = { projectId: string; apiKey: string; appId: string; authDomain: string };
-export type DeploymentConfig = { local: { projectId: string; authHost: string; firestoreHost: string }; preview: Hosted | null; production: Hosted | null };
+export type BackendConfig = { mode: 'local' | 'preview' | 'production'; initialSeed?: number; namespace?: string; projectId: string; apiKey: string; appId?: string; authDomain?: string; authHost?: string; firestoreHost?: string };
+type Hosted = { initialSeed?: number; projectId: string; apiKey: string; appId: string; authDomain: string };
+export type DeploymentConfig = { local: { initialSeed?: number; projectId: string; authHost: string; firestoreHost: string }; preview: Hosted | null; production: Hosted | null };
 export function selectConfig(config: DeploymentConfig, url: URL): BackendConfig {
   if (!config || !config.local) throw new Error('Room setup is not available on this deployment yet.');
   if (['localhost', '127.0.0.1'].includes(url.hostname)) {
@@ -14,5 +14,7 @@ export function selectConfig(config: DeploymentConfig, url: URL): BackendConfig 
   if (!selected) throw new Error('Room setup is not available on this deployment yet.');
   if (!selected.projectId || selected.projectId.startsWith('demo-') || !selected.apiKey || !selected.appId || !selected.authDomain ||
     (config.preview && config.production && config.preview.projectId === config.production.projectId)) throw new Error('Invalid room environment configuration.');
+  if (mode === 'production' && selected.initialSeed !== undefined) throw new Error('Production games require fresh randomness.');
+  if (selected.initialSeed !== undefined && (!Number.isInteger(selected.initialSeed) || selected.initialSeed < 0 || selected.initialSeed > 0xffffffff)) throw new Error('Invalid initialization seed.');
   return { ...selected, mode, namespace: mode === 'preview' ? url.pathname.split('/')[2] : 'production' };
 }

@@ -8,12 +8,12 @@
     "review": "Visually inspected phone baseline: Create room is the clear primary action; submarine, game facts and attribution fit the viewport."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-desktop.png": {
-    "sha256": "d6cc61f55c1b9e4243c307092dd1bccfa6352faeef2b3cd7a02d332a0968510e",
-    "review": "Visually inspected desktop baseline: The dialog describes the working lobby and forthcoming turns; text fits and the close button has visible keyboard focus."
+    "sha256": "50504e38169d4269ac30d4e600d43d78f422063f4211373bfa3abc475a103d0a",
+    "review": "Visually inspected desktop: The ivory help dialog explains shared oxygen and treasure risk in player language. Text and focused close control fit."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-phone.png": {
-    "sha256": "565b1d3d799296cfbc72a88ac2f721a11e0e526fa045f131c2b695a672ce8a2a",
-    "review": "Visually inspected phone baseline: The dialog describes the working lobby and forthcoming turns; text fits and the close button has visible keyboard focus."
+    "sha256": "e9bbda6ade9eb0be048ebb87994de61abce3040b92add4e986bf964a89cbcfe4",
+    "review": "Visually inspected phone: The ivory help dialog explains shared oxygen and treasure risk in player language. Text and focused close control fit."
   },
   "tests/e2e/001-coming-soon/screenshots/002-return-desktop.png": {
     "sha256": "44429e5c44bc1209d5ff9ca9bdfa86dc1736083939f55741e2a1a60e9112b4c7",
@@ -48,20 +48,20 @@
     "review": "Visually inspected phone baseline: All three names fit; Ada is labelled You and the roster visibly resets readiness for all three players. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-desktop.png": {
-    "sha256": "31970df9f1047f4095280cd234929cacb09c23ed1f8d4445196d937c8cc3fb64",
-    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "1868ba79f18e4c7d377b15b5d282767f397762c46dd8931e02403b20fc93310d",
+    "review": "Visually inspected desktop: The illustrated ocean, distinct named submarine markers, oxygen meter and turn controls fit. Independent path scrolling preserves the action area."
   },
   "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-phone.png": {
-    "sha256": "5b2f352d682e6925efa763ca4aea05ee25937c6076386119f583d2abedf2b26d",
-    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "2c4423c09dc7872cf7347607afb2d3a6605424ad309a621e4e24c76905266404",
+    "review": "Visually inspected phone: The illustrated ocean, distinct named submarine markers, oxygen meter and turn controls fit. Independent path scrolling preserves the action area."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-desktop.png": {
-    "sha256": "1b242eb3c9cf6cf76893945b43d92f0d835f2688d7f550e6ee6bcafd91caf32e",
-    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "b7da8e52abe3ba2afc062ba6487500810b36bbd59cab4057a1008bb474546b92",
+    "review": "Visually inspected desktop: The illustrated ocean, distinct named submarine markers, oxygen meter and turn controls fit. Independent path scrolling preserves the action area."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-phone.png": {
-    "sha256": "4100802ecf4ae7f373b022abfd3e44a532bd0e056ad58eac714051193bdf702c",
-    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "29a6d9be38604add60076ea443f36e5fdf97fb9c943df18ec2bc550ef290df2c",
+    "review": "Visually inspected phone: The illustrated ocean, distinct named submarine markers, oxygen meter and turn controls fit. Independent path scrolling preserves the action area."
   },
   "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-desktop.png": {
     "sha256": "7845a4719d39d2ffac8b693d86ca63859646f08b1997953f8091bbf38b214082",
@@ -80,12 +80,12 @@
     "review": "Visually inspected phone baseline: The released guest seat is absent and the rejoin form retains Sol’s name with a clear leave explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-desktop.png": {
-    "sha256": "02860d91a34fb0925b7dccbfea681a25ed26036fc7d022dc9d012602ae5a284a",
-    "review": "Visually inspected desktop baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "9755f5cb8d76ecc3896d3e733b24db0dce1ed8f169db3fd669738903bff5c01b",
+    "review": "Visually inspected desktop: Both divers appear aboard; the oxygen preview is explicit and the gold roll action remains reachable beside or below the ocean."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-phone.png": {
-    "sha256": "50dd5c53bb9d0c4dda15025bd2aea8717580d4030bc7a7269cb8af2801ee8899",
-    "review": "Visually inspected phone baseline: The confirmed start shows ordered seats and the correct first diver; the copy explicitly explains that taking turns is forthcoming. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "e9f9124f59047177bad52d628e817199b48ce00224e34a24aabeb77ebcd2be2f",
+    "review": "Visually inspected phone: Both divers appear aboard; the oxygen preview is explicit and the gold roll action remains reachable beside or below the ocean."
   },
   "tests/e2e/004-closed-room/screenshots/000-closed-guest-desktop.png": {
     "sha256": "c0b40f6d129198168e75eb246ad6a546dd7dba97d83f8f3d5075989bde25c7e7",
@@ -102,5 +102,21 @@
   "tests/e2e/004-closed-room/screenshots/000-confirm-host-phone.png": {
     "sha256": "af1225029e7ad4f6721ecd2350c00833ba51e17ad4e2a819d64793a6b551b02b",
     "review": "Visually inspected phone baseline: The host can clearly choose Close room or Stay; closure consequences and controls fit within the viewport. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-phone.png": {
+    "sha256": "4d9bd4f0070e082e32374b2dca778e730d7fa77910e4886ae07edd273e944168",
+    "review": "Visually inspected phone: Confirmed landing centers Mira on space six with readable dice arithmetic and pickup/pass controls. The next player sees the handoff and concealed treasure; controls fit without document overflow."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-desktop.png": {
+    "sha256": "f00025b90a62d21a9f8eaea93bc08ad705c68b580d43d1b6fae7a5eb92150a85",
+    "review": "Visually inspected desktop: Confirmed landing centers Mira on space six with readable dice arithmetic and pickup/pass controls. The next player sees the handoff and concealed treasure; controls fit without document overflow."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-phone.png": {
+    "sha256": "94f3eeefd88aaa8dd2ce9acac300824cc3a3cb61e749c46dbafa34bd567f9181",
+    "review": "Visually inspected phone: Confirmed landing centers Mira on space six with readable dice arithmetic and pickup/pass controls. The next player sees the handoff and concealed treasure; controls fit without document overflow."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-desktop.png": {
+    "sha256": "7e8ebd199217357feae885ea329c39cc4e082fe8b5da692ca3c486496676055b",
+    "review": "Visually inspected desktop: Confirmed landing centers Mira on space six with readable dice arithmetic and pickup/pass controls. The next player sees the handoff and concealed treasure; controls fit without document overflow."
   }
 }

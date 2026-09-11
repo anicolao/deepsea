@@ -34,6 +34,8 @@ export class TestSteps {
     scenarios.set(info, views);
   }
 
+  gameLayout() { this.layout = 'game'; }
+
   async step(id: string, title: string, checks: Check[]) {
     if (this.finished || !title.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || !checks.length) {
       throw new Error('Each step needs a stable kebab-case ID and semantic checks.');
