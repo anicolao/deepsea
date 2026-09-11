@@ -12,6 +12,10 @@ if (process.platform !== 'linux' || process.arch !== 'x64') {
   console.error('Canonical screenshots require the x86_64-linux Nix shell (use Linux CI on other platforms).');
   process.exit(1);
 }
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH?.startsWith('/nix/store/') || !process.env.FONTCONFIG_FILE?.startsWith('/nix/store/')) {
+  console.error('Use the browser distribution and font configuration supplied by the Nix flake.');
+  process.exit(1);
+}
 if (args.some((arg) => !['--update-snapshots'].includes(arg))) {
   console.error('Supported option: --update-snapshots. Configure projects and policies in playwright.config.ts.');
   process.exit(1);

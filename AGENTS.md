@@ -10,6 +10,8 @@ Write design documents as standalone designs for Deep Sea. Explain decisions fro
 
 Follow `E2E_GUIDE.md` for browser tests: no explicit waits, masking, pixel tolerance, retries, skipped/focused tests, or per-test timeout overrides. Use the shared test fixture and TestSteps helper. Review generated screenshots and walkthroughs, then run normal verification before committing. Run tools through the Nix flake.
 
+Keep the guide's enforcement map and negative regression tests aligned with every E2E rule. Do not weaken the configuration contract or source guards to pass a test. Record exact baseline hashes and specific visual review notes in `E2E_REVIEWS.json`; automated updates must not fabricate review attestations. Stage all non-ignored changes before committing so the hook verifies the same files as the commit.
+
 Record every user prompt concerning this project verbatim in `PROMPTS.md`, including corrections and follow-up requests. Append each prompt once, in conversation order, under the next `## Prompt N: Summary` heading. Give each new prompt a 2–3 word summary, for example `## Prompt 8: Write Prompt Summaries`, followed by a blank line and the verbatim prompt. Preserve spelling, punctuation, capitalization, and line breaks in the prompt body. Leave historical headings unchanged. Do not include assistant messages or automatically supplied environment context.
 
 Update the log before doing other project work for each new prompt. Never rewrite or remove existing entries, and never invent or duplicate a prompt to satisfy a hook. Stage the new entries with the related work when committing.

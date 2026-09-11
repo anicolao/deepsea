@@ -1,28 +1,44 @@
-import { expect, test, type Page, type TestInfo } from '@playwright/test';
+import { test, type Page, type TestInfo } from '@playwright/test';
+import { expect, assertionsPerformed } from './assertions';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 type Check = { description: string; assert: () => Promise<unknown> };
 type CompletedStep = { id: string; title: string; checks: string[] };
+const scenarios = new WeakMap<TestInfo, TestSteps>();
+
+export function assertStepsFinished(info: TestInfo) {
+  const steps = scenarios.get(info);
+  if (!steps || !steps.finished) throw new Error('Every scenario must construct TestSteps, run semantic steps, and call finish().');
+}
 
 export class TestSteps {
   private completed: CompletedStep[] = [];
+  finished = false;
 
   constructor(
     private page: Page,
     private info: TestInfo,
     private title: string,
     private description: string
-  ) {}
+  ) {
+    if (scenarios.has(info)) throw new Error('Use one TestSteps walkthrough per scenario.');
+    scenarios.set(info, this);
+  }
 
   async step(id: string, title: string, checks: Check[]) {
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || !checks.length) {
+    if (this.finished || !title.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id) || !checks.length) {
       throw new Error('Each step needs a stable kebab-case ID and semantic checks.');
     }
     if (this.completed.some((step) => step.id.endsWith(`-${id}`))) throw new Error('Duplicate step ID');
     const numberedId = `${String(this.completed.length).padStart(3, '0')}-${id}`;
     await test.step(title, async () => {
-      for (const check of checks) await test.step(check.description, check.assert);
+      for (const check of checks) await test.step(check.description, async () => {
+        if (!check.description.trim()) throw new Error('Semantic checks require a description.');
+        const before = assertionsPerformed();
+        await check.assert();
+        if (assertionsPerformed() === before) throw new Error('Each semantic check must execute an expect matcher.');
+      });
       await expect(this.page.locator('body')).toBeVisible();
       // Readiness is a condition on local fonts, not a delay or screenshot-only style change.
       await expect(this.page.locator('html')).toHaveJSProperty('lang', 'en');
@@ -58,6 +74,8 @@ export class TestSteps {
   }
 
   finish() {
+    if (this.finished || !this.completed.length) throw new Error('Finish exactly once, after at least one completed step.');
+    this.finished = true;
     if (this.info.project.name !== 'desktop') return;
     const content = [
       `# ${this.title}`,

@@ -27,7 +27,27 @@ Canonical screenshots use **x86_64-linux**, pinned Chromium, headless mode, loca
 7. **No uncontrolled inputs.** Bundle fonts and assets. Block unexpected external network requests and fail on browser errors or failed resources. Fix random seeds, identities, locale, and clock when those features exist. Do not reveal hidden game values to simplify screenshots.
 8. **Assertions before pictures.** Screenshots supplement explicit checks of headings, state, enabled controls, focus, and results. A pretty image alone does not prove the scenario worked.
 
-`scripts/check-e2e-policy.mjs` rejects common forbidden calls and option overrides in scenarios and helpers before browser execution. It is an AST-based guard, not a complete proof against every possible workaround. Reviewers must also check for aliases, dynamic code, injected DOM changes, and policy changes in configuration. Do not weaken or bypass the guard.
+`scripts/check-e2e-policy.mjs` checks source policy, the complete central configuration, verification commands, and baseline review records before browser execution. Scenarios may import only the shared fixture and TestSteps; DOM evaluation and request interception are reserved for the shared infrastructure. Computed API access, aliased test imports, dynamic imports, and unapproved helpers fail the source check. Do not weaken or bypass the guard.
+
+### Enforcement map
+
+Every executable rule has a pre-commit check. The table separates those checks from judgments that software cannot establish. The checks are regression protection, not a security boundary against someone editing the checkers themselves.
+
+| Requirement | Pre-commit enforcement | Remaining review |
+| --- | --- | --- |
+| 1. No explicit waits | AST guard rejects wait APIs, timers, polling, `networkidle`, and references to forbidden methods, including aliases of those methods. | Decide whether the observed readiness condition proves the intended state. |
+| 2. No masking or hiding failures | AST guard rejects screenshot options, style injection, DOM evaluation in scenarios, markup replacement, removal APIs, and direct property mutation. Only TestSteps may capture screenshots. Configuration must match the checked contract. | Inspect app changes and trusted layout-check code for concealed content. |
+| 3. Zero pixel tolerance | Entire configuration must match `scripts/e2e-contract.json`, including all three zero thresholds; local overrides fail the AST guard. Normal browser execution compares every baseline. | Changes to the enforcement contract need explicit policy review. |
+| 4. No retries or hidden tests | Contract fixes discovery, both projects, retries, `forbidOnly`, and update mode. AST rejects focus/skip/fixme/slow and fixture/config overrides. Runner rejects selection arguments and CI updates; package scripts must invoke the full suite. | A hook cannot prevent someone invoking Git with `--no-verify` or deleting a scenario; CI and PR review remain necessary. |
+| 5. Timing policy | Contract fixes every timeout; source guard rejects timeout setters and local overrides. | Diagnose slow behavior rather than raising limits. |
+| 6. Real app and interactions | Contract requires the fresh production preview. Guard rejects markup mocks, interception outside the fixture, forced actions, injected events, app-state evaluation, extra contexts, and unapproved imports. | Verify assertions describe actual user behavior. Emulator/player-context rules become executable when multiplayer is implemented; extra contexts currently fail. |
+| 7. Controlled inputs and browser health | Runner requires the matching Nix browser version, Nix browser/font paths, and Linux architecture. Contract fixes viewport, locale, time zone, theme, and motion. AST rejects uncontrolled random/time calls in tests. Required fixture blocks external traffic and fails console, page, HTTP, transport, and unexpected-page errors. | Inspect application randomness, hidden information, and future emulator data handling when those features exist. |
+| 8. Assertions before pictures | TestSteps requires named checks; each callback must execute a counted matcher before layout checks and screenshot capture. The automatic fixture rejects scenarios without TestSteps or `finish()`. | A matcher count cannot prove that an assertion is meaningful. |
+| Step IDs, layout, walkthrough | Helper rejects empty/duplicate IDs, empty descriptions, repeated or premature finish, overflow, clipping, overlapping controls, and small buttons. Normal runs compare the generated walkthrough. | Judge readability and scenario completeness. |
+| Reviewed baselines and normal verification | `E2E_REVIEWS.json` must contain the exact SHA-256 and review notes for every baseline, without stale entries. The hook runs normal zero-tolerance verification. Update mode cannot fabricate review notes. | A hash-bound record is an attestation; it cannot prove visual inspection happened. |
+| Commit exactly what passed | Hook rejects unstaged changes and untracked, non-ignored files before and after verification, and checks the staged prompt entry. | Review the PR's explanation of intended visual changes. |
+
+Negative regression tests exercise configuration weakening, forbidden APIs and imports, missing/empty steps, stale reviews, and actual hook failures. Guard and infrastructure changes must preserve these tests and their failure cases.
 
 The [Playwright assertion documentation](https://playwright.dev/docs/test-assertions) explains observable-state assertions. Its [screenshot API](https://playwright.dev/docs/api/class-pageassertions) compares stable captures, while [screenshot configuration](https://playwright.dev/docs/api/class-testproject) defines the pixel thresholds. Project rules above intentionally restrict available options.
 
@@ -72,15 +92,15 @@ The shared fixture rejects external network traffic and records console errors, 
 
 1. Change the application and semantic assertions together. Review the intended behavior first.
 2. Run `nix develop -c npm run test:e2e:update`. This is the only documented update path; it also regenerates the walkthrough from passing steps.
-3. Inspect **every** added or changed screenshot at phone and desktop sizes. Check content, layout, focus, and readability against the assertions and UX design. An update command succeeding is not review.
+3. Inspect **every** added or changed screenshot at phone and desktop sizes. Check content, layout, focus, and readability against the assertions and UX design. Record its SHA-256 and specific review notes in `E2E_REVIEWS.json`; remove entries for deleted baselines. An update command succeeding is not review. To print hashes, run `nix develop -c node --input-type=module -e 'import { screenshotFiles, digest } from "./scripts/check-e2e-reviews.mjs"; import { readFileSync } from "node:fs"; for (const path of screenshotFiles()) console.log(path, digest(readFileSync(path)));'`. This command does not attest that you reviewed anything.
 4. Run `nix develop -c npm run verify` without update mode. All screenshots must match with zero differences. Missing baselines fail in normal mode rather than being silently accepted.
-5. Commit the app, test, walkthrough, screenshots, and verbatim prompt entry together. Explain intentional visual changes in the PR.
+5. Stage the app, test, walkthrough, screenshots, review records, and verbatim prompt entry together, then commit. Explain intentional visual changes in the PR.
 
 Normal tests never rewrite approved screenshots or walkthroughs. On failure, inspect the expected, actual, and difference images under `test-results/`, and the HTML report and retained trace under `playwright-report/`. These diagnostic files are not baselines and are not committed. CI uploads them even when verification fails.
 
 ## Hooks and CI
 
-The pre-commit hook checks the staged prompt log and runs `npm run verify`, entering Nix if necessary. The verification uses working-tree files; stage the final related app/test/baseline changes before committing. Never use `--no-verify` or disable Husky to get a failing change through.
+The pre-commit hook checks the staged prompt log, confirms that all non-ignored working files match the index, runs the policy checker directly, and runs `npm run verify`, entering Nix if necessary. It checks index/worktree agreement again afterward and stops on any failed command. Stage all final changes before committing; untracked non-ignored files also fail. Never use `--no-verify` or disable Husky to get a failing change through.
 
 CI installs the locked dependencies inside Nix and runs the same verification on the exact checked-out commit. PRs also check that the prompt log appends to the base history. After verification, the same static build is published at `/deepsea/pr<N>/` for same-repository PRs and `/deepsea/` for main. Publication preserves other previews and runs serially. The repository's Pages source is the root of `gh-pages`; the workflow explicitly requests a Pages build because workflow-token pushes do not trigger one automatically. See [GitHub's token documentation](https://docs.github.com/en/actions/concepts/security/github_token). Fork PRs verify without publishing. Preview links appear in the workflow summary; previews are not evidence of Firebase functionality. Browser screenshots and generated walkthroughs must already be committed and are never updated automatically by CI.
 

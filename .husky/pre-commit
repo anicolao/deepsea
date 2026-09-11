@@ -1,5 +1,10 @@
+set -eu
+
 if [ -z "${IN_NIX_SHELL:-}" ]; then
   exec nix develop -c sh .husky/pre-commit
 fi
 node scripts/check-prompts.mjs
+node scripts/check-staged-tree.mjs
+node scripts/check-e2e-policy.mjs
 npm run verify
+node scripts/check-staged-tree.mjs

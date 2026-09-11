@@ -1,7 +1,9 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base } from '@playwright/test';
+import { expect } from './assertions';
+import { assertStepsFinished } from './test-steps';
 
 export const test = base.extend<{ browserHealth: void }>({
-  browserHealth: [async ({ context, page, baseURL }, use) => {
+  browserHealth: [async ({ context, page, baseURL }, use, info) => {
     const problems: string[] = [];
     const origin = new URL(baseURL!).origin;
     await context.route('**/*', async (route) => {
@@ -20,8 +22,11 @@ export const test = base.extend<{ browserHealth: void }>({
     page.on('response', (response) => {
       if (response.status() >= 400) problems.push(`HTTP ${response.status()}: ${response.url()}`);
     });
+    page.on('requestfailed', (request) => problems.push(`Failed request: ${request.url()}`));
+    context.on('page', () => problems.push('Unexpected extra page: extend the shared fixture before testing multiple pages.'));
     await use();
     expect(problems, 'No browser errors, failed resources, or external requests').toEqual([]);
+    assertStepsFinished(info);
   }, { auto: true }]
 });
 
