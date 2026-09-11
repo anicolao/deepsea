@@ -76,6 +76,7 @@ it('allows bounded lobby actions while rejecting malformed lobby payloads', asyn
     { type: 'lobby/left', payload: {} },
     { type: 'lobby/ready', payload: { ready: true, rosterRevision: 'created' } },
     { type: 'game/started', payload: { seed: 2026, starterUid: 'mira', expectedActionId: 'created' } },
+    { type: 'dive/ordered', payload: { order: ['unit-a','unit-b'], expectedActionId: 'landed' } },
     { type: 'turn/rolled', payload: { direction: 'out', expectedActionId: 'started' } },
     { type: 'turn/landed', payload: { choice: 'pickup', expectedActionId: 'rolled' } },
     { type: 'turn/landed', payload: { choice: 'drop', unitId: 'opaque', expectedActionId: 'rolled' } }

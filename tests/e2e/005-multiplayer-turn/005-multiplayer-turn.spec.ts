@@ -13,7 +13,8 @@ test('a real turn moves treasure and survives a reload in both browsers', async 
   await guest.getByLabel('Your name').fill('Sol');
   await guest.getByRole('button', { name: 'Join room' }).click();
   await guest.getByRole('button', { name: 'Ready up' }).click();
-  await host.getByRole('button', { name: 'Ready up' }).click();
+  await expect(host.getByRole('list',{name:'Crew'}).getByRole('listitem')).toHaveCount(2);
+  await host.getByRole('button',{name:'Ready up'}).click();
   await host.getByRole('button', { name: 'Start dive' }).click();
   await host.getByRole('button', { name: 'Roll dice' }).click();
   await hostSteps.step('rolled', 'Mira lands on concealed treasure', [{description:'The confirmed dice move six spaces without using oxygen on an empty cargo hold.', assert:async()=>{

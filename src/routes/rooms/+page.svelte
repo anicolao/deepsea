@@ -1,6 +1,7 @@
 <script lang="ts">
   import '@fontsource/atkinson-hyperlegible/400.css';
   import '@fontsource/atkinson-hyperlegible/700.css';
+  import Review from '$lib/components/Review.svelte';
   import Game from '$lib/components/Game.svelte';
   import { onMount } from 'svelte';
   import { base } from '$app/paths';
@@ -107,7 +108,7 @@
     <section><h2>Room closed</h2><p>The host left before the dive started.</p><a href={`${base}/rooms/`}>Create another room</a></section>
   {:else if room?.phase === 'started' && !me}
     <section><h2>This dive has already started</h2><p>The crew is fixed. Ask your friends to invite you to their next room.</p><a href={`${base}/rooms/`}>Create another room</a></section>
-  {:else if room?.phase === 'started' && me && room.dive}<Game {room} {uid} {enabled} {act} />
+  {:else if room?.phase === 'started' && me && room.dive}{#if room.dive.stage === 'playing'}<Game {room} {uid} {enabled} {act} />{:else}<Review {room} {uid} {enabled} {act} />{/if}
   {:else if room}
     <section aria-label="Room lobby">
       <h2>{room.hostName}’s room</h2>

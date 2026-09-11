@@ -145,6 +145,9 @@ test('errors in a second player fail the scenario and still close all contexts',
 
 test('reload cancellation classification is restricted to the exact stream, code and navigation', async () => {
   for (const [url, code, duringReload, allowed] of [
+    ['http://127.0.0.1:8080/v1/projects/demo-deepsea/databases/(default)/documents:commit', 'net::ERR_ABORTED', true, true],
+    ['http://127.0.0.1:8080/v1/projects/demo-deepsea/databases/(default)/documents:commit', 'net::ERR_ABORTED', false, false],
+    ['http://127.0.0.1:8080/v1/projects/demo-deepsea/databases/(default)/documents:batchGet', 'net::ERR_FAILED', true, false],
     ['http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel', 'net::ERR_ABORTED', true, true],
     ['http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel', 'net::ERR_FAILED', true, false],
     ['http://127.0.0.1:8080/missing-resource', 'net::ERR_ABORTED', true, false],
@@ -192,4 +195,55 @@ test('delayed reload cancellation belongs only to the exact old request, not a n
     }, h.info);
     if (allowed) await run; else await assert.rejects(run, /any player context/);
   }
+});
+
+test('overlap checks honor only the intended scroll panel clipping rectangle', () => {
+  const source = readFileSync('tests/e2e/helpers/test-steps.ts','utf8');
+  const file = ts.createSourceFile('steps.ts',source,ts.ScriptTarget.Latest,true);
+  let expression;
+  function find(node) { if(ts.isVariableDeclaration(node) && node.name.getText(file)==='visibleBox') expression=node.initializer.getText(file);ts.forEachChild(node,find); }
+  find(file);assert.ok(expression);
+  const code=ts.transpileModule(`const visibleBox = ${expression}; visibleBox;`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  const panel={left:0,right:300,top:100,bottom:400};
+  const control=(top,bottom,inside=true)=>({getBoundingClientRect:()=>({left:10,right:100,top,bottom}),closest:()=>inside?{getBoundingClientRect:()=>panel}:null});
+  const game=runInNewContext(code,{layout:'game'});
+  const clipped=game(control(380,430));assert.equal(clipped.bottom,400);assert.equal(clipped.top,380);
+  const outside=game(control(430,474));assert.ok(outside.bottom<=outside.top);
+  const footer=game(control(430,474,false));assert.equal(footer.top,430);assert.equal(footer.bottom,474);
+  const ordinary=runInNewContext(code,{layout:'room'})(control(380,430));assert.equal(ordinary.bottom,430);
+  const overlapping=game(control(390,410));assert.ok(Math.min(clipped.bottom,overlapping.bottom)>Math.max(clipped.top,overlapping.top));
+});
+
+test('only recovered immutable Firestore event conflicts qualify as SDK retries', async () => {
+ const url='http://127.0.0.1:8080/v1/projects/demo-deepsea/databases/(default)/documents:commit?key=local-emulator-key';
+ const name='projects/demo-deepsea/databases/(default)/documents/environments/local/games/room/events/tab_3';
+ const fields={type:{stringValue:'lobby/ready'}};
+ for(const mode of ['same-write','verified-read','missing-ack','wrong-event','wrong-fields','wrong-status','wrong-endpoint','unconditional-verify']){
+  const {health}=infrastructure();const handlers=new Map();
+  const response=(status,writes,target=url,errorStatus='ALREADY_EXISTS')=>({status:()=>status,url:()=>target,request:()=>({url:()=>target,method:()=> 'POST',postDataJSON:()=>({writes})}),json:async()=>({error:{code:409,status:errorStatus}})});
+  const run=health[0]({context:{route:async()=>{},on(){}},page:{on:(name,fn)=>handlers.set(name,fn)},baseURL:'http://localhost/'},async()=>{
+   const target=mode==='wrong-endpoint'?'http://127.0.0.1:8080/unrelated':url;
+   handlers.get('response')(response(409,[{update:{name,fields}}],target,mode==='wrong-status'?'PERMISSION_DENIED':'ALREADY_EXISTS'));
+   handlers.get('console')({type:()=> 'error',text:()=> 'Failed to load resource: the server responded with a status of 409 (Conflict)',location:()=>({url:target})});
+   if(mode!=='missing-ack')handlers.get('response')(response(200,mode==='verified-read'?[{verify:name,currentDocument:{updateTime:'2026-09-11T00:00:00Z'}}]:mode==='unconditional-verify'?[{verify:name}]:[{update:{name:mode==='wrong-event'?name+'other':name,fields:mode==='wrong-fields'?{changed:true}:fields}}]));
+  },{});
+  if(['same-write','verified-read'].includes(mode))await run;else await assert.rejects(run,/No browser errors/);
+ }
+});
+
+test('completed Fetch streams require successful same-session acknowledgement advancement', async () => {
+ for(const mode of ['advanced','missing-response','no-successor','stagnant','different-session','different-database','wrong-method','wrong-endpoint','wrong-code']){
+  const {health}=infrastructure(), handlers=new Map();
+  const url=(sid,aid,database='projects/demo/databases/(default)')=>'http://127.0.0.1:8080/google.firestore.v1.Firestore/Listen/channel?RID=rpc&SID='+sid+'&AID='+aid+'&database='+encodeURIComponent(database);
+  const old={url:()=>mode==='wrong-endpoint'?'http://127.0.0.1:8080/other':url('a',3),method:()=>mode==='wrong-method'?'POST':'GET',failure:()=>({errorText:mode==='wrong-code'?'net::ERR_FAILED':'net::ERR_ABORTED'})};
+  const next={url:()=>url(mode==='different-session'?'b':'a',mode==='stagnant'?3:5,mode==='different-database'?'projects/other/databases/(default)':'projects/demo/databases/(default)'),method:()=> 'GET'};
+  const response=request=>({status:()=>200,url:request.url,request:()=>request});
+  const run=health[0]({context:{route:async()=>{},on(){}},page:{on:(name,fn)=>handlers.set(name,fn)},baseURL:'http://localhost/'},async()=>{
+   handlers.get('request')(old);
+   if(mode!=='missing-response')handlers.get('response')(response(old));
+   handlers.get('requestfailed')(old);
+   if(mode!=='no-successor'){handlers.get('request')(next);handlers.get('response')(response(next));}
+  },{});
+  if(mode==='advanced')await run;else await assert.rejects(run,/No browser errors/);
+ }
 });

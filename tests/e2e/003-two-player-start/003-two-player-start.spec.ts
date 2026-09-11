@@ -25,7 +25,8 @@ test('two players can leave, rejoin and start while late invites are rejected', 
   } }]);
   await guest.getByRole('button', { name: 'Join room' }).click();
   await guest.getByRole('button', { name: 'Ready up' }).click();
-  await host.getByRole('button', { name: 'Ready up' }).click();
+  await expect(host.getByRole('list',{name:'Crew'}).getByRole('listitem')).toHaveCount(2);
+  await host.getByRole('button',{name:'Ready up'}).click();
   await host.getByRole('button', { name: 'Start dive' }).click();
   hostSteps.gameLayout();
   await hostSteps.step('started', 'Two ready friends start', [{ description: 'The saved start contains both seats and Mira as first diver.', assert: async () => {

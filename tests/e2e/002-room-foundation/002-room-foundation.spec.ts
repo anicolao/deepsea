@@ -51,6 +51,7 @@ test('friends create, join, ready and start a room through real browser actions'
     await expect(host.getByRole('button', { name: 'Roll dice' })).toHaveCount(0);
     await expect(third.getByRole('heading', { name: 'Sol’s turn', exact: true })).toBeVisible();
   } }]);
+  await expect(guest.getByRole('button', { name: 'Roll dice' })).toBeEnabled();
   await players.reload(guest);
   guestSteps.gameLayout();
   await guestSteps.step('reloaded', 'Reload keeps the player and confirmed start', [{ description: 'Sol returns to the same seat and the same first diver without a second join.', assert: async () => {

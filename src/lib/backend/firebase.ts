@@ -8,7 +8,9 @@ import type { EventTransport } from './repository';
 export async function connectBackend(config: BackendConfig, instanceName = `${config.projectId}-${config.namespace ?? 'local'}`) {
   const app = initializeApp({ projectId: config.projectId, apiKey: config.apiKey, appId: config.appId, authDomain: config.authDomain }, instanceName);
   const auth = initializeAuth(app, { persistence: browserLocalPersistence });
-  const db = initializeFirestore(app, {});
+  // A bounded-response transport avoids buffering-proxy stream switching in browsers.
+  // Node integration clients retain the SDK's native transport.
+  const db = initializeFirestore(app, typeof window === 'undefined' ? {} : { experimentalForceLongPolling: true });
   if (config.mode === 'local') {
     connectAuthEmulator(auth, `http://${config.authHost}`, { disableWarnings: true });
     const [host, port] = config.firestoreHost!.split(':');

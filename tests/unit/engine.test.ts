@@ -36,7 +36,7 @@ describe('multiplayer turns', () => {
   it('conserves all tiles through many legal pickup/pass turns', () => {
     for(let seed=0;seed<40;seed++){
       let d=initialDive(seed,['a','b','c','d','e','f'],'a');
-      for(let i=0;i<30;i++){
+      for(let i=0;i<30 && d.stage === 'playing';i++){
         d=turn(d,seed,d.active,'turn/rolled',{direction:'out'})!;
         const me=d.divers.find(p=>p.uid===d.active)!;
         d=turn(d,seed,d.active,'turn/landed',{choice:d.path[me.position-1]?'pickup':'pass'})!;

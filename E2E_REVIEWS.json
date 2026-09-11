@@ -118,5 +118,29 @@
   "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-desktop.png": {
     "sha256": "7e8ebd199217357feae885ea329c39cc4e082fe8b5da692ca3c486496676055b",
     "review": "Visually inspected desktop: Confirmed landing centers Mira on space six with readable dice arithmetic and pickup/pass controls. The next player sees the handoff and concealed treasure; controls fit without document overflow."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-phone.png": {
+    "sha256": "40c7b5f5c2393f38096a7a54a0478a3e3e64544c0b68061d8d7ca95c6a8fc3ac",
+    "review": "Visually inspected phone: The depleted oxygen and last-turn instruction are explicit. Landing and whole-unit selection controls remain reachable on both layouts."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-desktop.png": {
+    "sha256": "1715e202232c346ec94bb0ec62ba62cd4b0ddee38754c54ed0323a40c59e3ca7",
+    "review": "Visually inspected desktop: The depleted oxygen and last-turn instruction are explicit. Landing and whole-unit selection controls remain reachable on both layouts."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-phone.png": {
+    "sha256": "c61e0b86d6a0bef1f815d429c94ef3386d4a9c91c58cec88bcf31c85d9254bc9",
+    "review": "Visually inspected phone: Concealed units have stack group labels and distinct earlier/later controls. The ivory panel scrolls independently above the confirm action."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-desktop.png": {
+    "sha256": "b2cdf445ef693a3696413f0df215f348b7de7f87c63996e670200b431201b331",
+    "review": "Visually inspected desktop: Concealed units have stack group labels and distinct earlier/later controls. The ivory panel scrolls independently above the confirm action."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/000-review-host-phone.png": {
+    "sha256": "547586da409ad3c0f7d1d642761d614cc02573739561ca590120e6f88e8a76ed",
+    "review": "Visually inspected phone: Returned versus lost outcomes and separate dive/total columns are readable. Saved treasure disclosure and next-starter text are visible."
+  },
+  "tests/e2e/006-dive-resolution/screenshots/000-review-host-desktop.png": {
+    "sha256": "6e9f3354e1f6927a04474203ada8a39f05434eceef0a054637231de1adcfdc0c",
+    "review": "Visually inspected desktop: Returned versus lost outcomes and separate dive/total columns are readable. Saved treasure disclosure and next-starter text are visible."
   }
 }
