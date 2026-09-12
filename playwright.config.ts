@@ -39,7 +39,7 @@ export default defineConfig({
     navigationTimeout: 2_000,
     trace: 'on',
     launchOptions: {
-      args: ['--font-render-hinting=none', '--disable-lcd-text', '--disable-gpu', '--force-device-scale-factor=1']
+      args: ['--font-render-hinting=none', '--disable-lcd-text', '--disable-gpu', '--disable-partial-raster', '--disable-skia-runtime-opts', '--force-device-scale-factor=1']
     }
   },
   projects: [

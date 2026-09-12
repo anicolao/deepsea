@@ -8,8 +8,10 @@ test("six friends complete three dives and share victory", async ({
     name: string;
     steps: TestSteps;
   }[] = [];
-  for (const name of ["Mira", "Sol", "Kai", "Luz", "Nori", "Pip"]) {
-    const page = await players.create(393);
+  const names = ["Mira", "Sol", "Kai", "Luz", "Nori", "Pip"];
+  const pages = await Promise.all(names.map(() => players.create(393)));
+  for (const [index, name] of names.entries()) {
+    const page = pages.at(index)!;
     const steps = new TestSteps(
       page,
       info,
@@ -27,13 +29,9 @@ test("six friends complete three dives and share victory", async ({
   await expect(
     host.getByText("Mira (You) · Host", { exact: true }),
   ).toBeVisible();
-  await Promise.all(
-    crew.slice(1).map(async (friend) => {
-      await friend.page.goto(host.url());
-      await friend.page.getByLabel("Your name").fill(friend.name);
-    }),
-  );
   for (const friend of crew.slice(1)) {
+    await friend.page.goto(host.url());
+    await friend.page.getByLabel("Your name").fill(friend.name);
     await friend.page.getByRole("button", { name: "Join room" }).click();
     await expect(
       friend.page.getByRole("button", { name: "Ready up" }),
@@ -49,6 +47,14 @@ test("six friends complete three dives and share victory", async ({
     ),
   );
   await host.getByRole("button", { name: "Start dive" }).click();
+  const activate = async (
+    page: Awaited<ReturnType<typeof players.create>>,
+    name: string,
+  ) => {
+    const button = page.getByRole("button", { name, exact: true });
+    await expect(button).toBeEnabled();
+    await button.press("Enter");
+  };
   for (const [index, moves] of [
     [
       { seat: 0, back: false, choice: "pass" },
@@ -99,7 +105,7 @@ test("six friends complete three dives and share victory", async ({
       const actor = crew.at(move.seat)!.page;
       if (move.back)
         await actor.getByLabel("Turn back", { exact: true }).check();
-      await actor.getByRole("button", { name: "Roll dice" }).click();
+      await activate(actor, "Roll dice");
     };
     let rolled = roll(moves.at(0)!);
     for (const [position, move] of moves.entries()) {
@@ -107,18 +113,12 @@ test("six friends complete three dives and share victory", async ({
       const actor = crew.at(move.seat)!.page,
         next = moves.at(position + 1);
       const landing = move.choice
-        ? actor.getByRole("button", { name: "Leave it", exact: true }).click()
+        ? activate(actor, "Leave it")
         : Promise.resolve();
       rolled = next ? roll(next) : Promise.resolve();
       await Promise.all([landing, rolled]);
     }
-    if (index < 2)
-      await host
-        .getByRole("button", {
-          name: "Continue to dive " + (index + 2),
-          exact: true,
-        })
-        .click();
+    if (index < 2) await activate(host, "Continue to dive " + (index + 2));
   }
   await Promise.all(
     crew.map(async (friend) => {
@@ -133,16 +133,16 @@ test("six friends complete three dives and share victory", async ({
                 exact: true,
               }),
             ).toBeVisible();
-            for (const other of crew)
-              await expect(
-                friend.page.getByRole("row", {
-                  name:
-                    other.name +
-                    (other.name === friend.name ? " (You)" : "") +
-                    " 0 0 0 0",
-                  exact: true,
-                }),
-              ).toBeVisible();
+            await expect(friend.page.getByRole("rowheader")).toHaveCount(6);
+            await expect(friend.page.getByRole("rowheader")).toContainText(
+              crew.map(
+                (other) =>
+                  other.name + (other.name === friend.name ? " (You)" : ""),
+              ),
+            );
+            await expect(friend.page.getByRole("cell")).toHaveText(
+              Array.from({ length: 24 }, () => "0"),
+            );
             await expect(
               friend.page.getByRole("button", {
                 name: "Play again",

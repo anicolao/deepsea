@@ -134,6 +134,24 @@ export function compareEvents(a: ConfirmedEvent, b: ConfirmedEvent) {
   );
 }
 export function replay(gameId: string, input: unknown[]): Projection {
+  return project(gameId, input);
+}
+
+type ReplayCache = { signatures: string[]; result: Projection };
+
+// A watcher normally receives an unchanged chronological prefix plus new events.
+// Validate every snapshot, but only reduce the new suffix. Changed history falls
+// back to a full replay, including late arrivals, deletions and ID collisions.
+export function createProjector(gameId: string) {
+  const cache: ReplayCache = { signatures: [], result: replay(gameId, []) };
+  return (input: unknown[]) => project(gameId, input, cache);
+}
+
+function project(
+  gameId: string,
+  input: unknown[],
+  cache?: ReplayCache,
+): Projection {
   const result: Projection = {
     room: null,
     blocked: false,
@@ -158,7 +176,25 @@ export function replay(gameId: string, input: unknown[]): Projection {
       collisions.add(id);
     unique.set(id, event);
   }
-  for (const event of [...unique.values()].sort(compareEvents)) {
+  const ordered = [...unique.values()].sort(compareEvents);
+  const cacheable = !result.diagnostics.length && !collisions.size;
+  const signatures = cache && cacheable ? ordered.map(canonicalJSON) : [];
+  let offset = 0;
+  if (
+    cache &&
+    cacheable &&
+    cache.signatures.length <= signatures.length &&
+    cache.signatures.every(
+      (signature, index) => signature === signatures[index],
+    )
+  ) {
+    offset = cache.signatures.length;
+    result.room = cache.result.room;
+    result.blocked = cache.result.blocked;
+    result.diagnostics = [...cache.result.diagnostics];
+    result.acceptedIds = [...cache.result.acceptedIds];
+  }
+  for (const event of ordered.slice(offset)) {
     if (collisions.has(event.id)) {
       result.diagnostics.push(`Conflicting duplicate: ${event.id}`);
       continue;
@@ -178,6 +214,11 @@ export function replay(gameId: string, input: unknown[]): Projection {
     result.acceptedIds.push(event.id);
   }
   result.diagnostics.sort();
+  if (cache) {
+    cache.signatures = signatures;
+    // Keep the cache independent of the projection handed to consumers.
+    cache.result = cacheable ? structuredClone(result) : replay(gameId, []);
+  }
   return result;
 }
 

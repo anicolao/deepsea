@@ -66,7 +66,7 @@ test("safe return, final oxygen turn and lost cargo ordering resolve one shared 
       ).toBeVisible();
       await players.setConnected(host, false);
       await expect(
-        host.getByText("Offline — reconnect to make changes.", { exact: true }),
+        host.getByText("Reconnecting…", { exact: true }),
       ).toBeVisible();
     }
   }

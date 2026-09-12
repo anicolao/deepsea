@@ -16,13 +16,21 @@ Five seated friends see only one final join.
 
 ![Phone: The crew has exactly six seats](screenshots/000-full-crew-mira-phone.png)
 
+## The full crew is ready to dive
+
+- The invite confirmation and six ready seats fit alongside an enabled Start dive.
+
+![Desktop: The full crew is ready to dive](screenshots/001-ready-crew-mira-desktop.png)
+
+![Phone: The full crew is ready to dive](screenshots/001-ready-crew-mira-phone.png)
+
 ## Every diver is identifiable during play
 
 - The crew inspector names all six divers, distinguishes the local seat, and shows concealed cargo separately from saved points.
 
-![Desktop: Every diver is identifiable during play](screenshots/001-six-divers-mira-desktop.png)
+![Desktop: Every diver is identifiable during play](screenshots/002-six-divers-mira-desktop.png)
 
-![Phone: Every diver is identifiable during play](screenshots/001-six-divers-mira-phone.png)
+![Phone: Every diver is identifiable during play](screenshots/002-six-divers-mira-phone.png)
 
 ## sol
 

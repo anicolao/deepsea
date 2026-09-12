@@ -150,7 +150,7 @@ Run automated verification only against emulators. Separately perform a named li
 - [x] Every E2E rule retains pre-commit enforcement and negative regression coverage; walkthroughs and baseline review records match.
 - [x] Live preview/production boundaries, nested invites, deployment, compatibility, and rollback instructions are verified and recorded.
 
-The automated acceptance evidence is 53 enforcement regressions, 250 unit cases (including 200 complete games across two through six players), five real emulator authorization cases, and twelve browser journeys on each of two viewports. The same journeys run against the retained live PR preview. UX_ACCEPTANCE.md records screenshot review, contrast and keyboard evidence without claiming a physical-device or screen-reader audit. The final PR must retain green exact-head checks before review.
+The automated acceptance evidence is 53 enforcement regressions, 255 unit cases (including 200 complete games across two through six players), five real emulator authorization cases, and twelve browser journeys on each of two viewports. The same journeys run against the retained live PR preview. UX_ACCEPTANCE.md records screenshot review, contrast and keyboard evidence without claiming a physical-device or screen-reader audit. The final PR must retain green exact-head checks before review.
 
 ## Working rules for each delivery
 

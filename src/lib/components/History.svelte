@@ -43,7 +43,7 @@
     margin: 6px 0;
   }
   small {
-    color: #b0eee0;
+    color: #496573;
   }
   ol {
     list-style: none;

@@ -132,6 +132,24 @@ test("two friends compete for the final seat and only one joins", async ({
       page.getByRole("button", { name: "Ready up" }).click(),
     ),
   );
+  await host.getByRole("button", { name: "Copy invite" }).click();
+  await crew.at(0)!.steps.step("ready-crew", "The full crew is ready to dive", [
+    {
+      description:
+        "The invite confirmation and six ready seats fit alongside an enabled Start dive.",
+      assert: async () => {
+        await expect(
+          host.getByText("Invite copied", { exact: true }),
+        ).toBeVisible();
+        await expect(
+          host.getByText("✓ You are ready", { exact: true }),
+        ).toBeVisible();
+        await expect(
+          host.getByRole("button", { name: "Start dive" }),
+        ).toBeEnabled();
+      },
+    },
+  ]);
   await host.getByRole("button", { name: "Start dive" }).click();
   await host.getByRole("button", { name: "Roll dice" }).click();
   await host.getByRole("button", { name: "Pick up treasure" }).click();

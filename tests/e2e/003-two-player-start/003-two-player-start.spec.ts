@@ -32,7 +32,6 @@ test("two players can leave, rejoin and start while late invites are rejected", 
     "room",
   );
   await host.goto("./");
-  await host.getByRole("link", { name: "Create room", exact: true }).click();
   await host.getByLabel("Your name").fill("Mira");
   await host.getByRole("button", { name: "Create room", exact: true }).click();
   await expect(

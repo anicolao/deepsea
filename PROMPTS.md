@@ -79,3 +79,11 @@ OK that's rebased and merged. Let's start a new branch for all the remaining imp
 > Firebase has no authenticated account on this machine, which prevents provisioning the live PR backend. Please run `cd /home/anicolao/projects/deepsea && nix develop -c npm exec -- firebase login --no-localhost`, complete Google sign-in, and tell me when it’s done. I’ll continue implementing the lobby and preview checks meanwhile.
 
 this was already done.
+
+## Prompt 20: Match Responsive Mockups
+
+The mechanics of the game appear to work, but the UX is nothing at all like the UX_DESIGN even though we said we were building the prdouction game. Review each screen and make it match the responsive design provided, and add thsoe fixes to this PR.
+
+## Prompt 21: Finish UX Work
+
+not sure how you got interrupted. finish the UX job

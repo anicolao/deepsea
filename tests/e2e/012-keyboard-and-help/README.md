@@ -8,29 +8,37 @@ A long player name stays readable while help, cargo and history preserve the cur
 
 A long player name stays readable while help, cargo and history preserve the current move.
 
+## Direction and concealed cargo remain visible together
+
+- The return direction is selected before committing a roll, with visible cargo and oxygen cost.
+
+![Desktop: Direction and concealed cargo remain visible together](screenshots/000-direction-host-desktop.png)
+
+![Phone: Direction and concealed cargo remain visible together](screenshots/000-direction-host-phone.png)
+
 ## Help does not discard the chosen direction
 
 - The named dialog explains movement and oxygen in player language and has a keyboard close control.
 
-![Desktop: Help does not discard the chosen direction](screenshots/000-help-host-desktop.png)
+![Desktop: Help does not discard the chosen direction](screenshots/001-help-host-desktop.png)
 
-![Phone: Help does not discard the chosen direction](screenshots/000-help-host-phone.png)
+![Phone: Help does not discard the chosen direction](screenshots/001-help-host-phone.png)
 
 ## Cargo shows units and tiles without a peek
 
 - The held unit is concealed and the roster has readable long names and statuses.
 
-![Desktop: Cargo shows units and tiles without a peek](screenshots/001-cargo-host-desktop.png)
+![Desktop: Cargo shows units and tiles without a peek](screenshots/002-cargo-host-desktop.png)
 
-![Phone: Cargo shows units and tiles without a peek](screenshots/001-cargo-host-phone.png)
+![Phone: Cargo shows units and tiles without a peek](screenshots/002-cargo-host-phone.png)
 
 ## Confirmed moves have a readable history
 
 - History names the divers and their actions without exposing hidden values or event data.
 
-![Desktop: Confirmed moves have a readable history](screenshots/002-history-host-desktop.png)
+![Desktop: Confirmed moves have a readable history](screenshots/003-history-host-desktop.png)
 
-![Phone: Confirmed moves have a readable history](screenshots/002-history-host-phone.png)
+![Phone: Confirmed moves have a readable history](screenshots/003-history-host-phone.png)
 
 ## guest
 

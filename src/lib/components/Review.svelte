@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Diver from "./Diver.svelte";
   import History from "./History.svelte";
   import { playerView, finalResults } from "$lib/game/engine";
   import type { Room } from "$lib/game/protocol";
@@ -10,12 +11,19 @@
     type: string,
     payload: Record<string, unknown>,
   ) => Promise<void>;
-  $: view = playerView(room.dive!);
-  $: result = finalResults(room.dive!);
+  let projectedDive = room.dive;
+  let view = playerView(room.dive!);
+  let result = finalResults(room.dive!);
+  $: if (room.dive !== projectedDive) {
+    projectedDive = room.dive;
+    view = playerView(room.dive!);
+    result = finalResults(room.dive!);
+  }
   $: current = view.reviews.at(-1)!;
   $: owner = view.cleanup[0];
   $: mine = owner === uid;
   $: lost = view.divers.find((p) => p.uid === owner)?.cargo ?? [];
+  let history: HTMLDialogElement;
   let historyOpen = false;
   let order: string[] = [],
     revision = "";
@@ -33,21 +41,42 @@
   }
 </script>
 
-<div class="review">
+<div
+  class="review"
+  class:full-results={view.stage === "finished" && view.divers.length > 4}
+>
   <header aria-live="polite" aria-atomic="true">
     <p class="eyebrow">BACK AT THE SURFACE · DIVE {view.number} OF 3</p>
     <h1>
       {view.stage === "finished"
-        ? "The haul is in"
+        ? "Game complete"
         : view.stage === "cleanup"
           ? "Treasure left behind"
           : `Dive ${view.number} complete`}
     </h1>
-    <p>Previously saved treasure stays safe.</p>
+    <p>
+      {view.stage === "finished"
+        ? "After 3 dives"
+        : "Previously saved treasure stays safe."}
+    </p>
   </header>
   <section class="report" data-game-path aria-label="Dive results">
-    {#if view.stage === "finished"}
-      <h2 aria-live="polite">
+    {#if view.stage === "finished"}<svg
+        class="trophy"
+        viewBox="0 0 100 100"
+        aria-hidden="true"
+        ><path d="M28 13h44v24c0 22-44 22-44 0Z" fill="#efba43" /><path
+          d="M28 20H14c0 22 8 25 19 25M72 20h14c0 22-8 25-19 25"
+          fill="none"
+          stroke="#e8a529"
+          stroke-width="6"
+        /><path
+          d="M50 53v22M35 83h30M40 75h20"
+          stroke="#d99a22"
+          stroke-width="9"
+        /><path d="M36 20v14" stroke="#ffe29a" stroke-width="5" /></svg
+      >
+      <h2 class="winner" aria-live="polite">
         {result.winners.map(name).join(" & ")}
         {result.winners.length === 1 ? "wins!" : "share victory!"}
       </h2>
@@ -67,7 +96,13 @@
           ></thead
         ><tbody
           >{#each result.rows as p}<tr
-              ><th scope="row">{name(p.uid)}{p.uid === uid ? " (You)" : ""}</th
+              ><th scope="row"
+                ><span class="player-name"
+                  ><Diver
+                    seat={room.members.find((m) => m.uid === p.uid)?.seat}
+                  /><span>{name(p.uid)}{p.uid === uid ? " (You)" : ""}</span
+                  ></span
+                ></th
               >{#each p.dives as score}<td>{score}</td>{/each}<td
                 ><strong>{p.points}</strong></td
               ></tr
@@ -87,8 +122,9 @@
       </p>
       <ol aria-label="Lost treasure order">
         {#each order as id, index}<li>
-            <div>
-              <strong>Unit {lost.findIndex((u) => u.id === id) + 1}</strong
+            <div class="lost-unit">
+              <span class="concealed-gem" aria-hidden="true">◇</span><strong
+                >Unit {lost.findIndex((u) => u.id === id) + 1}</strong
               ><span
                 >Level {lost.find((u) => u.id === id)?.levels.join(", ")} · {lost.find(
                   (u) => u.id === id,
@@ -132,7 +168,12 @@
         ><tbody
           >{#each current.players as p}<tr
               ><th scope="row"
-                >{name(p.uid)}{p.uid === uid ? " (You)" : ""}<small
+                ><span class="player-name"
+                  ><Diver
+                    seat={room.members.find((m) => m.uid === p.uid)?.seat}
+                  /><span>{name(p.uid)}{p.uid === uid ? " (You)" : ""}</span
+                  ></span
+                ><small class:lost={!p.returned}
                   >{p.returned ? "Returned" : "Treasure lost"}</small
                 ></th
               ><td>{p.gained.reduce((sum, t) => sum + t.value, 0)}</td><td
@@ -143,21 +184,14 @@
       </table>
       {#each current.players.filter((p) => p.gained.length) as p}<details>
           <summary>{name(p.uid)}’s saved treasure</summary>
-          <p>
-            {p.gained
-              .map((t) => `Level ${t.level}: ${t.value} points`)
-              .join(" · ")}
-          </p>
+          <div class="revealed-coins">
+            {#each p.gained as t}<span
+                aria-label={"Level " + t.level + ": " + t.value + " points"}
+                >{t.value}</span
+              >{/each}
+          </div>
         </details>{/each}
     {/if}
-    {#if view.stage !== "cleanup"}<details
-        class="history"
-        bind:open={historyOpen}
-      >
-        <summary>View game history</summary>{#if historyOpen}<History
-            {room}
-          />{/if}
-      </details>{/if}
   </section>
   <section class="actions" data-game-actions aria-label="After the dive">
     {#if view.stage === "finished"}<button
@@ -188,30 +222,58 @@
           act("dive/continued", { expectedActionId: room.lastActionId })}
         >Continue to dive {view.number + 1}</button
       >{/if}
+    {#if view.stage !== "cleanup"}<button
+        class="history-button"
+        on:click={() => {
+          historyOpen = true;
+          history.showModal();
+        }}>View game history</button
+      >{/if}
   </section>
 </div>
+
+<dialog
+  class="history-dialog"
+  bind:this={history}
+  aria-label="Game history"
+  on:close={() => (historyOpen = false)}
+>
+  <h2>Game history</h2>
+  <div class="history-body" data-game-path>
+    {#if historyOpen}<History {room} />{/if}
+  </div>
+  <button on:click={() => history.close()}>Back to results</button>
+</dialog>
 
 <style>
   .review {
     width: 100%;
-    height: calc(100dvh - 132px);
-    max-width: 850px;
+    max-width: 760px;
     margin: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    background: #f8f4eb;
+    color: #102f46;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 2px solid #658da1;
+    box-shadow: 0 0 0 4px #113b51;
   }
   header {
+    text-align: center;
+    padding: 22px 24px 12px;
     flex-shrink: 0;
   }
   .eyebrow {
-    color: #b0eee0;
-    font-size: 12px;
+    color: #557482;
+    font-size: 11px;
     letter-spacing: 2px;
+    margin: 0 0 8px;
   }
   h1 {
     font-size: 32px;
-    margin: 8px 0;
+    margin: 4px 0 10px;
   }
   h2 {
     font-size: 23px;
@@ -225,43 +287,48 @@
     min-height: 0;
     overflow-y: auto;
     flex: 1;
-    background: #f5f1dc;
-    color: #12313d;
-    padding: 24px;
+    padding: 8px 24px 18px;
+  }
+  .report > h2 {
+    text-align: center;
+  }
+  .report > p {
+    font-size: 14px;
+    text-align: center;
+  }
+  .trophy {
+    display: block;
+    width: 95px;
+    height: 95px;
+    margin: 0 auto;
+  }
+  .winner {
+    font-size: 30px;
   }
   .actions {
-    border: 1px solid #497074;
-    background: #12313d;
-    padding: 16px;
+    padding: 16px 24px 20px;
+    flex-shrink: 0;
+    border-top: 1px solid #d4dad1;
   }
   .actions h2 {
-    font-size: 21px;
+    font-size: 19px;
+    background: #dcebf0;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 0 8px;
   }
   .actions p {
-    font-size: 14px;
+    font-size: 13px;
+    text-align: center;
+    margin: 6px 0;
   }
-  table {
+  .primary {
     width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-  caption {
-    text-align: left;
-    margin-bottom: 12px;
-  }
-  th,
-  td {
-    padding: 14px 8px;
-    border-bottom: 1px solid #9fae9c;
-  }
-  td {
-    font-size: 23px;
-  }
-  small {
-    display: block;
-    font-size: 14px;
-    font-weight: normal;
-    margin-top: 5px;
+    background: #087d8b;
+    color: white;
+    border-color: #087d8b;
+    font-weight: bold;
+    min-height: 50px;
   }
   button,
   summary {
@@ -269,99 +336,258 @@
     min-height: 44px;
   }
   button {
-    padding: 10px 12px;
-    background: #173e49;
-    color: #f5f1dc;
-    border: 1px solid #779c9a;
+    border: 1px solid #93abb4;
+    border-radius: 10px;
+    padding: 9px 12px;
+    background: #e6eeea;
+    color: #0b6072;
     cursor: pointer;
   }
-  .primary {
-    background: #edcc61;
-    color: #10242d;
-    font-weight: bold;
-  }
   button:disabled {
-    opacity: 0.55;
+    background: #c5d2d2;
+    color: #4a6670;
     cursor: default;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    border: 1px solid #cfd7d3;
+    border-radius: 12px;
+  }
+  caption {
+    text-align: left;
+    font-size: 14px;
+    color: #496573;
+    padding: 0 0 9px;
+  }
+  th,
+  td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #d3dbd7;
+  }
+  thead th {
+    font-size: 14px;
+    font-weight: normal;
+    background: #edf0ea;
+  }
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  td {
+    font-size: 23px;
+  }
+  th {
+    overflow-wrap: anywhere;
+  }
+  th small {
+    display: block;
+    color: #087584;
+    font-size: 13px;
+    font-weight: normal;
+    margin: 5px 0 0 44px;
+  }
+  .player-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .player-name > span {
+    min-width: 0;
+  }
+  details {
+    border-bottom: 1px solid #d4dad1;
+    padding: 6px 0;
   }
   summary {
     display: flex;
     align-items: center;
     cursor: pointer;
     font-weight: bold;
-  }
-  ol {
-    padding: 0;
-    list-style: none;
-  }
-  li {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #9fae9c;
-  }
-  li div {
-    flex: 1;
-  }
-  li span {
-    display: block;
-    font-size: 14px;
+    font-size: 15px;
   }
   summary::after {
     content: "+";
     margin-left: auto;
   }
   details[open] > summary::after {
-    content: "-";
+    content: "−";
   }
-  .history {
-    background: #12313d;
-    color: #f5f1dc;
-    padding: 12px;
-    margin-top: 16px;
+  .revealed-coins {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
   }
-  th {
-    overflow-wrap: anywhere;
+  .revealed-coins > span {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 3px solid #ebc270;
+    background: #ffd676;
+    box-shadow: inset 0 0 0 2px #ffebaf;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+  li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #cfd7d3;
+  }
+  li > div {
+    flex: 1;
+  }
+  li span,
+  li small {
+    display: block;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .lost-unit {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 3px 10px;
+  }
+  .lost-unit .concealed-gem {
+    grid-row: 1/4;
+    background: #12364b;
+    border: 2px solid #638495;
+    border-radius: 7px;
+    color: #bdd7d7;
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    margin: 0;
+  }
+  .lost-unit strong {
+    font-size: 15px;
   }
   @media (max-width: 700px) {
     .review {
-      gap: 10px;
+      border: 0;
+      border-radius: 18px 18px 0 0;
+      box-shadow: none;
+    }
+    header {
+      padding: 16px 18px 8px;
     }
     h1 {
-      font-size: 27px;
+      font-size: 28px;
+    }
+    header p:not(.eyebrow) {
+      font-size: 14px;
+      margin: 7px 0;
     }
     .report {
-      padding: 16px;
-    }
-    h2 {
-      font-size: 21px;
+      padding: 8px 16px 12px;
     }
     .actions {
-      padding: 12px;
-    }
-    .primary {
-      width: 100%;
+      padding: 12px 16px 16px;
     }
     th,
     td {
-      padding: 10px 4px;
+      padding: 12px 6px;
+    }
+    thead th {
+      font-size: 12px;
+    }
+    td {
+      font-size: 20px;
+    }
+    .player-name {
+      gap: 5px;
+      font-size: 14px;
+    }
+    th small {
+      margin-left: 0;
+      font-size: 12px;
+    }
+    .trophy {
+      width: 80px;
+      height: 80px;
+    }
+    .winner {
+      font-size: 27px;
     }
     li {
       flex-wrap: wrap;
     }
-    li div {
+    .lost-unit {
       min-width: 100%;
     }
+    li button {
+      flex: 1;
+    }
+    .actions h2 {
+      font-size: 17px;
+    }
   }
-  .report,
-  .actions {
-    border-radius: 0;
+  .history-button {
+    width: 100%;
+    margin-top: 10px;
+    background: transparent;
   }
-  button {
-    border-radius: 0;
+  .history-dialog {
+    background: #f8f4eb;
+    color: #102f46;
+    max-width: 540px;
+    width: calc(100% - 32px);
+    max-height: calc(100dvh - 40px);
+    padding: 24px;
+    border: 1px solid #7b9ca9;
+    border-radius: 18px;
   }
-  .history {
-    border-radius: 0;
+  .history-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .history-body {
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .history-dialog > button {
+    flex-shrink: 0;
+  }
+  th small.lost {
+    color: #ad3042;
+  }
+  .full-results header {
+    padding: 12px 24px 4px;
+  }
+  .full-results header h1 {
+    font-size: 27px;
+    margin: 3px 0;
+  }
+  .full-results header p {
+    margin: 4px 0;
+  }
+  .full-results .trophy {
+    height: 44px;
+  }
+  .full-results .winner {
+    font-size: 23px;
+    margin: 6px 0;
+  }
+  .full-results .report > p {
+    margin: 6px 0;
+    font-size: 13px;
+  }
+  .full-results th,
+  .full-results td {
+    padding: 5px 6px;
+  }
+  .full-results td {
+    font-size: 19px;
   }
 </style>
