@@ -80,8 +80,17 @@ test("a lost stack can be recovered and dropped whole with the keyboard", async 
         await hs.step("whole-unit", "The stack is one cargo choice", [
           {
             description:
-              "Both concealed tiles are selected as one unit; no individual tile can be dropped.",
+              "Both concealed tiles are selected as one unit; the alternative explicitly keeps the treasure.",
             assert: async () => {
+              await expect(
+                host.getByRole("button", {
+                  name: "Keep treasure",
+                  exact: true,
+                }),
+              ).toBeEnabled();
+              await expect(
+                host.getByRole("button", { name: "Leave it", exact: true }),
+              ).toHaveCount(0);
               await expect(
                 host.getByRole("option", { name: /Unit 1 · 2 tiles · level/ }),
               ).toHaveCount(1);
@@ -101,13 +110,19 @@ test("a lost stack can be recovered and dropped whole with the keyboard", async 
       } else if (move.choice) {
         await expect(
           actor.getByRole("button", {
-            name: move.choice === "pickup" ? "Pick up treasure" : "Leave it",
+            name:
+              move.choice === "pickup"
+                ? "Pick up treasure"
+                : /^(Leave it|Keep treasure|End turn)$/,
             exact: true,
           }),
         ).toBeEnabled();
         await actor
           .getByRole("button", {
-            name: move.choice === "pickup" ? "Pick up treasure" : "Leave it",
+            name:
+              move.choice === "pickup"
+                ? "Pick up treasure"
+                : /^(Leave it|Keep treasure|End turn)$/,
             exact: true,
           })
           .focus();

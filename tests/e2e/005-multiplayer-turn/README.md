@@ -16,6 +16,38 @@ Mira rolls, collects treasure and observes Sol taking the next turn.
 
 ![Phone: Mira lands on concealed treasure](screenshots/000-rolled-host-phone.png)
 
+## Look back toward the sunlit submarine
+
+- The submarine is visible at the surface while the treasure decision remains available.
+
+![Desktop: Look back toward the sunlit submarine](screenshots/001-surface-host-desktop.png)
+
+![Phone: Look back toward the sunlit submarine](screenshots/001-surface-host-phone.png)
+
+## Explore the darker water below
+
+- Level III treasure is visible deeper down; the submarine scrolls away and the landing controls stay available.
+
+![Desktop: Explore the darker water below](screenshots/002-twilight-host-desktop.png)
+
+![Phone: Explore the darker water below](screenshots/002-twilight-host-phone.png)
+
+## Explore the bioluminescent deep
+
+- Level IV treasure is visible in the abyss while the same pickup or leave decision stays available.
+
+![Desktop: Explore the bioluminescent deep](screenshots/003-midnight-host-desktop.png)
+
+![Phone: Explore the bioluminescent deep](screenshots/003-midnight-host-phone.png)
+
+## Reach the midnight seabed
+
+- The last level IV treasure and seabed are visible, with the same six-space roll and unchanged oxygen.
+
+![Desktop: Reach the midnight seabed](screenshots/004-abyss-host-desktop.png)
+
+![Phone: Reach the midnight seabed](screenshots/004-abyss-host-phone.png)
+
 ## guest
 
 Sol sees the confirmed move, reloads, and takes the next turn.

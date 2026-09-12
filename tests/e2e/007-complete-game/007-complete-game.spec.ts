@@ -157,7 +157,10 @@ test("friends complete three dives and play again without losing the result", as
       if (move.choice)
         await actor
           .getByRole("button", {
-            name: move.choice === "pickup" ? "Pick up treasure" : "Leave it",
+            name:
+              move.choice === "pickup"
+                ? "Pick up treasure"
+                : /^(Leave it|Keep treasure|End turn)$/,
             exact: true,
           })
           .click();

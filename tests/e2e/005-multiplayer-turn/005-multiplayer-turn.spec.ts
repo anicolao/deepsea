@@ -53,6 +53,12 @@ test("a real turn moves treasure and survives a reload in both browsers", async 
           host.getByRole("button", { name: "Pick up treasure" }),
         ).toBeEnabled();
         await expect(
+          host.getByRole("button", { name: "Leave it", exact: true }),
+        ).toBeEnabled();
+        await expect(
+          host.getByRole("button", { name: "Keep treasure", exact: true }),
+        ).toHaveCount(0);
+        await expect(
           guest.getByRole("meter", { name: "Shared oxygen" }),
         ).toHaveAttribute("aria-valuenow", "25");
         await expect(
@@ -64,7 +70,95 @@ test("a real turn moves treasure and survives a reload in both browsers", async 
   await host
     .getByRole("button", { name: "Show submarine", exact: true })
     .press("Enter");
-  await expect(host.getByText("Submarine", { exact: true })).toBeInViewport();
+  await hostSteps.step("surface", "Look back toward the sunlit submarine", [
+    {
+      description:
+        "The submarine is visible at the surface while the treasure decision remains available.",
+      assert: async () => {
+        await expect(
+          host.getByText("Submarine", { exact: true }),
+        ).toBeInViewport();
+        await expect(
+          host.getByRole("button", { name: "Pick up treasure" }),
+        ).toBeEnabled();
+      },
+    },
+  ]);
+  await host
+    .getByLabel("Space 18, concealed level 3 treasure, 1 tiles", {
+      exact: true,
+    })
+    .scrollIntoViewIfNeeded();
+  await hostSteps.step("twilight", "Explore the darker water below", [
+    {
+      description:
+        "Level III treasure is visible deeper down; the submarine scrolls away and the landing controls stay available.",
+      assert: async () => {
+        await expect(
+          host.getByLabel("Space 18, concealed level 3 treasure, 1 tiles", {
+            exact: true,
+          }),
+        ).toBeInViewport();
+        await expect(
+          host.getByText("Submarine", { exact: true }),
+        ).not.toBeInViewport();
+        await expect(
+          host.getByRole("button", { name: "Pick up treasure" }),
+        ).toBeEnabled();
+      },
+    },
+  ]);
+  await host
+    .getByLabel("Space 27, concealed level 4 treasure, 1 tiles", {
+      exact: true,
+    })
+    .scrollIntoViewIfNeeded();
+  await hostSteps.step("midnight", "Explore the bioluminescent deep", [
+    {
+      description:
+        "Level IV treasure is visible in the abyss while the same pickup or leave decision stays available.",
+      assert: async () => {
+        await expect(
+          host.getByLabel("Space 27, concealed level 4 treasure, 1 tiles", {
+            exact: true,
+          }),
+        ).toBeInViewport();
+        await expect(
+          host.getByRole("button", { name: "Pick up treasure" }),
+        ).toBeEnabled();
+        await expect(
+          host.getByRole("button", { name: "Leave it", exact: true }),
+        ).toBeEnabled();
+      },
+    },
+  ]);
+  await host
+    .getByText("THE DEEP · What will you bring home?", { exact: true })
+    .scrollIntoViewIfNeeded();
+  await hostSteps.step("abyss", "Reach the midnight seabed", [
+    {
+      description:
+        "The last level IV treasure and seabed are visible, with the same six-space roll and unchanged oxygen.",
+      assert: async () => {
+        await expect(
+          host.getByText("THE DEEP · What will you bring home?", {
+            exact: true,
+          }),
+        ).toBeInViewport();
+        await expect(
+          host.getByLabel("Space 32, concealed level 4 treasure, 1 tiles", {
+            exact: true,
+          }),
+        ).toBeInViewport();
+        await expect(
+          host.getByRole("meter", { name: "Shared oxygen" }),
+        ).toHaveAttribute("aria-valuenow", "25");
+        await expect(
+          host.getByText("Dice: 3 + 3 − 0 cargo = 6 spaces", { exact: true }),
+        ).toBeVisible();
+      },
+    },
+  ]);
   await host
     .getByRole("button", { name: "Find my diver", exact: true })
     .press("Enter");

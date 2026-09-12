@@ -56,20 +56,20 @@
     "review": "Visually inspected: Sol’s green Ready pill and mint You are ready banner clearly differ from Mira’s amber state; the outlined readiness toggle and leave link stay reachable."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-desktop.png": {
-    "sha256": "9ff82f2d695ce91d82fa1f15d1d7d1d36f5274d01d3a1d58ecae8c3cafc13300",
-    "review": "Visually inspected against turn mockup: three-person first dive shows the submarine and curved concealed path, full oxygen and visible empty cargo. Desktop has crew/tools beneath the board; phone keeps the turn, oxygen and action cards around its scrolling path."
+    "sha256": "18a5c71b150b7d64cd73d8465446ef59778224e4293bf799339d8be8ac1af087",
+    "review": "Visually inspected desktop screenshot: Three named divers remain legible on navy submarine backplates over sunlit water; Sol’s turn, oxygen and empty cargo stay clear. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-phone.png": {
-    "sha256": "eb2903911e4607e4776ff6d2c96fcb15468906c0ae97af961347046b0f65bd63",
-    "review": "Visually inspected against turn mockup: three-person first dive shows the submarine and curved concealed path, full oxygen and visible empty cargo. Desktop has crew/tools beneath the board; phone keeps the turn, oxygen and action cards around its scrolling path."
+    "sha256": "5e40582a7a8aea155dfa8250b7aa5ede6801ceeabab9c12196d4fac8223a82ac",
+    "review": "Visually inspected phone screenshot: Three named divers remain legible on navy submarine backplates over sunlit water; Sol’s turn, oxygen and empty cargo stay clear. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/002-room-foundation/screenshots/002-reloaded-guest-desktop.png": {
-    "sha256": "df7798f0a4245dcf01da21aef885c6ace129d75cec4000ab1bcf2a62a1cea0cc",
-    "review": "Visually inspected: restored Sol view keeps all three divers aboard, full oxygen and its labeled turn-cost preview; the teal Roll dice action is prominent beside/below the curved path."
+    "sha256": "2fcfaf21697cf2a273aac2a7659da67eefdcd1a2735aaf7992ead8a7f5e494c9",
+    "review": "Visually inspected desktop screenshot: Reload restores Sol’s roll action and all three submarine names; light shafts and shallow fish sit behind readable level-I tokens. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/002-room-foundation/screenshots/002-reloaded-guest-phone.png": {
-    "sha256": "27b62d1f78a55204f3a8f8c6a4b6a1abfc571f36a8e813c5ef294e5506db18b0",
-    "review": "Visually inspected: restored Sol view keeps all three divers aboard, full oxygen and its labeled turn-cost preview; the teal Roll dice action is prominent beside/below the curved path."
+    "sha256": "f3333996939bb45dbc1871f237c7140da40a37840e7ef2acf07e544b76957e9d",
+    "review": "Visually inspected phone screenshot: Reload restores Sol’s roll action and all three submarine names; light shafts and shallow fish sit behind readable level-I tokens. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-desktop.png": {
     "sha256": "e40c2b050ca0d4de221535c7898b26bb25055b284694273f9550bccb39da5cf8",
@@ -88,12 +88,12 @@
     "review": "Visually inspected: Rejoin form preserves Sol's name; crew status, explanation and teal Join room fit the rounded ivory card."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-desktop.png": {
-    "sha256": "d6f2fbe9d8b997f350646227d508505ab84dcb09a5cd928f5f88568a4dde9424",
-    "review": "Visually inspected: Started dive has clear oxygen, cargo and persistent Roll dice; curved ocean path and submarine fit the desktop/sidebar and phone/stack layouts."
+    "sha256": "fdfae92ed30bad9f82f29d934e8503aa57636dfba193bb8a5660616cb43bf41d",
+    "review": "Visually inspected desktop screenshot: The two-person starting view shows the sunlit submarine, readable crew plate, full oxygen and reachable Roll dice action. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-phone.png": {
-    "sha256": "5a92735b7f21f3f90263f05580f8ffaeaf1f001737ad0ac72eaab6cf4b40fc8e",
-    "review": "Visually inspected: Started dive has clear oxygen, cargo and persistent Roll dice; curved ocean path and submarine fit the desktop/sidebar and phone/stack layouts."
+    "sha256": "2aa0a884791055db9d09b61b33babd6aee04cfedc86f9f914f975abbc43c72bd",
+    "review": "Visually inspected phone screenshot: The two-person starting view shows the sunlit submarine, readable crew plate, full oxygen and reachable Roll dice action. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/004-closed-room/screenshots/000-closed-guest-desktop.png": {
     "sha256": "4e947844ea1f654ee9efcc1b934a506f3ce2fa02958fb74f909e743ef467ffb9",
@@ -112,28 +112,28 @@
     "review": "Visually inspected: centered ivory closure dialog explains the effect on everyone, with separate Close room and Stay buttons over the retained lobby."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-desktop.png": {
-    "sha256": "344428731f994b68ff55916d50996e437c5a139827844595065f6aed080e0bc3",
-    "review": "Visually inspected: Next player sees persistent oxygen and roll action, with crew identity retained in the desktop footer and phone inspector."
+    "sha256": "4cbe1e2953e3b1bbf5784908a303031e5b011651f0ce81f34dc22b0a8c267f02",
+    "review": "Visually inspected desktop screenshot: Sol remains at the bright submarine while Mira’s pickup hands over the turn; oxygen and Roll dice remain clear outside the path. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-phone.png": {
-    "sha256": "c889e1a5f474af0fc5b8581b5a30becd99b5b37313e445375d4c40e49bbdb569",
-    "review": "Visually inspected: Next player sees persistent oxygen and roll action, with crew identity retained in the desktop footer and phone inspector."
+    "sha256": "9ce009f0852333c079dced9cd69eb8c310b2d63454ad0dafde7ab39a6f8932d4",
+    "review": "Visually inspected phone screenshot: Sol remains at the bright submarine while Mira’s pickup hands over the turn; oxygen and Roll dice remain clear outside the path. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-desktop.png": {
-    "sha256": "442348f4d59bfaf26f13fb77559267067d7181885ee64108f48f595daedfdca5",
-    "review": "Visually inspected: Confirmed dice and highlighted landing appear with Pick up treasure and Leave it; phone preserves a scrollable board above cargo/actions."
+    "sha256": "a949a4f88533f8710da36be3e66a572f091b47781f33a9bf437d4d5ab5172ae8",
+    "review": "Visually inspected desktop screenshot: Mira’s gold-ringed sixth-space landing sits among shallow schooling fish; confirmed dice, empty cargo, Pick up treasure and Leave it are readable. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-phone.png": {
-    "sha256": "e7295ab5e58798aaf474d9bdc5a19961315e339c0e67512ccec77f4c7beec079",
-    "review": "Visually inspected: Confirmed dice and highlighted landing appear with Pick up treasure and Leave it; phone preserves a scrollable board above cargo/actions."
+    "sha256": "0cb3822086ff792b24b4dc73e08e074ca8b95a0fd404761cd3bbddeb512b8b84",
+    "review": "Visually inspected phone screenshot: Mira’s gold-ringed sixth-space landing sits among shallow schooling fish; confirmed dice, empty cargo, Pick up treasure and Leave it are readable. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-desktop.png": {
-    "sha256": "d62baab7f20e7ebbfd9b74e367518ea4ff3fd962f690502e36d5f09b3b7c0cb9",
-    "review": "Visually inspected: Empty oxygen, five concealed cargo cards and last-turn instructions are readable; whole-unit selector and disabled drop action fit without clipping."
+    "sha256": "ca72b9ef0171012123d347713c9f572c9238f64c9165f10ece212ba3fb5426dd",
+    "review": "Visually inspected desktop screenshot: Zero oxygen, five concealed cargo units and no movement are clear; the empty-space choice explicitly says Keep treasure beside the disabled drop action, over twilight water. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-phone.png": {
-    "sha256": "df403d56c8e22b2887fda0e04ea68b06257588e865e9559723239d480fbe00bc",
-    "review": "Visually inspected: Empty oxygen, five concealed cargo cards and last-turn instructions are readable; whole-unit selector and disabled drop action fit without clipping."
+    "sha256": "d1fbce9722462a914b381036af66e4eab9e363f218ef2d80fba5a3cbf6b68ca9",
+    "review": "Visually inspected phone screenshot: Zero oxygen, five concealed cargo units and no movement are clear; the empty-space choice explicitly says Keep treasure beside the disabled drop action, over twilight water. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-review-host-desktop.png": {
     "sha256": "532f392fab37498379f1dba7e5b42c2294b532fd42853208aee1326e104d5613",
@@ -232,28 +232,28 @@
     "review": "Reviewed Sol’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
   },
   "tests/e2e/009-recovery/screenshots/000-offline-host-desktop.png": {
-    "sha256": "f3e96e1da960f1ccfffbb2970ca365120b5b3bdc95f141025cbe6f2965a0eacf",
-    "review": "Visually inspected: Amber reconnect banner clearly labels last-known oxygen and disabled moves while preserving the board/cargo; phone layout remains reachable."
+    "sha256": "f4d82ca08855a92e492a7b9881b3fec5878dd61ad63f804513d97a0f67d29f77",
+    "review": "Visually inspected desktop screenshot: Amber reconnecting notice and last-known oxygen remain readable; the last confirmed landing stays visible and both pickup/leave actions are disabled over the scrolling scene. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/009-recovery/screenshots/000-offline-host-phone.png": {
-    "sha256": "01ae5886ed02a9ad70f456b07ab23ea37595e803b3ff3e6a74482eb9343d7d82",
-    "review": "Visually inspected: Amber reconnect banner clearly labels last-known oxygen and disabled moves while preserving the board/cargo; phone layout remains reachable."
+    "sha256": "6dcc97a9c333e3dec7f6787699b8712174d10cb79525171d2a95b45ca5358f76",
+    "review": "Visually inspected phone screenshot: Amber reconnecting notice and last-known oxygen remain readable; the last confirmed landing stays visible and both pickup/leave actions are disabled over the scrolling scene. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/009-recovery/screenshots/000-one-charge-guest-desktop.png": {
-    "sha256": "04a44e4596c90aa85e8a25f81c865594d9ef593551b8d87cd1ae2547dc741020",
-    "review": "Visually inspected: Recovered state shows oxygen charged once and distinct selected Keep diving/Turn back cards above Roll dice."
+    "sha256": "33dcad3edb9f44a34394ea26a98288d851206bce962e08404694548ac8734bb0",
+    "review": "Visually inspected desktop screenshot: Sol’s direction controls remain reachable with oxygen 24 and no cargo; the diver plate contrasts with the shallow fish and sunlit water. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/009-recovery/screenshots/000-one-charge-guest-phone.png": {
-    "sha256": "4d415451a4dd27a64be1b8c0fb39b4f6e9c8449717989f6142f4befce3d9ee32",
-    "review": "Visually inspected: Recovered state shows oxygen charged once and distinct selected Keep diving/Turn back cards above Roll dice."
+    "sha256": "4381bc1c389e459e9a17fb68fcd4bbe7b74daea45e0a337061fb416c6cf8a066",
+    "review": "Visually inspected phone screenshot: Sol’s direction controls remain reachable with oxygen 24 and no cargo; the diver plate contrasts with the shallow fish and sunlit water. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/009-recovery/screenshots/000-restored-tab-desktop.png": {
-    "sha256": "3446e9449c2f072b1295acc2a7621900808108997f9a60604e6530a7393b63ef",
-    "review": "Visually inspected: Restored tab retains Mira's two concealed units and position while explaining Sol's turn; no duplicate move controls appear."
+    "sha256": "f57e58152b9672e78d272e8319b53d02f947ffb4580e2cdf2ef65219ed29e9e2",
+    "review": "Visually inspected desktop screenshot: Restored Mira tab shows two concealed cargo units and Sol’s turn; the empty ninth-space diver plate and level-II path remain clear over the depth artwork. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/009-recovery/screenshots/000-restored-tab-phone.png": {
-    "sha256": "238d98a3673d3560812d85c0461bc3c20c0198f8b9ee7474eed7cb2f6328bf1d",
-    "review": "Visually inspected: Restored tab retains Mira's two concealed units and position while explaining Sol's turn; no duplicate move controls appear."
+    "sha256": "6406dff96afd815e26bf19a0142083521b1778881192dea31a6b62febdd07233",
+    "review": "Visually inspected phone screenshot: Restored Mira tab shows two concealed cargo units and Sol’s turn; the empty ninth-space diver plate and level-II path remain clear over the depth artwork. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-desktop.png": {
     "sha256": "63093ab8671bfe594fa1ea139259dfd0172c18b41d72e56aa1f68ca8e4f60f6a",
@@ -320,36 +320,36 @@
     "review": "Visually inspected phone: all six green readiness pills, copied-invite confirmation, own-ready banner, first-diver selector and enabled Start dive fit; Leave room remains reachable."
   },
   "tests/e2e/010-last-seat/screenshots/002-six-divers-mira-desktop.png": {
-    "sha256": "608b9244a3a68958a637a8a82ce9f7b5324d435dd273a82171a9eff169729ffb",
-    "review": "Visually inspected desktop: six crew and cargo rows fit the scrollable ivory inspector, with concealed unit details, saved totals and persistent Back to dive."
+    "sha256": "f83e0c5bde8acab5bce3d48cb9961937c98285bcf8126d861a008150aa0f30f8",
+    "review": "Visually inspected desktop screenshot: All six crew entries, concealed cargo and return button fit the ivory inspector; the new ocean scene remains subordinate behind the modal backdrop. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/010-last-seat/screenshots/002-six-divers-mira-phone.png": {
-    "sha256": "a1862ce52f7e2d234c9d8eb4b161e9339242438f7fff022f676a51cbf4d5243c",
-    "review": "Visually inspected phone: six-person cargo dialog clearly separates carried units and saved points, with persistent Back to dive."
+    "sha256": "908e5baa66099d12ff6b1dbef3cf25231db7046ab4ba2928efd8f4241ee5ee65",
+    "review": "Visually inspected phone screenshot: All six crew entries, concealed cargo and return button fit the ivory inspector; the new ocean scene remains subordinate behind the modal backdrop. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-desktop.png": {
-    "sha256": "579c74215e9eb7c7696a0165a7a92f9cdafa315cb7d5159c5301a9a438710b39",
-    "review": "Visually inspected: Deep-end stacks display tile counts and tier shapes; returned diver sees Back aboard and can continue following the crew."
+    "sha256": "1116490e1a631463cdd648df5d2453b75be484506da24dda4e7726818a5f6b1b",
+    "review": "Visually inspected desktop screenshot: The returned two-tile stack and Mira’s marker remain on the dark later-dive path; Sol’s Back aboard status, empty cargo and oxygen 24 are clear. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-phone.png": {
-    "sha256": "7132deca9eea13acc0735e95749c3624e0c8f1056d8a4e3240ae7f7ea676e043",
-    "review": "Visually inspected: Deep-end stacks display tile counts and tier shapes; returned diver sees Back aboard and can continue following the crew."
+    "sha256": "c9e6fb784a16e4a565afd10f773a638b03aa4d198a368f76195518c78d74b3f3",
+    "review": "Visually inspected phone screenshot: The returned two-tile stack and Mira’s marker remain on the dark later-dive path; Sol’s Back aboard status, empty cargo and oxygen 24 are clear. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-desktop.png": {
-    "sha256": "eb91e35608c977f73ffa6252dcfa12098e2a95b9e32b3eb45112af01f97119bc",
-    "review": "Visually inspected: Whole-stack selector shows two tiles as one unit, hidden cargo face preserves level/count, and gold keyboard focus clearly marks Drop selected treasure."
+    "sha256": "e11e895000d17ab7866639a4f5d58b9e8cde2d9d7a9008270d9c915f177004dc",
+    "review": "Visually inspected desktop screenshot: Dive-two deep landing keeps the two-tile stack as one selected cargo unit; keyboard focus outlines Drop selected treasure and the alternative clearly reads Keep treasure. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-phone.png": {
-    "sha256": "22c205c1db4982c7d88d5b001fb3d4efd31b544393c22715323528ffb8379b40",
-    "review": "Visually inspected: Whole-stack selector shows two tiles as one unit, hidden cargo face preserves level/count, and gold keyboard focus clearly marks Drop selected treasure."
+    "sha256": "c9fea43811d900aec434e88c7e8823727a4fa8fe4585219838409b6422296fa2",
+    "review": "Visually inspected phone screenshot: Dive-two deep landing keeps the two-tile stack as one selected cargo unit; keyboard focus outlines Drop selected treasure and the alternative clearly reads Keep treasure. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/000-direction-host-desktop.png": {
-    "sha256": "addbab53315a51d5ac9ed5595ea454083d6c6d1083df530bb98791563383d9d8",
-    "review": "Visually inspected: Long diver name wraps legibly in its expanded board label; selected Turn back has both teal fill and visible gold keyboard focus, with roll and cargo reachable."
+    "sha256": "44102deaf8dc5b26c84352daa6737ea2fe249c3dc523bf4537ef9e42ca213110",
+    "review": "Visually inspected desktop screenshot: The long diver name wraps within its navy plate over shallow fish; the Turn back radio retains visible keyboard focus and Roll dice stays reachable. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/000-direction-host-phone.png": {
-    "sha256": "6d3d6ca98b2e60cd30440ada8faa42d66ad3f37d03750a87a493a941565ff8b7",
-    "review": "Visually inspected: Long diver name wraps legibly in its expanded board label; selected Turn back has both teal fill and visible gold keyboard focus, with roll and cargo reachable."
+    "sha256": "b1e44f4de0e37fc0c6a031ffedd84408e5b90ed9b3899bbe87ab20bc751e2788",
+    "review": "Visually inspected phone screenshot: The long diver name wraps within its navy plate over shallow fish; the Turn back radio retains visible keyboard focus and Roll dice stays reachable. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-desktop.png": {
     "sha256": "1b4d00641b64e35acce0b695cfa067eac91b5a8d7a448af091910f65b74aecf4",
@@ -360,27 +360,59 @@
     "review": "Visually inspected: Long host name wraps in the room heading and seat row without displacing readiness controls; guest can copy invite or ready up."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/001-help-host-desktop.png": {
-    "sha256": "c45fdbca9ef5bee28e687a856111830ac838aa202e42f1fbc58d1417a965ee14",
-    "review": "Visually inspected: Help dialog preserves selected direction behind the backdrop, explains the full turn flow in readable prose, and highlights keyboard return control."
+    "sha256": "c6dd9947861767b4da197b65708ad184178ae03f1c4c2b45c02259a6ef2885a6",
+    "review": "Visually inspected desktop screenshot: Ivory rules dialog remains legible over the dimmed shallow scene, with a visible focused Back to the dive control. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/001-help-host-phone.png": {
-    "sha256": "4e92bfec7788b3dfbd86bcae47612052edf16a9df98bd9028165c3b2eff6e386",
-    "review": "Visually inspected: Help dialog preserves selected direction behind the backdrop, explains the full turn flow in readable prose, and highlights keyboard return control."
+    "sha256": "b0576856511f897e9562497fcf97af2f3848b8e7abfb28191d78ad581127a4b1",
+    "review": "Visually inspected phone screenshot: Ivory rules dialog remains legible over the dimmed shallow scene, with a visible focused Back to the dive control. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/002-cargo-host-desktop.png": {
-    "sha256": "6a337b9091783264dc2d0e5469c983f9196212972d7dc4c70490778b5df530e5",
-    "review": "Visually inspected: Cargo inspector wraps the long name, separates hidden cargo from saved points and exposes a focused scroll region with reachable Back to dive."
+    "sha256": "364b1f58e8002265d68d7e2a5ba8ba5b933a79c1a7345cca347a433da88c6d7d",
+    "review": "Visually inspected desktop screenshot: Cargo inspector shows the long name, concealed unit and Sol’s empty cargo clearly; its focus outline and return control remain distinct over the new scene. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/002-cargo-host-phone.png": {
-    "sha256": "6f99359c02bd3f9e0c248d074a3a5b2bf43f05418fede4a1868885f8af3c7b27",
-    "review": "Visually inspected: Cargo inspector wraps the long name, separates hidden cargo from saved points and exposes a focused scroll region with reachable Back to dive."
+    "sha256": "e6ad9106c9e558d875d93c3cee9fddc4cfe7840c7aa2cd7afd0e185165981f2e",
+    "review": "Visually inspected phone screenshot: Cargo inspector shows the long name, concealed unit and Sol’s empty cargo clearly; its focus outline and return control remain distinct over the new scene. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/003-history-host-desktop.png": {
-    "sha256": "9d463e73d609a4a1002d5e0e8dc57be7e21160af36a86c9ad5eeb6881ec34995",
-    "review": "Visually inspected: History gives readable player-language move records, including the long name; gold focus outline and return control remain inside the viewport."
+    "sha256": "50e6fec6b9bc27190134fc633c72ebcb26ff200e7950893931311f9aeb2a5bec",
+    "review": "Visually inspected desktop screenshot: History keeps readable navy public move text and keyboard focus on ivory; the surface artwork is visible only through the dimmed backdrop. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/003-history-host-phone.png": {
-    "sha256": "d1f9e2ac87575a793061c0c076b828156958ef7d1977574d18b79cc97c229420",
-    "review": "Visually inspected: History gives readable player-language move records, including the long name; gold focus outline and return control remain inside the viewport."
+    "sha256": "c8bbbc3270551cd3802472c52c8c4b513f8307e0e8fb01b2194fd0952595d16b",
+    "review": "Visually inspected phone screenshot: History keeps readable navy public move text and keyboard focus on ivory; the surface artwork is visible only through the dimmed backdrop. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/001-surface-host-desktop.png": {
+    "sha256": "153dae11c83a459b86608a020c7e1be965261001f08cf6a60b022888bb0b3d5c",
+    "review": "Visually inspected desktop screenshot: Surface scroll shows bright ripples, light shafts and a readable submarine plate; focus stays on Show submarine and the pickup/leave controls remain available. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/001-surface-host-phone.png": {
+    "sha256": "d20ed51097a7d44a891eda2f2f7523feccca5ef9fe149d761e23182f001d668c",
+    "review": "Visually inspected phone screenshot: Surface scroll shows bright ripples, light shafts and a readable submarine plate; focus stays on Show submarine and the pickup/leave controls remain available. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/002-twilight-host-desktop.png": {
+    "sha256": "6fe670f97171632e2737db1bb4b82565061c8b2cd0286c2596bd605e47bfcce2",
+    "review": "Visually inspected desktop screenshot: Scrolled level-III path uses dark blue water with twilight squid and jellyfish imagery; level outlines and the unchanged landing controls remain legible. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/002-twilight-host-phone.png": {
+    "sha256": "4034f9b1af3eea2e74886ae579259c99a5c7769880a92e4d5faf831d3fe54a94",
+    "review": "Visually inspected phone screenshot: Scrolled level-III path uses dark blue water with twilight squid and jellyfish imagery; level outlines and the unchanged landing controls remain legible. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/003-midnight-host-desktop.png": {
+    "sha256": "6ac72034d5b2cd2682bdcd411066ee2bb69d2201594c34a1d21de58a9fa630f7",
+    "review": "Visually inspected desktop screenshot: The level-IV stretch shows near-black water, an anglerfish and luminous organisms with natural proportions; the path stays readable beside persistent landing controls. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/003-midnight-host-phone.png": {
+    "sha256": "e1200e1f40181e51af0bcfc7a9cb7799d2423e56a4c48804801e84028392a461",
+    "review": "Visually inspected phone screenshot: The level-IV stretch shows near-black water, an anglerfish and luminous organisms with natural proportions; the path stays readable beside persistent landing controls. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/004-abyss-host-desktop.png": {
+    "sha256": "6931f91d384f16894bfcfb9b0b1ba55c2c3f8fb1647c15520f0a56f875041101",
+    "review": "Visually inspected desktop screenshot: the last level-IV tokens and deep caption remain readable against near-black water with luminous organisms; oxygen, cargo and pickup/leave actions remain in place. The wide crop prioritizes deep-water fauna."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/004-abyss-host-phone.png": {
+    "sha256": "bdbaa133ab31c44d652628a52594f4f3c6fc7206358215a0a21b4e736dbe002f",
+    "review": "Visually inspected phone screenshot: The final level-IV tokens and deep caption remain readable against midnight water and rocky lower margins; oxygen, cargo and pickup/leave actions stay in place. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork."
   }
 }

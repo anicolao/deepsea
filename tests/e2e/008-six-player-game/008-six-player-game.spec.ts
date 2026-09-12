@@ -29,18 +29,28 @@ test("six friends complete three dives and share victory", async ({
   await expect(
     host.getByText("Mira (You) · Host", { exact: true }),
   ).toBeVisible();
+  for (let index = 1; index < crew.length; index += 2) {
+    await Promise.all(
+      crew.slice(index, index + 2).map(async (friend) => {
+        await friend.page.goto(host.url());
+        await friend.page.getByLabel("Your name").fill(friend.name);
+      }),
+    );
+  }
   for (const friend of crew.slice(1)) {
-    await friend.page.goto(host.url());
-    await friend.page.getByLabel("Your name").fill(friend.name);
-    await friend.page.getByRole("button", { name: "Join room" }).click();
+    await friend.page.getByRole("button", { name: "Join room" }).press("Enter");
     await expect(
       friend.page.getByRole("button", { name: "Ready up" }),
     ).toBeEnabled();
   }
-  for (const friend of crew)
-    await expect(
-      friend.page.getByRole("list", { name: "Crew" }).getByRole("listitem"),
-    ).toHaveCount(6);
+  await Promise.all(
+    crew.map(
+      async (friend) =>
+        await expect(
+          friend.page.getByRole("list", { name: "Crew" }).getByRole("listitem"),
+        ).toHaveCount(6),
+    ),
+  );
   await Promise.all(
     crew.map((friend) =>
       friend.page.getByRole("button", { name: "Ready up" }).click(),
@@ -51,8 +61,9 @@ test("six friends complete three dives and share victory", async ({
     page: Awaited<ReturnType<typeof players.create>>,
     name: string,
   ) => {
-    const button = page.getByRole("button", { name, exact: true });
-    await expect(button).toBeEnabled();
+    const button = page
+      .getByRole("button", { name, exact: true })
+      .and(page.locator(":enabled"));
     await button.press("Enter");
   };
   for (const [index, moves] of [
@@ -103,8 +114,13 @@ test("six friends complete three dives and share victory", async ({
   ].entries()) {
     const roll = async (move: (typeof moves)[number]) => {
       const actor = crew.at(move.seat)!.page;
-      if (move.back)
-        await actor.getByLabel("Turn back", { exact: true }).check();
+      if (move.back) {
+        const direction = actor
+          .getByLabel("Turn back", { exact: true })
+          .and(actor.locator(":enabled"));
+        await direction.press("Space");
+        await expect(direction).toBeChecked();
+      }
       await activate(actor, "Roll dice");
     };
     let rolled = roll(moves.at(0)!);
