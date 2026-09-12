@@ -2,11 +2,11 @@
 
 ## Status and scope
 
-Deep Sea is a turn-based web game for friends playing from separate devices. Its design must keep every browser in agreement about the board, preserve decisions across interruptions, and make the shared oxygen supply and individual choices understandable. This document proposes the MVP design. The coming-soon screen, local anonymous authentication, immutable room creation/replay, and multi-browser verification are implemented; joining, readiness, and gameplay are not. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the accepted `base-1` rules conventions.
+Deep Sea is a turn-based web game for friends playing from separate devices. Its design keeps browsers in agreement, preserves decisions across interruptions, and makes shared oxygen and individual choices understandable. The complete MVP implements room setup, three-dive gameplay, scoring, replay, recovery and phone/desktop controls. [RULES_SUMMARY.md](RULES_SUMMARY.md) defines the accepted `base-1` rules conventions. [UX_ACCEPTANCE.md](UX_ACCEPTANCE.md) and the deployed PR checks record acceptance evidence.
 
 Support 2–6 human players, each using their own browser. Players create a room, invite friends, ready up, play three dives, review scores, and start another game. Include reload/reconnection, understandable turn history, and keyboard/touch operation on phones and desktops.
 
-Exclude bots, matchmaking, accounts beyond anonymous sessions, chat, spectators as a product feature, shared-table controllers, Boost rules, and ranked play. These exclusions are MVP design proposals, not restrictions on the long-term vision.
+The MVP excludes bots, matchmaking, accounts beyond anonymous sessions, chat, spectators as a product feature, shared-table controllers, Boost rules, and ranked play. These scope decisions do not restrict the long-term vision.
 
 ## Architecture and trust
 
@@ -42,33 +42,33 @@ If a player cannot return, the group can start a new room; the MVP has no host-c
 
 ## State and event contract
 
-Canonical data lives at `games/{gameId}/events/{eventId}`. No mutable score or board document is required. Maintain a single chronological reducer for lobby and gameplay so future membership events cannot retroactively change earlier turns.
+Canonical data lives at `environments/{namespace}/games/{gameId}/events/{eventId}`. Preview namespaces are `pr<N>` in the preview project; production uses `production` in a separate project. No mutable score or board document is required. One chronological reducer handles lobby and gameplay so later membership events cannot retroactively change earlier turns.
 
 Each envelope contains `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. Use a per-tab random client ID plus monotonic sequence for event IDs; persist the exact ID and payload before submission and reuse both on retry. Separate client IDs prevent two tabs sharing a player identity from allocating the same sequence of event IDs.
 
-Every gameplay action asserts `diveNumber`, `turnNumber`, `phase`, and `expectedActionId` (the last accepted state-changing event). Compare confirmed events by the full timestamp's seconds and nanoseconds, then bytewise document ID. Preserving timestamp precision and using locale-independent comparison gives every browser the same ordering. Unacknowledged timestamps never establish canonical order; rebuild from confirmed history when late events arrive. First valid event at its replay position wins; stale competitors produce a visible conflict with no partial mutation.
+Every gameplay action carries `expectedActionId`, the last accepted state-changing event. This identifies the complete expected state; the reducer checks its dive, turn, phase and actor. Compare confirmed events by the full timestamp's seconds and nanoseconds, then bytewise document ID. Unacknowledged timestamps never establish canonical order; rebuild from confirmed history when late events arrive. First valid event at its replay position wins; stale competitors produce a visible conflict with no partial mutation.
 
-If a retry finds its immutable event already present, compare the stored actor, versions, type, and payload with the persisted submission and acknowledge the match. Never overwrite it to refresh its timestamp; report an ID collision if the contents differ.
+Submit one atomic Firestore REST create with an absent-document precondition and server timestamp. Normal writes need no preliminary read. If a reply is lost or a retry finds its immutable event already present, read that exact ID and compare the complete stored envelope with the persisted submission. Never overwrite it to refresh its timestamp; report an ID collision if contents differ. The SDK watches the canonical stream; the UI waits for that projection before permitting another action.
 
-Invalid envelopes, duplicate IDs, wrong actors, and illegal actions produce diagnostics. Unsupported versions block further local interaction and request a reload/update. Cached projections are disposable; cache keys include game and protocol versions. Replay the full room stream on reconnect; the short, bounded game does not require incremental replay checkpoints.
+Invalid envelopes, duplicate IDs, wrong actors, and illegal actions produce diagnostics. Unsupported versions block moves and request an update. Open pages keep only disposable in-memory views while disconnected. Browser identity and pending envelopes persist with their environment/game identity; pending versions are validated before reuse. Replay the full confirmed room stream on reconnect; the MVP has no durable projection checkpoints.
 
 | Event | Payload and reducer responsibility |
 | --- | --- |
 | `game/created` | Host name, game ID, versions; establish lobby. |
-| `player/joined`, `player/left`, `player/ready` | Validate UID and lobby state; allocate/release seats or update readiness. Host departure closes an unstarted room. |
+| `lobby/joined`, `lobby/left`, `lobby/ready` | Validate UID and lobby state; allocate/release seats or update readiness. Host departure closes an unstarted room. |
 | `game/started` | Seed and selected starter; freeze the ready roster and initialize the component manifest. |
 | `turn/rolled` | Continue/return choice and expected state; charge oxygen, lock direction, derive dice, and move atomically. |
-| `treasure/chosen` | Pass, pick up, or drop a specific carried unit; resolve the landing decision and finish the turn. |
-| `loss/ordered` | Stranded owner supplies a permutation of carried unit IDs, in the cleanup order defined by the rules; no fabricated, omitted, or split units. |
+| `turn/landed` | Pass, pick up, or drop a specific carried unit; resolve the landing decision and finish the turn. |
+| `dive/ordered` | Stranded owner supplies a permutation of carried unit IDs, in the cleanup order defined by the rules; no fabricated, omitted, or split units. |
 | `dive/continued` | After cleanup, advance the dive with the derived starter and retained board. No new full-board shuffle. |
 
 Returning directly to the submarine finishes the turn inside `turn/rolled`; there is no treasure-choice event aboard. If oxygen was exhausted, finish the active diver's remaining landing decision before entering cleanup. When no stranded cargo needs ordering, resolve cleanup automatically. After the final cleanup, derive game completion without requiring another player event.
 
 The state includes roster/order, active seat, dive/turn/phase, remaining oxygen, an exhaustion flag, path spaces, diver locations/directions, carried units, banked tiles, cleanup queue, and dive results. Distinguish `not-yet-dived`, `underwater`, and `returned`; a player who has not left the submarine still needs their first turn.
 
-The first movement of a dive is outward. Initial setup and each accepted turn completion prepare the next active diver's oxygen charge for display; `turn/rolled` commits that charge exactly once together with direction and movement. The UI shows the post-charge oxygen available for the decision, including a last-turn notice, without requiring a separate bookkeeping click.
+The first movement of a dive is outward. The UI distinguishes current oxygen from the projected amount after the turn cost. `turn/rolled` commits that charge once together with direction and movement. When the confirmed charge exhausts oxygen, display zero and the last-turn notice until the landing choice resolves, without a separate bookkeeping click.
 
-Use stable opaque IDs for the 32 original tiles and for path spaces. A treasure unit contains one or more tile IDs; carrying cost uses unit count while scoring uses tile values. Keep identities and values separate so IDs and accessible labels do not reveal concealed values. Validate conservation across path, cargo, cleanup, and banked zones after every accepted action.
+Use stable opaque IDs for the 32 original tiles. Path addresses are the dive number and position; blanks retain their position during that dive, and cleanup compacts positions before the next dive. A treasure unit contains one or more tiles; carrying cost uses unit count while scoring uses tile values. Keep identities and values separate so IDs and labels do not reveal concealed values. Validate conservation across path, cargo, cleanup and banked zones after every accepted action.
 
 ## Randomness and visible information
 
@@ -90,13 +90,13 @@ The user has accepted the proposed rulebook resolutions under `rulesetVersion: "
 
 Use Vitest for reducer legality, conservation, exact seed fixtures, phase transitions, zero movement, oxygen exhaustion, lost stacks, starter selection, and ties. Firestore emulator tests cover allowed attribution and denied mutation/unauthenticated access. Repository tests cover full-precision ordering, duplicate retries, multi-tab IDs, cache recovery, and malformed events.
 
-Playwright will use isolated browser contexts against Auth/Firestore emulators. Prove both the actor's result and other players' converged view. Include two-player complete games, a six-player game, a race for the sixth seat, conflicting turn submissions, lost acknowledgements, reconnect during cleanup, hidden-value rendering checks, and wrong-version blocking. Use semantic assertions before screenshots, fixed seeds/locale/fonts/viewports, and no production data. Generate scenario walkthroughs from test steps. The browser and rendering environment are already pinned; [E2E_GUIDE.md](E2E_GUIDE.md) fixes screenshot and color tolerances at zero and defines the enforced timing policy. Extend multiplayer infrastructure without weakening that contract.
+Playwright uses isolated browser contexts against Auth/Firestore emulators and repeats the deployed journeys against the isolated preview backend. Both the actor's result and other players' converged views are asserted. The suite includes complete two- and six-player games, a race for the sixth seat, conflicting turns, lost acknowledgements, reconnect during cleanup, whole-stack play, keyboard controls and hidden-value checks. Semantic assertions precede exact screenshots with fixed seeds, locale, fonts and viewports. Production games are not test fixtures. Scenario walkthroughs come from test steps. [E2E_GUIDE.md](E2E_GUIDE.md) defines the enforced timing and zero-pixel comparison contracts.
 
-Retain the existing prompt hook. Add game verification alongside it as code arrives: type checks, unit tests, emulator rules tests, browser scenarios, and production build. CI runs the same commands. Prompt logging is checked against the staged index by the local hook; CI should compare the PR's prompt log with its base rather than expecting a staged local change.
+The pre-commit hook checks the staged prompt log or continuation and runs type checks, policy regressions, unit tests, emulator rules tests, browser scenarios and the production build. CI runs the same verification; its prompt check compares the PR with its base. The commit tree must match the verified tree.
 
 ## Tooling and deployment
 
-Continue using `flake.nix`, `flake.lock`, npm, and `package-lock.json`. Add required system tools such as the emulator JDK and Nix-compatible browser dependencies through the flake when the corresponding implementation arrives. Pin Firebase CLI and test libraries in npm; do not install tools globally. The current Node version must be checked against selected dependencies before scaffolding, and any upgrade belongs in the flake.
+`flake.nix` and `flake.lock` supply Node, the emulator JDK, GitHub CLI and the canonical browser environment. npm and `package-lock.json` pin application libraries, Firebase CLI, the formatter and test tools. Future system-tool changes belong in the flake; project tools are not installed globally.
 
 Publish the main build at `/deepsea/` and retained PR previews at `/deepsea/pr<N>/`. Handle base paths for invites, assets, and navigation. Build and publish the exact tested PR head for same-repository branches; retain other previews and serialize publication to avoid concurrent overwrites. Fork PRs run checks without deployment credentials.
 

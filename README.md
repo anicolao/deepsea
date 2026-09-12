@@ -1,63 +1,58 @@
 # Deep Sea
 
-Deep Sea is a project based on **Deep Sea Adventure** by Oink Games. It will be a multiplayer game on the web that preserves the tension of diving for treasure while everyone shares a limited oxygen supply.
+A multiplayer browser game for **2–6 friends**, based on **Deep Sea Adventure** by Oink Games.
 
-Dive deeper for better rewards, decide when to turn back, and try to reach the submarine before the air runs out. Taking more treasure puts pressure on the shared supply, so each player's choices affect the whole table. See the [official game page](https://oinkgames.com/en/games/analog/deep-sea-adventure/) for an introduction to the original game.
+Dive for concealed treasure, share one oxygen tank, and decide when to turn back. Every carried unit uses air and slows movement. Bring treasure back to the submarine, play three dives, and compare your crew's final haul.
 
-## Project status
+**[Play the complete MVP review build](https://anicolao.github.io/deepsea/pr6/)** · [Manual review guide](PR_PREVIEW.md)
 
-Room creation, invites, joining, readiness, first-diver selection, leaving, and confirmed starts are implemented. Separate browsers retain their seats after reload. Two- and three-person user journeys run on phone and desktop. Players can roll, move, collect or drop concealed treasure, and follow each other on the shared board. Players can finish three dives, order lost stacks, compare final scores and create another room. Recovery and final UX acceptance are being completed on this branch. The retained PR preview uses a dedicated live Firebase backend. A PR is ready only after its deployed-preview check passes.
+Create a room and share its invitation. Each friend joins from their own browser or device. Ready the crew, choose the first diver, and start. The game includes complete turns, lost-treasure stacking, three-dive scoring, tiebreaks, shared winners, public move history, keyboard controls and a fresh-room replay flow. Reloads retain the anonymous seat; reconnecting reconciles confirmed moves before allowing another action.
 
-Read [VISION.md](VISION.md) for the project's north star.
+This is for trusted groups. There are no bots, public matchmaking, accounts, chat or ranked play. The client conceals unrevealed values in the player interface; it is not a server-enforced hidden-information or anti-cheat system.
 
-## MVP direction
+## Run locally
 
-The MVP will be a multiplayer game on the web. [MVP_DESIGN.md](MVP_DESIGN.md) records its scope and architecture. [RULES_SUMMARY.md](RULES_SUMMARY.md) and [BASE_1.md](docs/protocol/BASE_1.md) record the accepted project conventions and versioned protocol.
-
-[UX_DESIGN.md](UX_DESIGN.md) describes player journeys, screen behavior, and interaction states with generated mockups.
-
-[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) sequences the work from the tested coming-soon screen to the complete multiplayer MVP, with dependencies and acceptance checks for each step.
-
-## Run and verify
+Use Nix with flakes enabled:
 
 ```sh
 nix develop
 npm ci
-npm run dev
+npm run emulators
 ```
 
-Open `http://127.0.0.1:5173/`. To try room setup, run `nix develop -c npm run emulators` in another terminal, then open `http://127.0.0.1:5173/rooms/`. Creating a room updates its URL; copy the invite into another browser profile, enter a name, and join. Ready both players, choose the first diver as host, and start. The emulator data is disposable and does not survive emulator shutdown. Ordinary page reloads retain browser identity and the room while the emulators run.
+In another Nix terminal, run `npm run dev`, then open `http://127.0.0.1:5173/`. Copy an invitation into a separate browser profile to add a friend. Two tabs in one profile share an identity. Emulator data is disposable; ordinary reloads retain the seat while the emulators run.
 
-Stop manually started emulators before running `npm run verify`; verification owns fresh instances and fails on occupied ports. It runs type checks, Node guard tests, Vitest unit tests, Firestore rules/SDK integration tests, and the production-build browser suite, then shuts down its services. The canonical E2E environment is the x86_64-linux Nix shell. Setup automatically downloads the emulator artifact selected by the pinned Firebase CLI before the server-startup budget begins.
+The flake supplies Git, GitHub CLI, Node/npm, Java, curl, ripgrep, actionlint, pinned Chromium and fonts. JavaScript tools and libraries have exact versions in the npm lockfile. Add future system tools to `flake.nix` and commit its lockfile; do not install project tools globally. `npm run format` formats application source and scenarios with the pinned formatter.
 
-`static/backend.json` selects the demo backend only on loopback hosts. Retained PR previews use `deepsea-preview-anicolao`, with a separate `pr<N>` namespace for each PR. Production configuration remains unset; no environment falls back to another backend. A configured live backend and passing deployed browser journeys are required for every PR. See [PR_PREVIEW.md](PR_PREVIEW.md) for the manual journey and backend deployment command. See [Firebase's emulator setup](https://firebase.google.com/docs/emulator-suite/install_and_configure) and [Auth emulator connection](https://firebase.google.com/docs/emulator-suite/connect_auth).
+## Verify and contribute
 
-[E2E_GUIDE.md](E2E_GUIDE.md) defines the no-waits, no-masking, zero-pixel testing contract and baseline review workflow. [The first scenario walkthrough](tests/e2e/001-coming-soon/README.md) contains screenshots generated by the actual browser test. Retained PR builds are published at `https://anicolao.github.io/deepsea/pr<N>/`.
-
-## Prompt log and development hooks
-
-Record every project prompt verbatim in [PROMPTS.md](PROMPTS.md), following [AGENTS.md](AGENTS.md). Use `## Prompt N: Summary` with a 2–3 word summary, then a blank line and the verbatim prompt. Append new entries without changing earlier entries, then stage them with the related work.
-
-Use Nix with flakes enabled to enter the pinned development environment, then install JavaScript dependencies and activate the hook:
+Stop manually started emulators, then run:
 
 ```sh
-nix develop
-npm ci
-npm run verify
+nix develop -c npm run verify
 ```
 
-The flake provides Git, GitHub CLI (`gh`), SSH, Node.js 22 with npm, Java 21 for emulators, curl, ripgrep, actionlint for workflow validation, pinned Playwright browsers, and font configuration. Firebase CLI and test libraries are exact npm dependencies. Add future development tools to `flake.nix` and commit the lockfile. For a single command, use `nix develop -c <command>`. Hook installation uses the `prepare` script, following the [Husky setup documentation](https://typicode.github.io/husky/how-to.html).
+Verification checks types, enforcement regressions, game rules, event repositories, real emulator authorization and complete browser journeys. It owns fresh local services and shuts them down afterwards. Canonical screenshots use the x86_64 Linux Nix environment. [E2E_GUIDE.md](E2E_GUIDE.md) specifies semantic steps, no explicit waits, no masking, zero pixel tolerance and manual baseline review. [UX_ACCEPTANCE.md](UX_ACCEPTANCE.md) maps the finished player journeys to tests and visual evidence.
 
-For GitHub operations, run `gh auth status` in the development shell and, if needed, authenticate with `gh auth login --web --git-protocol https`. Keep credentials outside the repository.
+Every PR requires a working retained preview at `/deepsea/pr<N>/` and green deployed browser checks on its exact head. The preview project is isolated from the production project; neither falls back to the other. Merging to `main` verifies and publishes the root `/deepsea/` build. See [OPERATIONS.md](OPERATIONS.md) for authentication, Firebase setup, deployment, compatibility and rollback.
 
-The pre-commit hook rejects commits unless the staged `PROMPTS.md` preserves the committed history and adds a nonempty prompt entry. This also applies to the first commit. An unstaged update does not count. Keep work for a single prompt in one commit; never invent entries just to pass the check.
+Record every project prompt verbatim in [PROMPTS.md](PROMPTS.md), in order, under a heading such as `## Prompt 19: Short Prompt Summary`. Use a 2–3 word summary and preserve the original body. Follow [AGENTS.md](AGENTS.md): never rewrite history or invent prompts to pass a hook. A sequence of commits for one prompt appends unique continuation records to [PROMPT_WORK.md](PROMPT_WORK.md), referencing the exact prompt-log hash.
 
-Run `npm run check:prompts` to check the current index, or `npm test` to exercise the guard in temporary Git repositories. The hook cannot read chat history or verify verbatim completeness; recording prompts remains a contributor responsibility.
+`npm ci` installs the Husky hook. It checks the staged prompt/continuation, rejects unstaged or untracked inputs, enforces every E2E rule and runs normal verification on the exact commit tree. It cannot read the conversation or prove verbatim completeness; maintaining the log remains a contributor responsibility. Use `nix develop -c gh auth status` for GitHub authentication and keep credentials outside the repository.
 
-## Credits
+## Design and rules
 
-This project's original contributions are licensed under the [GNU General Public License version 3](LICENSE) (`GPL-3.0-only`).
+- [VISION.md](VISION.md): the project's north star.
+- [RULES_SUMMARY.md](RULES_SUMMARY.md) and [BASE_1.md](docs/protocol/BASE_1.md): accepted rules conventions and versioned behavior.
+- [MVP_DESIGN.md](MVP_DESIGN.md): scope, event persistence and multiplayer architecture.
+- [UX_DESIGN.md](UX_DESIGN.md): player experience and mockups.
+- [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md): delivery steps and acceptance evidence.
+- [Scenario walkthroughs](tests/e2e/): screenshots produced by real browser journeys.
 
-Deep Sea Adventure is published by Oink Games and was designed by Jun Sasaki and Goro Sasaki, with artwork by Jun Sasaki. See [Oink Games' credits](https://oinkgames.com/en/games/analog/deep-sea-adventure/).
+## Credits and license
 
-This repository documents a separate development project and does not claim official affiliation with Oink Games. No license for the original game's artwork, branding, or rulebook is implied.
+Original project contributions are licensed under the [GNU General Public License version 3](LICENSE), `GPL-3.0-only`.
+
+Deep Sea Adventure is published by Oink Games, designed by Jun Sasaki and Goro Sasaki, with artwork by Jun Sasaki. See [the publisher's game page and credits](https://oinkgames.com/en/games/analog/deep-sea-adventure/).
+
+This is an independent project with original browser artwork. It does not claim official affiliation or a license to the publisher's artwork, branding or rulebook. The generated ocean asset's provenance and prompt are recorded in [static/art/README.md](static/art/README.md).

@@ -90,3 +90,36 @@ it("connects retained previews to their isolated live namespace", () => {
   expect(selected.authHost).toBeUndefined();
   expect(selected.firestoreHost).toBeUndefined();
 });
+
+it("uses the committed production project only at the root deployment", () => {
+  const production = selectConfig(
+    config,
+    new URL("https://anicolao.github.io/deepsea/rooms/?room=review"),
+  );
+  const preview = selectConfig(
+    config,
+    new URL("https://anicolao.github.io/deepsea/pr6/rooms/?room=review"),
+  );
+  expect(production.mode).toBe("production");
+  expect(production.projectId).toBe("deepsea-game-anicolao");
+  expect(production.namespace).toBe("production");
+  expect(production.projectId).not.toBe(preview.projectId);
+  expect(production.authHost).toBeUndefined();
+  expect(production.firestoreHost).toBeUndefined();
+  expect(production.initialSeed).toBeUndefined();
+  expect(preview.namespace).toBe("pr6");
+});
+
+it("rejects a fixed production seed and unknown hosted paths", () => {
+  expect(() =>
+    selectConfig(
+      { ...config, production: { ...config.production, initialSeed: 2026 } },
+      new URL("https://anicolao.github.io/deepsea/rooms/"),
+    ),
+  ).toThrow();
+  for (const url of [
+    "https://anicolao.github.io/another-game/rooms/",
+    "https://unknown.invalid/deepsea/pr6/rooms/",
+  ])
+    expect(() => selectConfig(config, new URL(url))).toThrow();
+});
