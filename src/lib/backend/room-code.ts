@@ -1,3 +1,4 @@
+import { stream } from "../game/random";
 import { RoomCollisionError } from "./rest";
 import type { RoomRepository } from "./repository";
 
@@ -13,6 +14,17 @@ export function newRoomCode(
     }
   }
   return code;
+}
+
+// Isolated browser runs reproduce initialization; ordinary rooms use crypto.
+export function roomCodeGenerator(seed?: number): () => string {
+  if (seed === undefined) return newRoomCode;
+  const next = stream(seed, "room-codes");
+  return () =>
+    newRoomCode((bytes) => {
+      for (let i = 0; i < bytes.length; i++) bytes[i] = next() & 255;
+      return bytes;
+    });
 }
 
 export function invitationRoom(

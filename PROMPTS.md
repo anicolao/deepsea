@@ -95,3 +95,11 @@ This is looking much better. But, the "Leave it" button is confusing when the ch
 ## Prompt 23: Improve Multiplayer Clarity
 
 this is starting to look close to complete! the two big problems that remain are that games are too hard to join - they should be something like 4 or 5 letter codes that I can just join rather than complex links; and the in game experience when it isn't my turn is a problem - there are no animations or indications of what the other person is doing. it's also hard to tell how much air the team is consuming. Let's make a commit to fix those issues and then maybe we finally have an MVP.
+
+## Prompt 24: Show Room Code
+
+This UI is awful, the room code shouldn't be hidden behind a button. Just show it to the user prominently next to the copy invite button
+
+## Prompt 25: Publish Every Fix
+
+There is no point making changes that don't go on the PR. Always update the PR with fixes.

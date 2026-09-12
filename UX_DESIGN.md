@@ -46,7 +46,7 @@ flowchart TD
 
 Home asks for a name and offers **Create a room**. A second path accepts a five-letter room code, case-insensitively, or an invite link. **Find room** shows the intended crew before joining. Opening an invite directly skips pasting and asks only for a name before **Join room**. Keep the room context visible so players know which invitation they are accepting. There is no email, password, or account-registration form.
 
-**Room code** opens a sharing dialog with the code in large type, a copy action and a return-to-crew control. Existing invitation links remain usable.
+The five-letter **Room code** is always visible in large type beside **Copy invite** in the lobby. Players can read it aloud without opening another control. Existing invitation links remain usable.
 
 Each lobby row shows the player's name, distinct diver marker, seat, and readiness. Mark the local player as “You” and the creator as “Host.” **Copy invite link** provides a visible and announced “Link copied” confirmation; if clipboard access fails, reveal a selectable link.
 

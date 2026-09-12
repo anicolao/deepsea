@@ -123,3 +123,57 @@ it("rejects a fixed production seed and unknown hosted paths", () => {
   ])
     expect(() => selectConfig(config, new URL(url))).toThrow();
 });
+
+it("isolates seeded browser runs beneath their own preview or local namespace", () => {
+  const testRun = "12345678-1234-4567-89ab-123456789abc";
+  const initialized = {
+    ...config,
+    local: { ...config.local, initialSeed: 2026, testRun },
+    preview: { ...config.preview, initialSeed: 2026, testRun },
+  };
+  expect(
+    selectConfig(initialized, new URL("http://localhost/rooms/")).namespace,
+  ).toBe(`local-e2e-${testRun}`);
+  expect(
+    selectConfig(
+      initialized,
+      new URL("https://anicolao.github.io/deepsea/pr6/rooms/"),
+    ).namespace,
+  ).toBe(`pr6-e2e-${testRun}`);
+  for (const testRun of ["production", "../pr5", "", "a/b"]) {
+    expect(() =>
+      selectConfig(
+        { ...initialized, preview: { ...initialized.preview, testRun } },
+        new URL("https://anicolao.github.io/deepsea/pr6/rooms/"),
+      ),
+    ).toThrow();
+  }
+  expect(() =>
+    selectConfig(
+      { ...config, local: { ...config.local, testRun } },
+      new URL("http://localhost/"),
+    ),
+  ).toThrow();
+  expect(() =>
+    selectConfig(
+      { ...config, production: { ...config.production, testRun } },
+      new URL("https://anicolao.github.io/deepsea/rooms/"),
+    ),
+  ).toThrow();
+});
+it("rejects invalid initialization seeds on local and preview deployments", () => {
+  for (const initialSeed of [-1, 1.5, 4294967296, NaN]) {
+    expect(() =>
+      selectConfig(
+        { ...config, local: { ...config.local, initialSeed } },
+        new URL("http://localhost/"),
+      ),
+    ).toThrow();
+    expect(() =>
+      selectConfig(
+        { ...config, preview: { ...config.preview, initialSeed } },
+        new URL("https://anicolao.github.io/deepsea/pr6/rooms/"),
+      ),
+    ).toThrow();
+  }
+});

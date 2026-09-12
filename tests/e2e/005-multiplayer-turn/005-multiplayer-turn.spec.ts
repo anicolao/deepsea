@@ -28,10 +28,13 @@ test("a real turn moves treasure and survives a reload in both browsers", async 
   await expect(
     host.getByText("Mira (You) · Host", { exact: true }),
   ).toBeVisible();
-  await host.getByRole("button", { name: "Room code", exact: true }).click();
+  await expect(host.getByLabel("Room code", { exact: true })).toBeVisible();
+  await expect(
+    host.getByRole("button", { name: "Copy invite", exact: true }),
+  ).toBeVisible();
   const code = await host.getByLabel("Room code", { exact: true }).innerText();
   expect(code).toMatch(/^[A-Z]{5}$/);
-  await host.getByRole("button", { name: "Back to crew" }).click();
+
   await guest.goto("./");
   await guest
     .getByLabel("Room code or invite link")

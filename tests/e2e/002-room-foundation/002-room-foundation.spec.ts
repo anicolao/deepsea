@@ -36,10 +36,20 @@ test("friends create, join, ready and start a room through real browser actions"
   await host.getByRole("button", { name: "Create room", exact: true }).click();
   await hostSteps.step("created", "The host invites friends", [
     {
-      description: "Mira is seated as host and cannot start alone.",
+      description:
+        "Mira sees the room code beside Copy invite and cannot start alone.",
       assert: async () => {
         await expect(
           host.getByText("Mira (You) · Host", { exact: true }),
+        ).toBeVisible();
+        await expect(
+          host.getByLabel("Room code", { exact: true }),
+        ).toBeVisible();
+        await expect(host.getByLabel("Room code", { exact: true })).toHaveText(
+          /^[A-Z]{5}$/,
+        );
+        await expect(
+          host.getByRole("button", { name: "Copy invite", exact: true }),
         ).toBeVisible();
         await expect(
           host.getByRole("button", { name: "Start dive" }),
@@ -54,6 +64,8 @@ test("friends create, join, ready and start a room through real browser actions"
   await host.getByRole("button", { name: "Copy invite" }).click();
   await expect(host.getByText("Invite copied", { exact: true })).toBeVisible();
   const invite = await players.readInvite(host);
+  const code = await host.getByLabel("Room code", { exact: true }).innerText();
+  expect(new URL(invite).searchParams.get("room")).toBe(code);
   await guest.goto(invite);
   await guestSteps.step(
     "invited",
@@ -82,6 +94,12 @@ test("friends create, join, ready and start a room through real browser actions"
       description:
         "Sol has a seat and can withdraw readiness, but cannot start the room.",
       assert: async () => {
+        await expect(
+          guest.getByLabel("Room code", { exact: true }),
+        ).toBeVisible();
+        await expect(guest.getByLabel("Room code", { exact: true })).toHaveText(
+          code,
+        );
         await expect(
           guest.getByText("Sol (You)", { exact: true }),
         ).toBeVisible();

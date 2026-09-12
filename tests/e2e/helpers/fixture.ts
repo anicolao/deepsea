@@ -3,7 +3,7 @@ import { expect } from './assertions';
 import { assertStepsFinished } from './test-steps';
 
 type Players = { tab: (page: Page) => Promise<Page>; loseNextAcknowledgement: (page: Page) => Promise<void>; faultCount: (page: Page) => number; visit: (page: Page, url: string) => Promise<void>; readInvite: (page: Page) => Promise<string>; create: (seed?: number) => Promise<Page>; reload: (page: Page) => Promise<void>; setConnected: (page: Page, connected: boolean) => Promise<void> };
-async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], streams = new Map<Page, Set<Request>>(), cancelledByReload = new Set<Request>(), seed = 2026, allowedTabs = new Set<BrowserContext>(), offline = new Set<Page>(), faults = new Map<Page, Set<Request>>(), offlineRequests = new Set<Request>(), navigating = new Set<Page>()) {
+async function monitor(context: BrowserContext, page: Page, baseURL: string, problems: string[], testRun: string, streams = new Map<Page, Set<Request>>(), cancelledByReload = new Set<Request>(), seed = 2026, allowedTabs = new Set<BrowserContext>(), offline = new Set<Page>(), faults = new Map<Page, Set<Request>>(), offlineRequests = new Set<Request>(), navigating = new Set<Page>()) {
   const hosted = new URL(baseURL).origin === 'https://anicolao.github.io';
   const origins = new Set([new URL(baseURL).origin, ...(hosted ? ['https://identitytoolkit.googleapis.com', 'https://securetoken.googleapis.com', 'https://firestore.googleapis.com'] : ['http://127.0.0.1:9099', 'http://127.0.0.1:8080'])]);
   // Trusted backend requests need observation, not a round trip through a route handler.
@@ -14,8 +14,8 @@ async function monitor(context: BrowserContext, page: Page, baseURL: string, pro
     else if (url.pathname === new URL('backend.json', baseURL).pathname) {
       const response = await route.fetch();
       const config = await response.json();
-      // Only reproducible randomness at initialization: no identities, actions or board state.
-      await route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed }, preview: config.preview ? { ...config.preview, initialSeed: seed } : null } });
+      // Only reproducible randomness at initialization: isolated namespace, no identities, actions or board state.
+      await route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed, testRun }, preview: config.preview ? { ...config.preview, initialSeed: seed, testRun } : null } });
     } else await route.continue();
   });
   const expectedFailures: {url: string; text: string}[] = [];
@@ -125,16 +125,17 @@ async function monitor(context: BrowserContext, page: Page, baseURL: string, pro
     }
   };
 }
-export const test = base.extend<{ browserHealth: void; players: Players }>({
-  browserHealth: [async ({ context, page, baseURL }, use, info) => {
+export const test = base.extend<{ browserHealth: void; players: Players; testRun: string }>({
+  testRun: async ({}, use) => { await use(crypto.randomUUID()); },
+  browserHealth: [async ({ context, page, baseURL, testRun }, use, info) => {
     const problems: string[] = [];
-    const inspected = await monitor(context, page, baseURL!, problems);
+    const inspected = await monitor(context, page, baseURL!, problems, testRun);
     await use();
     await inspected();
     expect(problems, 'No browser errors, failed resources, or external requests').toEqual([]);
     assertStepsFinished(info);
   }, { auto: true }],
-  players: async ({ browser, baseURL }, use, info) => {
+  players: async ({ browser, baseURL, testRun }, use, info) => {
     const contexts: BrowserContext[] = [];
     const allowedTabs = new Set<BrowserContext>(), offline = new Set<Page>();
     const faults = new Map<Page, Set<Request>>(), seeds = new Map<Page, number>();
@@ -154,7 +155,7 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
         contexts.push(context);
         const page = await context.newPage();
         pages.push(page); seeds.set(page,seed);
-        checks.push(await monitor(context, page, baseURL!, problems, streams, cancelledByReload, seed, allowedTabs, offline, faults, offlineRequests, navigating));
+        checks.push(await monitor(context, page, baseURL!, problems, testRun, streams, cancelledByReload, seed, allowedTabs, offline, faults, offlineRequests, navigating));
         return page;
       },
       tab: async original => {
@@ -164,7 +165,7 @@ export const test = base.extend<{ browserHealth: void; players: Players }>({
         let page: Page;
         try { page = await context.newPage(); } finally { allowedTabs.delete(context); }
         pages.push(page); seeds.set(page,seed);
-        checks.push(await monitor(context,page,baseURL!,problems,streams,cancelledByReload,seed,allowedTabs,offline,faults,offlineRequests, navigating));
+        checks.push(await monitor(context,page,baseURL!,problems,testRun,streams,cancelledByReload,seed,allowedTabs,offline,faults,offlineRequests, navigating));
         return page;
       },
       loseNextAcknowledgement: async page => {

@@ -2,6 +2,7 @@ import { it, expect, vi } from "vitest";
 import {
   invitationRoom,
   newRoomCode,
+  roomCodeGenerator,
   createCodedRoom,
 } from "../../src/lib/backend/room-code";
 import { RoomCollisionError } from "../../src/lib/backend/rest";
@@ -90,4 +91,15 @@ it("bounds collision retries and never discards normal moves", async () => {
   const move = repo.prepareAction("ABYSS", "lobby/left", {});
   expect(() => repo.discardRejectedCreation(move)).toThrow();
   expect(repo.pending("ABYSS")).toEqual(move);
+});
+
+it("reproduces room-code initialization only when explicitly seeded", () => {
+  expect(roomCodeGenerator()).toBe(newRoomCode);
+  const first = roomCodeGenerator(2026),
+    second = roomCodeGenerator(2026);
+  const sequence = Array.from({ length: 10 }, first);
+  expect(sequence).toEqual(Array.from({ length: 10 }, second));
+  expect(new Set(sequence).size).toBe(10);
+  for (const code of sequence) expect(code).toMatch(/^[A-HJ-NP-Z]{5}$/);
+  expect(roomCodeGenerator(393)()).not.toBe(sequence[0]);
 });

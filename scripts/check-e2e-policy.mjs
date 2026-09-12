@@ -46,7 +46,7 @@ export function policyErrors(source, filename) {
       report(file, 'Scenarios must import unaliased test and expect from ../helpers/fixture.');
     }
   }
-  const seededConfig = (node) => fixture && node.getText(file) === 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed }, preview: config.preview ? { ...config.preview, initialSeed: seed } : null } })';
+  const seededConfig = (node) => fixture && node.getText(file) === 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed, testRun }, preview: config.preview ? { ...config.preview, initialSeed: seed, testRun } : null } })';
   const visit = (node) => {
     if (ts.isVariableDeclaration(node) && node.initializer && ts.isIdentifier(node.initializer) && ['test', 'expect'].includes(node.initializer.text)) report(node, 'Do not alias the shared test or expect.');
     if (ts.isImportSpecifier(node) && node.propertyName && !fixture && !assertions) report(node, 'Do not alias E2E imports.');

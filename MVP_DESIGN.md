@@ -31,7 +31,7 @@ Firestore rules should require authentication, own-UID attribution, a bounded va
 
 ## Room and player flow
 
-1. Enter a display name and create or join through a five-letter room code or an invite URL. Show the code in the lobby’s sharing dialog and accept lowercase entry. Use a randomly generated room code; creation writes one fixed `created` event ID so concurrent attempts cannot silently share a room.
+1. Enter a display name and create or join through a five-letter room code or an invite URL. Show the code prominently in the lobby beside Copy invite and accept lowercase entry. Use a randomly generated room code; creation writes one fixed `created` event ID so concurrent attempts cannot silently share a room.
 2. Host occupies seat one. Subsequent valid joins fill seats two through six in canonical event order. Display name is presentation; UID owns the seat.
 3. Players can leave or change readiness before play. Membership changes clear readiness. Host selects the initial starter so the group can apply the swimming rule, then starts once 2–6 current players are ready.
 4. Freeze seats and circular turn order at start. Reject late joins and departures as game actions. A disconnected player's seat is retained; their turn waits without consuming oxygen on a wall-clock timer.
