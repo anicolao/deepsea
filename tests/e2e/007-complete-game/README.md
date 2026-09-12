@@ -35,3 +35,11 @@ Sol sees all three dive scores and can return to the completed result after anot
 ![Desktop: Every dive contributes to the final score](screenshots/000-final-result-guest-desktop.png)
 
 ![Phone: Every dive contributes to the final score](screenshots/000-final-result-guest-phone.png)
+
+## Earlier hauls remain inspectable
+
+- The first dive still reveals only its safely returned treasure and keeps the three-dive result available.
+
+![Desktop: Earlier hauls remain inspectable](screenshots/001-saved-dive-guest-desktop.png)
+
+![Phone: Earlier hauls remain inspectable](screenshots/001-saved-dive-guest-phone.png)

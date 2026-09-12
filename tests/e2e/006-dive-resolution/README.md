@@ -22,7 +22,7 @@ Sol stays underwater, finishes the last turn and orders lost cargo with the keyb
 
 ## Finish the last oxygen-exhausting turn
 
-- Oxygen is below zero but Sol still has the legal landing choice.
+- Oxygen is exhausted but Sol still has the legal landing choice.
 
 ![Desktop: Finish the last oxygen-exhausting turn](screenshots/000-last-turn-guest-desktop.png)
 
