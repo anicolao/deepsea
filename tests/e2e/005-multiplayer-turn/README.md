@@ -52,10 +52,18 @@ Mira rolls, collects treasure and observes Sol taking the next turn.
 
 Sol sees the confirmed move, reloads, and takes the next turn.
 
+## Follow Mira’s roll and air use
+
+- Sol sees Mira’s dice, destination and zero air charge while she chooses treasure.
+
+![Desktop: Follow Mira’s roll and air use](screenshots/000-watch-roll-guest-desktop.png)
+
+![Phone: Follow Mira’s roll and air use](screenshots/000-watch-roll-guest-phone.png)
+
 ## Sol sees the pickup and takes over
 
 - The shared path now has an empty sixth space and the next player can roll.
 
-![Desktop: Sol sees the pickup and takes over](screenshots/000-next-turn-guest-desktop.png)
+![Desktop: Sol sees the pickup and takes over](screenshots/001-next-turn-guest-desktop.png)
 
-![Phone: Sol sees the pickup and takes over](screenshots/000-next-turn-guest-phone.png)
+![Phone: Sol sees the pickup and takes over](screenshots/001-next-turn-guest-phone.png)

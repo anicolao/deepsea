@@ -36,6 +36,7 @@ export type Dive = {
     turn: number;
     faces: [number, number];
     movement: number;
+    oxygenCost: number;
     from: number;
     to: number;
     uid: string;
@@ -284,6 +285,7 @@ export function turn(
       turn: d.turn,
       faces,
       movement,
+      oxygenCost: player.cargo.length,
       from,
       to: player.position,
       uid: actor,

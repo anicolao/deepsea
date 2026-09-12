@@ -160,3 +160,5 @@ The six-player journey selects return directions with native keyboard input and 
 Its keyboard action locators intersect the named control with `:enabled`, so Playwright resolves the action only when the control becomes enabled. This avoids a separate pre-action polling assertion without allowing disabled controls or forced input. Final state assertions remain explicit.
 
 The navigation classifier ends at the main-frame commit, not after a delay. A request from the new document or another player never qualifies as old-document cancellation. The guard suite exercises this boundary, unused/misapplied faults, shared-tab health, and concurrent empty checks.
+
+The multiplayer-turn journey reads a newly created room’s five-letter code from the real sharing dialog and joins from another browser with lowercase entry. It checks the waiting player’s dice, air charge and current decision before its full screenshot. Room codes and identities remain genuinely allocated by the app; the fixture only supplies the existing initialization seed. Layout failures name overlapping controls to make responsive regressions actionable.

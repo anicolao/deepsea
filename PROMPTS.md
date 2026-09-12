@@ -91,3 +91,7 @@ not sure how you got interrupted. finish the UX job
 ## Prompt 22: Clarify Ocean Descent
 
 This is looking much better. But, the "Leave it" button is confusing when the choice is to drop or keep your treasure; it only make sense if the choice is to take treasure or leave it. If it's drop or keep  the button should have a different label. The ocean should not be fixed behind the treasure chits; the background image should be tall enough to scroll with the tiles and show increasingly deeper and darker sea as you scroll down, including suitably different fauna as you enter the deep.
+
+## Prompt 23: Improve Multiplayer Clarity
+
+this is starting to look close to complete! the two big problems that remain are that games are too hard to join - they should be something like 4 or 5 letter codes that I can just join rather than complex links; and the in game experience when it isn't my turn is a problem - there are no animations or indications of what the other person is doing. it's also hard to tell how much air the team is consuming. Let's make a commit to fix those issues and then maybe we finally have an MVP.

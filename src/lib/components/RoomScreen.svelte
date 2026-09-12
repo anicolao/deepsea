@@ -2,9 +2,13 @@
   import "@fontsource/atkinson-hyperlegible/400.css";
   import "@fontsource/atkinson-hyperlegible/700.css";
   import "./surface.css";
+  import { createCodedRoom, invitationRoom } from "$lib/backend/room-code";
   import Submarine from "./Submarine.svelte";
   import Diver from "./Diver.svelte";
-  let brief: HTMLDialogElement, closure: HTMLDialogElement;
+  let brief: HTMLDialogElement,
+    closure: HTMLDialogElement,
+    sharing: HTMLDialogElement;
+  let codeCopied = false;
   import Review from "$lib/components/Review.svelte";
   import Game from "$lib/components/Game.svelte";
   import { onMount } from "svelte";
@@ -16,7 +20,6 @@
   let name = "",
     error = "",
     roomId = "",
-    setupId = "",
     uid = "",
     starter = "",
     invite = "";
@@ -25,20 +28,14 @@
     inviteInput = "";
   function openInvite() {
     try {
-      const url = new URL(inviteInput.trim());
-      if (
-        url.origin !== location.origin ||
-        url.pathname !== base + "/rooms/" ||
-        !/^[A-Za-z0-9_-]{1,128}$/.test(url.searchParams.get("room") ?? "")
-      )
-        throw new Error("Invalid invite");
+      const id = invitationRoom(inviteInput, location.origin, base);
       error = "";
       joining = false;
-      observe(url.searchParams.get("room")!);
-      replaceState(url.pathname + url.search, {});
+      observe(id);
+      replaceState(base + "/rooms/?room=" + id, {});
     } catch {
       error =
-        "This invite looks incomplete or belongs to another table. Copy the whole link from your friend and open it directly.";
+        "Enter the five-letter room code or a complete invitation link from this table.";
     }
   }
   let connected = false,
@@ -131,7 +128,6 @@
             throw new Error("This room link is invalid.");
           observe(id);
         } else {
-          setupId = crypto.randomUUID();
           connected = true;
         }
       } catch (e) {
@@ -151,11 +147,10 @@
     busy = true;
     error = "";
     try {
-      const id = setupId,
-        pending = repository.prepareCreation(id, name);
-      observe(id);
-      replaceState(`${base}/rooms/?room=${id}`, {});
-      await repository.submit(pending);
+      await createCodedRoom(repository, name, undefined, (id) => {
+        observe(id);
+        replaceState(base + "/rooms/?room=" + id, {});
+      });
     } catch (e) {
       failure(e);
     } finally {
@@ -201,12 +196,11 @@
     left = false;
     closure.close();
     try {
-      const id = crypto.randomUUID(),
-        pending = repository.prepareCreation(id, localName);
       state = null;
-      observe(id);
-      replaceState(`${base}/rooms/?room=${id}`, {});
-      await repository.submit(pending);
+      await createCodedRoom(repository, localName, undefined, (id) => {
+        observe(id);
+        replaceState(base + "/rooms/?room=" + id, {});
+      });
     } catch (e) {
       failure(e);
     } finally {
@@ -305,13 +299,15 @@
   {:else if !roomId && joining}
     <form on:submit|preventDefault={openInvite}>
       <h2>Join your friends</h2>
-      <p>Paste the invitation they shared with you.</p>
-      <label for="invite-input">Invite link</label><input
+      <p>Enter the five-letter code your host shared.</p>
+      <label for="invite-input">Room code or invite link</label><input
         id="invite-input"
         bind:value={inviteInput}
-        type="url"
+        type="text"
+        autocapitalize="characters"
+        spellcheck="false"
         required
-      /><button disabled={!enabled || !inviteInput.trim()}>Open invite</button>
+      /><button disabled={!enabled || !inviteInput.trim()}>Find room</button>
       <p>
         <a data-sveltekit-reload href={base + "/rooms/"}
           >Create a room instead</a
@@ -335,18 +331,20 @@
           data-sveltekit-reload
           href="#home-invite"
           on:click={() => document.getElementById("home-invite")?.focus()}
-          >Join with invite</a
+          >Join with code</a
         >
       </div>
       <form class="paste-invite" on:submit|preventDefault={openInvite}>
-        <label for="home-invite">Invite link</label><input
+        <label for="home-invite">Room code or invite link</label><input
           id="home-invite"
-          type="url"
-          placeholder="Paste invite link here…"
+          type="text"
+          autocapitalize="characters"
+          spellcheck="false"
+          placeholder="Five letters, e.g. CORAL"
           bind:value={inviteInput}
           required
         /><button class="secondary" disabled={!enabled || !inviteInput.trim()}
-          >Open invite</button
+          >Find room</button
         >
       </form>
       <button class="quiet" on:click={() => brief.showModal()}
@@ -394,13 +392,22 @@
   {:else if room}
     <section class="lobby" aria-label="Room lobby">
       <h2 class="room-context">{room.hostName}’s room</h2>
-      {#if me}<button
-          class="copy-invite secondary"
-          aria-label="Copy invite"
-          on:click={copy}
-          ><span role="status">{copied ? "Invite copied" : "Copy invite"}</span
-          ></button
-        >{/if}
+      {#if me}<div class="actions share-actions">
+          <button
+            class="secondary"
+            on:click={() => {
+              codeCopied = false;
+              sharing.showModal();
+            }}>Room code</button
+          ><button
+            class="copy-invite secondary"
+            aria-label="Copy invite"
+            on:click={copy}
+            ><span role="status"
+              >{copied ? "Invite copied" : "Copy invite"}</span
+            ></button
+          >
+        </div>{/if}
       <ul aria-label="Crew">
         {#each room.members as member}<li>
             <Diver seat={member.seat} />
@@ -516,6 +523,22 @@
       >Reload</button
     >{/if}
 </main>
+<dialog bind:this={sharing} aria-labelledby="sharing-title">
+  <h2 id="sharing-title">Invite your crew</h2>
+  <p>Open Deep Sea on this table and choose Join with code.</p>
+  <p class="room-code" aria-label="Room code">{roomId}</p>
+  <button
+    on:click={async () => {
+      try {
+        await navigator.clipboard.writeText(roomId);
+        codeCopied = true;
+      } catch {
+        codeCopied = false;
+      }
+    }}>{codeCopied ? "Code copied" : "Copy room code"}</button
+  >
+  <form method="dialog"><button class="secondary">Back to crew</button></form>
+</dialog>
 <dialog bind:this={closure} aria-labelledby="close-title">
   <div role="group" aria-label="Confirm room closure">
     <h2 id="close-title">Leave your crew?</h2>
@@ -547,6 +570,19 @@
 </dialog>
 
 <style>
+  .room-code {
+    font-size: 42px;
+    letter-spacing: 0.15em;
+    font-weight: bold;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .share-actions {
+    margin-bottom: 8px;
+  }
+  .share-actions button {
+    margin: 0;
+  }
   .invite-options {
     display: flex;
     flex-wrap: wrap;

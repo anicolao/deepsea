@@ -92,7 +92,7 @@ export class TestSteps {
           for (let right = left + 1; right < controls.length; right++) {
             const a = visibleBox(controls[left]);
             const b = visibleBox(controls[right]);
-            if (Math.min(a.right, b.right) > Math.max(a.left, b.left) && Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top)) errors.push('Interactive controls overlap');
+            if (Math.min(a.right, b.right) > Math.max(a.left, b.left) && Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top)) errors.push('Interactive controls overlap: ' + controls[left].textContent?.trim() + ' / ' + controls[right].textContent?.trim());
           }
         }
         return errors;

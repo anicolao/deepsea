@@ -83,6 +83,12 @@ test("safe return, final oxygen turn and lost cargo ordering resolve one shared 
           guest.getByRole("meter", { name: "Shared oxygen" }),
         ).toHaveAttribute("aria-valuenow", "0");
         await expect(
+          guest.getByText("5 air used", { exact: true }),
+        ).toBeVisible();
+        await expect(
+          guest.getByText("5 air / round", { exact: true }),
+        ).toBeVisible();
+        await expect(
           guest.getByText("Last turn of this dive", { exact: true }),
         ).toBeVisible();
         await expect(
