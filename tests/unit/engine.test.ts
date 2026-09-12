@@ -14,6 +14,7 @@ describe("multiplayer turns", () => {
     expect(rolled.roll).toMatchObject({ faces: [3, 3], from: 0, to: 6 });
     expect(rolled.active).toBe("a");
     expect(rolled.oxygen).toBe(25);
+    expect(rolled.roll?.oxygenCost).toBe(0);
     expect(
       turn(rolled, 2026, "a", "turn/rolled", { direction: "out" }),
     ).toBeNull();
@@ -22,9 +23,20 @@ describe("multiplayer turns", () => {
     })!;
     expect(landed.active).toBe("b");
     expect(landed.divers[0].cargo).toHaveLength(1);
+    expect(landed.roll?.oxygenCost).toBe(0);
     expect(landed.path[5]).toBeNull();
     expect(conserved(landed, 2026)).toBe(true);
     expect(d.divers[0].cargo).toHaveLength(0);
+  });
+  it("records the actual air charge even when cargo prevents movement", () => {
+    const dive = initialDive(2026, ["a", "b"], "a");
+    const cargo = dive.path.splice(0, 8).filter((unit) => unit !== null);
+    dive.divers[0].cargo = cargo;
+    dive.oxygen = 3;
+    const rolled = turn(dive, 2026, "a", "turn/rolled", { direction: "out" })!;
+    expect(rolled.roll).toMatchObject({ oxygenCost: 8, movement: 0 });
+    expect(rolled.oxygen).toBe(-5);
+    expect(playerView(rolled).roll?.oxygenCost).toBe(8);
   });
   it("rejects out of turn, first-turn return, pickup on blank and cargo-free drop", () => {
     const d = initialDive(2026, ["a", "b"], "a");

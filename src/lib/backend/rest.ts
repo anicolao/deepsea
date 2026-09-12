@@ -15,6 +15,7 @@ type Field = {
   arrayValue?: { values?: Field[] };
   mapValue?: { fields?: Record<string, Field> };
 };
+export class RoomCollisionError extends Error {}
 export function encode(value: unknown): Field {
   if (value === null) return { nullValue: null };
   if (typeof value === "string") return { stringValue: value };
@@ -125,5 +126,5 @@ export async function appendEvent(
     !validEnvelope(saved) ||
     !sameEnvelope(saved as Envelope, pending.envelope)
   )
-    throw new Error("Room ID collision: the stored move differs.");
+    throw new RoomCollisionError("Room ID collision: the stored move differs.");
 }

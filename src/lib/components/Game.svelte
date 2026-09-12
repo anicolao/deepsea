@@ -15,16 +15,16 @@
     type: string,
     payload: Record<string, unknown>,
   ) => Promise<void>;
-  let locatedRoll = "";
+  let locatedRoll = "",
+    followTurn = true;
   afterUpdate(() => {
     if (
-      view.roll?.uid === uid &&
-      view.phase === "landing" &&
-      view.active === uid &&
-      room.lastActionId !== locatedRoll
+      view.roll &&
+      (view.roll.uid === uid || followTurn) &&
+      `${view.number}:${view.roll.turn}` !== locatedRoll
     ) {
-      locatedRoll = room.lastActionId;
-      locate(view.roll.to);
+      locatedRoll = `${view.number}:${view.roll.turn}`;
+      locate(view.roll.to, true);
     }
   });
   let direction = "out",
@@ -48,6 +48,10 @@
   $: me = view.divers.find((d) => d.uid === uid)!;
   $: active = view.divers.find((d) => d.uid === view.active)!;
   $: mine = view.active === uid;
+  $: crewCost = view.divers
+    .filter((d) => d.status !== "returned")
+    .reduce((total, d) => total + d.cargo.length, 0);
+  $: latest = room.dive!.history.at(-1);
   $: if (revision !== room.lastActionId) {
     revision = room.lastActionId;
     direction = me.direction;
@@ -70,7 +74,7 @@
   }
   let path: HTMLDivElement,
     anchor = 0;
-  function locate(position: number) {
+  function locate(position: number, animate = false) {
     anchor = position;
     const target = document.getElementById(`space-${position}`);
     if (!path || !target) return;
@@ -80,7 +84,10 @@
         target.getBoundingClientRect().top -
         path.getBoundingClientRect().top -
         (path.clientHeight - target.getBoundingClientRect().height) / 2,
-      behavior: "instant",
+      behavior:
+        animate && !matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "smooth"
+          : "instant",
     });
   }
   function keepAnchor(node: HTMLDivElement) {
@@ -104,7 +111,12 @@
     </p>
     <h1>{mine ? "Your turn" : name(view.active) + "’s turn"}</h1>
   </header>
-  <div class="board-grid" class:landing={mine && view.phase === "landing"}>
+  <div
+    class="board-grid"
+    class:landing={mine && view.phase === "landing"}
+    class:has-roll={!!view.roll}
+    class:watching={!mine}
+  >
     <section class="oxygen-card" aria-label="Oxygen supply">
       <svg class="tank" viewBox="0 0 32 64" aria-hidden="true"
         ><path
@@ -137,29 +149,50 @@
         >
           <span style={"width:" + Math.max(0, view.oxygen) * 4 + "%"}></span>
         </div>
+        <p class="air-load">
+          Crew load: <strong>{crewCost} air / round</strong> at current cargo.
+        </p>
         {#if mine && view.phase === "roll"}<p>
             After your turn cost: <strong
               >{Math.max(0, view.oxygen - me.cargo.length)} / 25</strong
             >
+          </p>{:else if view.phase === "roll"}<p>
+            {name(active.uid)}’s next roll:
+            <strong>−{active.cargo.length} air</strong>
           </p>{/if}
       </div>
     </section>
-    {#if mine && view.phase === "landing" && view.roll}<section
-        class="roll-card"
-      >
-        <strong>Your roll</strong>
-        <div class="roll-result">
-          <Dice faces={view.roll.faces} />
-          <p class="dice">
-            Dice: {view.roll.faces.join(" + ")} − {me.cargo.length} cargo = {view
-              .roll.movement} spaces
-          </p>
-        </div>
+    {#if view.roll}<section class="roll-card">
+        <strong
+          >{view.roll.uid === uid
+            ? "Your roll"
+            : name(view.roll.uid) + "’s roll"}</strong
+        >
+        {#key `${view.number}:${view.roll.turn}`}<div class="roll-result">
+            <Dice faces={view.roll.faces} />
+            <p class="dice">
+              Dice: {view.roll.faces.join(" + ")} − {view.roll.oxygenCost} cargo
+              = {view.roll.movement} spaces
+            </p>
+          </div>{/key}
+        <p class="move-summary">
+          {view.roll.to === 0
+            ? "Returned to the submarine"
+            : `Space ${view.roll.from} → ${view.roll.to}`} ·
+          <strong>{view.roll.oxygenCost} air used</strong>
+        </p>
       </section>{/if}
     <section class="sea" aria-label="Ocean path">
       <nav aria-label="Find your way">
         <button on:click={() => locate(me.position)}>Find my diver</button
         ><button on:click={() => locate(0)}>Show submarine</button>
+        <button
+          aria-pressed={followTurn}
+          on:click={() => {
+            followTurn = !followTurn;
+            if (followTurn) locate(view.roll?.to ?? active.position);
+          }}>Follow turn</button
+        >
       </nav>
       <!-- A named scroll region needs keyboard focus for native arrow-key scrolling. -->
       <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -250,6 +283,8 @@
                 </div>
                 <div class="divers">
                   {#each view.divers.filter((d) => d.position === i + 1) as diver}<strong
+                      class:arriving={view.roll?.uid === diver.uid}
+                      class:returning={diver.direction === "home"}
                       class:long-name={name(diver.uid).length > 18}
                       ><Diver
                         seat={room.members.find((m) => m.uid === diver.uid)
@@ -379,14 +414,23 @@
           <p>
             {me.status === "returned"
               ? "Your dive is complete. Follow your friends home."
-              : "Watch the shared path. Your turn follows the crew order."}
-          </p>{/if}
+              : "The highlighted diver is taking their turn."}
+          </p>
+          {#if latest}<p class="live-move" role="status" aria-atomic="true">
+              {#if latest.text.startsWith("Rolled")}
+                {view.roll?.to === 0
+                  ? "Returned safely to the submarine."
+                  : `Arrived at space ${view.roll?.to}.`}
+                {view.roll?.oxygenCost} air used.
+              {:else}<strong>{name(latest.uid)}</strong> · {latest.text}{/if}
+            </p>{/if}{/if}
       </section>
     </aside>
   </div>
   <footer class="game-footer">
     <nav class="crew-strip" aria-label="Crew positions">
       {#each view.divers as d}<button
+          class:active-diver={d.uid === view.active}
           on:click={() => locate(d.position)}
           aria-label={"Locate " + name(d.uid)}
           ><Diver seat={room.members.find((m) => m.uid === d.uid)?.seat} /><span
@@ -659,7 +703,7 @@
     line-height: 1.25;
     margin: 0;
   }
-  .board-grid:not(.landing) aside {
+  .board-grid:not(.has-roll) aside {
     grid-row: 2/4;
   }
   aside {
@@ -1413,6 +1457,120 @@
     .divers:has(.long-name) {
       width: 145px;
       max-width: 145px;
+    }
+  }
+
+  .move-summary {
+    font-size: 13px;
+    margin: 6px 0 0;
+  }
+  @media (min-width: 701px) {
+    .has-roll .cargo-card {
+      padding: 10px;
+    }
+    .has-roll .cargo-card h2 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .has-roll .cargo-unit {
+      width: 30px;
+      min-height: 36px;
+    }
+    .has-roll .cargo-unit > span {
+      font-size: 20px;
+    }
+    .has-roll .cargo-unit small {
+      font-size: 9px;
+    }
+    .has-roll .cargo-card p {
+      margin: 3px 0;
+      font-size: 12px;
+    }
+  }
+  .live-move {
+    border-left: 3px solid #087d8b;
+    padding-left: 8px;
+  }
+  .crew-strip .active-diver {
+    background: #d6e9df;
+    box-shadow: inset 0 -3px #087d8b;
+  }
+  .sea nav button[aria-pressed="true"] {
+    background: #d6e9df;
+    color: #086376;
+  }
+  .roll-result {
+    animation: roll-reveal 450ms ease-out;
+  }
+  .divers .arriving {
+    animation: diver-arrival 600ms ease-out;
+  }
+  .divers .returning {
+    --arrival-y: 28px;
+  }
+  .meter span {
+    transition: width 600ms ease-out;
+  }
+  @keyframes roll-reveal {
+    from {
+      transform: translateY(-5px) rotate(-3deg);
+      opacity: 0.3;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes diver-arrival {
+    from {
+      transform: translateY(var(--arrival-y, -28px));
+      opacity: 0.2;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .roll-result,
+    .divers .arriving {
+      animation: none;
+    }
+    .meter span {
+      transition: none;
+    }
+  }
+  @media (max-width: 700px) {
+    .roll-card {
+      flex-wrap: wrap;
+      gap: 4px 8px;
+    }
+    .roll-card > strong {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      max-width: 35%;
+    }
+    .move-summary {
+      flex-basis: 100%;
+      margin: 0;
+      font-size: 12px;
+    }
+    .live-move {
+      max-height: 64px;
+      overflow-y: auto;
+    }
+  }
+  @media (min-width: 701px) {
+    .landing .action {
+      padding: 10px;
+    }
+    .landing .action h2 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .landing .action p {
+      margin: 6px 0;
+      font-size: 13px;
     }
   }
 </style>

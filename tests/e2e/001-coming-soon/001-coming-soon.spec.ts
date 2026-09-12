@@ -30,7 +30,9 @@ test("visitors enter their name and learn the game from the arrival card", async
           await expect(
             page.getByRole("button", { name: "Create room", exact: true }),
           ).toBeEnabled();
-          await expect(page.getByLabel("Invite link")).toBeVisible();
+          await expect(
+            page.getByLabel("Room code or invite link"),
+          ).toBeVisible();
           await expect(
             page.getByRole("list", { name: "Game at a glance" }),
           ).toContainText("Shared oxygen");

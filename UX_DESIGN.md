@@ -44,7 +44,9 @@ flowchart TD
 
 **Example:** Mira creates a room and shares its invite with Sol and Nia. The crew screen shows three occupied seats, with Nia still unready.
 
-Home asks for a name and offers **Create a room**. A second path accepts an invite link. Opening an invite directly skips pasting and asks only for a name before **Join room**. Keep the room context visible so players know which invitation they are accepting. There is no email, password, or account-registration form.
+Home asks for a name and offers **Create a room**. A second path accepts a five-letter room code, case-insensitively, or an invite link. **Find room** shows the intended crew before joining. Opening an invite directly skips pasting and asks only for a name before **Join room**. Keep the room context visible so players know which invitation they are accepting. There is no email, password, or account-registration form.
+
+**Room code** opens a sharing dialog with the code in large type, a copy action and a return-to-crew control. Existing invitation links remain usable.
 
 Each lobby row shows the player's name, distinct diver marker, seat, and readiness. Mark the local player as “You” and the creator as “Host.” **Copy invite link** provides a visible and announced “Link copied” confirmation; if clipboard access fails, reveal a selectable link.
 
@@ -70,12 +72,14 @@ On a player's turn, bring the action area into view and announce “Your turn.�
 
 While saving, disable repeat submission and announce the pending move in the status area. Display dice only after the roll is confirmed. Show the two dice, cargo deduction, and resulting movement together. Briefly emphasize the confirmed landing with an equivalent text description; movement follows the rules for skipping occupied spaces. Reduced-motion mode shows the result directly. Never offer another roll because animation was skipped or the page reloaded.
 
+Everyone sees the latest confirmed dice, cargo deduction, destination and actual air charge. The waiting view states the active player’s current decision and recent pickup/drop result. **Follow turn** tracks confirmed movement and can be switched off to inspect the path independently. Dice and arrivals animate briefly, the oxygen meter transitions, and following uses smooth scrolling unless reduced motion is requested. The crew-load forecast totals one roll per diver at current cargo, excluding returned divers; the next roller’s cost is also shown.
+
 ### Landing choice
 
 | Landing state | Controls and explanation |
 | --- | --- |
 | Treasure space | **Pick up treasure** or **Leave it**. Explain that pickup adds one carried unit for future turns. |
-| Blank space with cargo | Select one carried unit, then **Drop selected treasure**, or **Leave it**. Selection can change before confirmation. |
+| Blank space with cargo | Select one carried unit, then **Drop selected treasure**, or **Keep treasure**. Selection can change before confirmation. |
 | Blank space without cargo | **End turn**, with “Nothing to pick up or drop here.” |
 | Zero movement | Explain “Your cargo prevents movement.” Offer the legal choice on the current space. |
 | Submarine | Complete the return automatically; show “Back aboard. Your dive is complete.” |

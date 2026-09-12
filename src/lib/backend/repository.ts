@@ -126,6 +126,15 @@ export class RoomRepository {
     this.announcePending(gameId);
     return pending;
   }
+  discardRejectedCreation(pending: PendingEvent) {
+    if (pending.id !== "created" || pending.envelope.type !== "game/created")
+      throw new Error("Only a rejected creation can be discarded.");
+    const saved = this.pending(pending.gameId);
+    if (!saved || !sameEnvelope(saved.envelope, pending.envelope))
+      throw new Error("Creation no longer matches.");
+    this.storage.removeItem(`${this.prefix}pending:${pending.gameId}`);
+    this.submitted.delete(pending.gameId);
+  }
   pending(gameId: string): PendingEvent | null {
     const raw = this.storage.getItem(`${this.prefix}pending:${gameId}`);
     if (!raw) return null;

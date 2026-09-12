@@ -28,7 +28,15 @@ test("a real turn moves treasure and survives a reload in both browsers", async 
   await expect(
     host.getByText("Mira (You) · Host", { exact: true }),
   ).toBeVisible();
-  await guest.goto(host.url());
+  await host.getByRole("button", { name: "Room code", exact: true }).click();
+  const code = await host.getByLabel("Room code", { exact: true }).innerText();
+  expect(code).toMatch(/^[A-Z]{5}$/);
+  await host.getByRole("button", { name: "Back to crew" }).click();
+  await guest.goto("./");
+  await guest
+    .getByLabel("Room code or invite link")
+    .fill(" " + code.toLowerCase() + " ");
+  await guest.getByRole("button", { name: "Find room" }).click();
   await guest.getByLabel("Your name").fill("Sol");
   await guest.getByRole("button", { name: "Join room" }).click();
   await guest.getByRole("button", { name: "Ready up" }).click();
@@ -38,6 +46,26 @@ test("a real turn moves treasure and survives a reload in both browsers", async 
   await host.getByRole("button", { name: "Ready up" }).click();
   await host.getByRole("button", { name: "Start dive" }).click();
   await host.getByRole("button", { name: "Roll dice" }).click();
+  await guestSteps.step("watch-roll", "Follow Mira’s roll and air use", [
+    {
+      description:
+        "Sol sees Mira’s dice, destination and zero air charge while she chooses treasure.",
+      assert: async () => {
+        await expect(
+          guest.getByRole("img", { name: "Dice: 3 and 3" }),
+        ).toBeVisible();
+        await expect(
+          guest.getByText("0 air used", { exact: true }),
+        ).toBeVisible();
+        await expect(
+          guest.getByRole("heading", { name: "Mira is choosing treasure" }),
+        ).toBeVisible();
+        await expect(
+          guest.getByRole("button", { name: "Follow turn" }),
+        ).toHaveAttribute("aria-pressed", "true");
+      },
+    },
+  ]);
   await hostSteps.step("rolled", "Mira lands on concealed treasure", [
     {
       description:

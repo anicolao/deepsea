@@ -35,12 +35,10 @@ test("keyboard players join by invite, inspect cargo and keep their direction wh
   await host.getByRole("button", { name: "Copy invite" }).press("Enter");
   const invite = await players.readInvite(host);
   await guest.goto("./");
-  await guest.getByRole("link", { name: "Join with invite" }).press("Enter");
-  await guest.getByLabel("Invite link").fill(invite);
-  await expect(
-    guest.getByRole("button", { name: "Open invite" }),
-  ).toBeEnabled();
-  await guest.getByRole("button", { name: "Open invite" }).press("Enter");
+  await guest.getByRole("link", { name: "Join with code" }).press("Enter");
+  await guest.getByLabel("Room code or invite link").fill(invite);
+  await expect(guest.getByRole("button", { name: "Find room" })).toBeEnabled();
+  await guest.getByRole("button", { name: "Find room" }).press("Enter");
   await guest.getByLabel("Your name").fill("Sol");
   await expect(guest.getByRole("button", { name: "Join room" })).toBeEnabled();
   await guest.getByLabel("Your name").press("Enter");
