@@ -19,9 +19,11 @@ Rules tests additionally cover movement boundaries, zero movement, occupied spac
 
 Live clients reuse an unchanged chronological event prefix so later turns do not repeatedly rebuild earlier dives. Projector tests compare every move of complete two- and six-player games with full replay, and cover late events, changed/deleted history, conflicting duplicates, rejected actions, version blocks and mutation isolation.
 
+The Firebase listener decodes only added or changed documents instead of decoding the full event history on every update. Each subscription maintains its own confirmed-event map; removals and pending or unresolved writes leave that map, while metadata still controls connectivity. Unit checks compare incremental updates with full replay and verify confirmation, removal and subscription isolation.
+
 ## Visual and interaction review
 
-The reference is the three mockup sheets embedded in UX_DESIGN.md. The interface uses their ocean surround, rounded ivory surfaces, navy type, teal primary actions, colored diver markers and score hierarchy. The original ocean illustration and submarine/dice/treasure SVGs are reused throughout arrival, play and results. Player-facing information remains governed by the accepted rules, including full path length, concealed cargo and shared winners.
+The reference is the three mockup sheets embedded in UX_DESIGN.md. The interface uses their ocean surround, rounded ivory surfaces, navy type, teal primary actions, colored diver markers and score hierarchy. Original ocean artwork and submarine/dice/treasure SVGs carry the visual identity throughout arrival, play and results. The playable path has its own continuous depth illustration, scrolling from sunlit fish through twilight jellyfish to bioluminescent life in the abyss. Player-facing information remains governed by the accepted rules, including full path length, concealed cargo and shared winners.
 
 | Screen | Responsive design and review evidence |
 | --- | --- |
@@ -33,6 +35,8 @@ The reference is the three mockup sheets embedded in UX_DESIGN.md. The interface
 | Dive review | Numbered diver rows distinguish returned/lost treasure, this-dive gains and totals. Returned treasure reveals coin values; the next starter and teal continuation remain visible. [Dive review](tests/e2e/006-dive-resolution/README.md). |
 | Final result and history | The ivory scorecard presents a gold trophy, winner or shared victory and three-dive totals. Play again and game history remain available below; history opens a scrollable dialog. [Results and history](tests/e2e/007-complete-game/README.md), [six-player shared result](tests/e2e/008-six-player-game/README.md). |
 | Help, cargo and failures | Help and inspectors use the same ivory/navy palette and restore focus. Closed, full and started rooms keep the illustrated room context and offer another room. [Keyboard and inspectors](tests/e2e/012-keyboard-and-help/README.md), [room closure](tests/e2e/004-closed-room/README.md). |
+
+The ocean artwork moves with the full treasure path, including its darker depths; it does not stay fixed behind the chits. The turn walkthrough captures the surface, twilight and seabed on phone and desktop. A treasure landing offers Pick up treasure / Leave it; an empty space with cargo offers Drop selected treasure / Keep treasure; an empty space without cargo offers End turn. The final-oxygen and whole-stack journeys verify the keep/drop wording.
 
 Find my diver and Show submarine move only the path. Selecting a crew member locates that diver without making a move. Distinct treasure outlines, level labels, seat numbers and player names supplement color. Unrevealed values remain absent from ordinary board, cargo, help and move history. Saved values are revealed only after a successful return.
 

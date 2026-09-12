@@ -14,7 +14,8 @@ import {
   onSnapshot,
   terminate,
 } from "firebase/firestore";
-import { type ConfirmedEvent, type PendingEvent } from "../game/protocol";
+import { type PendingEvent } from "../game/protocol";
+import { createConfirmedEvents } from "./confirmed-events";
 import { appendEvent } from "./rest";
 import type { BackendConfig } from "./config";
 import type { EventTransport } from "./repository";
@@ -54,6 +55,7 @@ export async function connectBackend(
   const user = auth.currentUser ?? (await signInAnonymously(auth)).user;
   const transport: EventTransport = {
     watch(gameId, next, error) {
+      const confirmedEvents = createConfirmedEvents();
       return onSnapshot(
         collection(
           db,
@@ -65,23 +67,9 @@ export async function connectBackend(
         ),
         { includeMetadataChanges: true },
         (snapshot) => {
-          const events = snapshot.docs
-            .filter(
-              (entry) =>
-                !entry.metadata.hasPendingWrites &&
-                entry.data().createdAt != null,
-            )
-            .map(
-              (entry) =>
-                ({
-                  ...entry.data(),
-                  id: entry.id,
-                  createdAt: {
-                    seconds: entry.data().createdAt.seconds,
-                    nanoseconds: entry.data().createdAt.nanoseconds,
-                  },
-                }) as ConfirmedEvent,
-            );
+          const events = confirmedEvents(
+            snapshot.docChanges({ includeMetadataChanges: true }),
+          );
           next(
             events,
             !snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites,

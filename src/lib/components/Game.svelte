@@ -156,11 +156,7 @@
           </p>
         </div>
       </section>{/if}
-    <section
-      class="sea"
-      aria-label="Ocean path"
-      style={`background-image:url(${base}/art/ocean.webp);background-size:cover`}
-    >
+    <section class="sea" aria-label="Ocean path">
       <nav aria-label="Find your way">
         <button on:click={() => locate(me.position)}>Find my diver</button
         ><button on:click={() => locate(0)}>Show submarine</button>
@@ -175,89 +171,100 @@
         tabindex="0"
         aria-label="Scrollable treasure path"
       >
-        <div class="submarine" id="space-0">
-          <div class="sub-art"><Submarine /></div>
-          <strong>Submarine</strong><span
-            >{view.divers
-              .filter((d) => d.position === 0)
-              .map((d) => `${symbol(d.uid)} ${name(d.uid)}`)
-              .join(" · ")}</span
-          >
-        </div>
-        <ol style={"height:" + (view.path.length * 82 + 70) + "px"}>
-          <svg
-            class="trail"
-            viewBox={"0 0 100 " + (view.path.length * 82 + 70)}
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            ><path
-              d={trail}
-              fill="none"
-              stroke="#b8d6cf"
-              stroke-width="2"
-              stroke-dasharray="2 2"
-              vector-effect="non-scaling-stroke"
-            /></svg
-          >
-          {#each view.path as unit, i}<li
-              id={`space-${i + 1}`}
-              style={"left:" + x(i) + "%;top:" + i * 82 + "px"}
-              class:occupied={view.divers.some((d) => d.position === i + 1)}
-            >
-              <span class="depth">{String(i + 1).padStart(2, "0")}</span>
+        <div class="ocean-depths">
+          <div class="ocean-art" aria-hidden="true">
+            {#each ["shallows", "twilight", "abyss"] as zone}
               <div
-                class="treasure"
-                class:blank={!unit}
-                style={`--level:${unit?.levels[0] ?? 0}`}
-                aria-label={unit
-                  ? `Space ${i + 1}, concealed level ${unit.levels.join(", ")} treasure, ${unit.count} tiles`
-                  : `Space ${i + 1}, empty`}
+                class={zone}
+                style={`--ocean-image:url(${base}/art/ocean-${zone}.webp)`}
+              ></div>
+            {/each}
+          </div>
+          <div class="submarine" id="space-0">
+            <div class="sub-art"><Submarine /></div>
+            <strong>Submarine</strong><span
+              >{view.divers
+                .filter((d) => d.position === 0)
+                .map((d) => `${symbol(d.uid)} ${name(d.uid)}`)
+                .join(" · ")}</span
+            >
+          </div>
+          <ol style={"height:" + (view.path.length * 82 + 70) + "px"}>
+            <svg
+              class="trail"
+              viewBox={"0 0 100 " + (view.path.length * 82 + 70)}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              ><path
+                d={trail}
+                fill="none"
+                stroke="#b8d6cf"
+                stroke-width="2"
+                stroke-dasharray="2 2"
+                vector-effect="non-scaling-stroke"
+              /></svg
+            >
+            {#each view.path as unit, i}<li
+                id={`space-${i + 1}`}
+                style={"left:" + x(i) + "%;top:" + i * 82 + "px"}
+                class:occupied={view.divers.some((d) => d.position === i + 1)}
               >
-                <svg
-                  viewBox="0 0 32 32"
-                  width="30"
-                  height="30"
-                  aria-hidden="true"
-                  >{#if unit}<polygon
-                      points={[
-                        "",
-                        "16,2 30,28 2,28",
-                        "4,4 28,4 28,28 4,28",
-                        "16,2 30,12 25,29 7,29 2,12",
-                        "9,3 23,3 31,16 23,29 9,29 1,16",
-                      ][unit.levels[0]]}
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    />{:else}<circle
-                      cx="16"
-                      cy="16"
-                      r="12"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    />{/if}</svg
-                >{#if unit}<small
-                    >{unit.count > 1
-                      ? `${unit.count} tiles`
-                      : ["", "I", "II", "III", "IV"][unit.levels[0]]}</small
-                  >{/if}
-              </div>
-              <div class="divers">
-                {#each view.divers.filter((d) => d.position === i + 1) as diver}<strong
-                    class:long-name={name(diver.uid).length > 18}
-                    ><Diver
-                      seat={room.members.find((m) => m.uid === diver.uid)?.seat}
-                    /><span>{symbol(diver.uid)} {name(diver.uid)}</span><small
-                      >{diver.direction === "home"
-                        ? "↑ Returning"
-                        : "↓ Diving"}</small
-                    ></strong
-                  >{/each}
-              </div>
-            </li>{/each}
-        </ol>
-        <p class="seabed">THE DEEP · What will you bring home?</p>
+                <span class="depth">{String(i + 1).padStart(2, "0")}</span>
+                <div
+                  class="treasure"
+                  class:blank={!unit}
+                  style={`--level:${unit?.levels[0] ?? 0}`}
+                  aria-label={unit
+                    ? `Space ${i + 1}, concealed level ${unit.levels.join(", ")} treasure, ${unit.count} tiles`
+                    : `Space ${i + 1}, empty`}
+                >
+                  <svg
+                    viewBox="0 0 32 32"
+                    width="30"
+                    height="30"
+                    aria-hidden="true"
+                    >{#if unit}<polygon
+                        points={[
+                          "",
+                          "16,2 30,28 2,28",
+                          "4,4 28,4 28,28 4,28",
+                          "16,2 30,12 25,29 7,29 2,12",
+                          "9,3 23,3 31,16 23,29 9,29 1,16",
+                        ][unit.levels[0]]}
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />{:else}<circle
+                        cx="16"
+                        cy="16"
+                        r="12"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />{/if}</svg
+                  >{#if unit}<small
+                      >{unit.count > 1
+                        ? `${unit.count} tiles`
+                        : ["", "I", "II", "III", "IV"][unit.levels[0]]}</small
+                    >{/if}
+                </div>
+                <div class="divers">
+                  {#each view.divers.filter((d) => d.position === i + 1) as diver}<strong
+                      class:long-name={name(diver.uid).length > 18}
+                      ><Diver
+                        seat={room.members.find((m) => m.uid === diver.uid)
+                          ?.seat}
+                      /><span>{symbol(diver.uid)} {name(diver.uid)}</span><small
+                        >{diver.direction === "home"
+                          ? "↑ Returning"
+                          : "↓ Diving"}</small
+                      ></strong
+                    >{/each}
+                </div>
+              </li>{/each}
+          </ol>
+          <p class="seabed">THE DEEP · What will you bring home?</p>
+        </div>
       </div>
     </section>
     <aside>
@@ -358,9 +365,11 @@
           <button
             disabled={!enabled}
             on:click={() => send("turn/landed", { choice: "pass" })}
-            >{view.path[me.position - 1] || me.cargo.length
+            >{view.path[me.position - 1]
               ? "Leave it"
-              : "End turn"}</button
+              : me.cargo.length
+                ? "Keep treasure"
+                : "End turn"}</button
           >
         {:else}<h2>
             {me.status === "returned"
@@ -580,7 +589,7 @@
     flex-direction: column;
     border-radius: 14px;
     overflow: hidden;
-    background-position: center;
+    background: #083146;
   }
   .oxygen-card {
     grid-column: 2;
@@ -830,8 +839,46 @@
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: #73aab6 #08283b;
-    padding: 10px 0;
     color: #f8f4eb;
+  }
+  .ocean-depths {
+    padding: 10px 0;
+    min-height: 100%;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(#08798c, #103e5b 33%, #06192e 66%, #020913);
+  }
+  .ocean-art {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .ocean-art > div {
+    position: absolute;
+    width: 100%;
+    height: calc(100% / 3 + 1px);
+    background-image: var(--fade), var(--ocean-image);
+    background-size:
+      100% 100%,
+      cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .ocean-art > .shallows {
+    top: 0;
+    background-position: center top;
+    --fade: linear-gradient(transparent 75%, #103e5b);
+  }
+  .ocean-art > .twilight {
+    top: calc(100% / 3);
+    --fade: linear-gradient(#103e5b, transparent 15%, transparent 85%, #06192e);
+  }
+  .ocean-art > .abyss {
+    bottom: 0;
+    background-position: center 65%;
+    --fade: linear-gradient(#06192e, transparent 15%);
   }
   .submarine {
     display: flex;
@@ -853,6 +900,9 @@
   }
   .submarine strong {
     font-size: 15px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #0b3046;
   }
   ol {
     list-style: none;

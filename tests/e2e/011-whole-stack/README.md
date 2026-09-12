@@ -10,7 +10,7 @@ Mira loses treasure, finds its stack on the next dive, and drops the entire unit
 
 ## The stack is one cargo choice
 
-- Both concealed tiles are selected as one unit; no individual tile can be dropped.
+- Both concealed tiles are selected as one unit; the alternative explicitly keeps the treasure.
 
 ![Desktop: The stack is one cargo choice](screenshots/000-whole-unit-host-desktop.png)
 

@@ -56,7 +56,10 @@ test("safe return, final oxygen turn and lost cargo ordering resolve one shared 
     if (move.choice !== "return")
       await actor
         .getByRole("button", {
-          name: move.choice === "pickup" ? "Pick up treasure" : "Leave it",
+          name:
+            move.choice === "pickup"
+              ? "Pick up treasure"
+              : /^(Leave it|Keep treasure|End turn)$/,
           exact: true,
         })
         .click();
@@ -86,7 +89,7 @@ test("safe return, final oxygen turn and lost cargo ordering resolve one shared 
           guest.getByText("Your cargo prevents movement.", { exact: true }),
         ).toBeVisible();
         await expect(
-          guest.getByRole("button", { name: "Leave it", exact: true }),
+          guest.getByRole("button", { name: "Keep treasure", exact: true }),
         ).toBeEnabled();
         await expect(
           host.getByRole("heading", { name: "Back aboard", exact: true }),
@@ -94,7 +97,9 @@ test("safe return, final oxygen turn and lost cargo ordering resolve one shared 
       },
     },
   ]);
-  await guest.getByRole("button", { name: "Leave it", exact: true }).click();
+  await guest
+    .getByRole("button", { name: "Keep treasure", exact: true })
+    .click();
   await players.setConnected(host, true);
   await expect(
     guest.getByRole("button", { name: "Confirm order" }),

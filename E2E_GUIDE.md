@@ -155,4 +155,8 @@ Trusted backend requests bypass the route callback but retain request/response/e
 
 Independent static final views may run their TestSteps concurrently. Every semantic callback has an isolated AsyncLocalStorage assertion counter, so it cannot borrow assertions from another check. Each view still gets its own full zero-tolerance screenshot, layout checks and completed walkthrough. The six-player game uses this after all players have acted through the UI. No scenario timeout changes or retries are permitted.
 
+The six-player journey selects return directions with native keyboard input and asserts the radio is checked. Independent invitation pages load together, joins remain ordered, and final views run concurrently. All six clients still play the same three dives and each verifies every score, winner, replay action and full screenshot under the original deadlines.
+
+Its keyboard action locators intersect the named control with `:enabled`, so Playwright resolves the action only when the control becomes enabled. This avoids a separate pre-action polling assertion without allowing disabled controls or forced input. Final state assertions remain explicit.
+
 The navigation classifier ends at the main-frame commit, not after a delay. A request from the new document or another player never qualifies as old-document cancellation. The guard suite exercises this boundary, unused/misapplied faults, shared-tab health, and concurrent empty checks.
