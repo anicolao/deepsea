@@ -28,21 +28,29 @@ Mira creates a room from the home screen, invites friends, chooses a first diver
 
 Sol joins through the invite, readies up, and sees the same saved start after reload.
 
+## The invitation names the crew before joining
+
+- The invite shows Mira’s room and asks only for the guest’s name.
+
+![Desktop: The invitation names the crew before joining](screenshots/000-invited-guest-desktop.png)
+
+![Phone: The invitation names the crew before joining](screenshots/000-invited-guest-phone.png)
+
 ## A friend joins and readies up
 
 - Sol has a seat and can withdraw readiness, but cannot start the room.
 
-![Desktop: A friend joins and readies up](screenshots/000-joined-guest-desktop.png)
+![Desktop: A friend joins and readies up](screenshots/001-joined-guest-desktop.png)
 
-![Phone: A friend joins and readies up](screenshots/000-joined-guest-phone.png)
+![Phone: A friend joins and readies up](screenshots/001-joined-guest-phone.png)
 
 ## Reload keeps the player and confirmed start
 
 - Sol returns to the same seat and the same first diver without a second join.
 
-![Desktop: Reload keeps the player and confirmed start](screenshots/001-reloaded-guest-desktop.png)
+![Desktop: Reload keeps the player and confirmed start](screenshots/002-reloaded-guest-desktop.png)
 
-![Phone: Reload keeps the player and confirmed start](screenshots/001-reloaded-guest-phone.png)
+![Phone: Reload keeps the player and confirmed start](screenshots/002-reloaded-guest-phone.png)
 
 ## third
 

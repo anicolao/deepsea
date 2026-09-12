@@ -82,6 +82,30 @@ test("keyboard players join by invite, inspect cargo and keep their direction wh
     .getByRole("button", { name: "Leave it", exact: true })
     .press("Enter");
   await host.getByLabel("Turn back", { exact: true }).press("Space");
+  await hs.step(
+    "direction",
+    "Direction and concealed cargo remain visible together",
+    [
+      {
+        description:
+          "The return direction is selected before committing a roll, with visible cargo and oxygen cost.",
+        assert: async () => {
+          await expect(
+            host.getByLabel("Turn back", { exact: true }),
+          ).toBeChecked();
+          await expect(
+            host.getByRole("region", { name: "Your concealed cargo" }),
+          ).toContainText("1 unit");
+          await expect(
+            host.getByRole("button", { name: "Roll dice", exact: true }),
+          ).toBeEnabled();
+          await expect(
+            host.getByText("After your turn cost:", { exact: false }),
+          ).toBeVisible();
+        },
+      },
+    ],
+  );
   await expect(host.getByRole("button", { name: "How to play" })).toBeEnabled();
   await host.getByRole("button", { name: "How to play" }).press("Enter");
   await hs.step("help", "Help does not discard the chosen direction", [

@@ -82,7 +82,7 @@ test("lost acknowledgements, competing tabs and reconnect preserve one accepted 
       description: "Offline controls stop new moves while oxygen stays at 24.",
       assert: async () => {
         await expect(
-          host.getByText("Offline — reconnect to make changes.", {
+          host.getByText("Reconnecting…", {
             exact: true,
           }),
         ).toBeVisible();

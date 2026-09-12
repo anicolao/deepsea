@@ -22,7 +22,7 @@ npm run emulators
 
 In another Nix terminal, run `npm run dev`, then open `http://127.0.0.1:5173/`. Copy an invitation into a separate browser profile to add a friend. Two tabs in one profile share an identity. Emulator data is disposable; ordinary reloads retain the seat while the emulators run.
 
-The flake supplies Git, GitHub CLI, Node/npm, Java, curl, ripgrep, actionlint, pinned Chromium and fonts. JavaScript tools and libraries have exact versions in the npm lockfile. Add future system tools to `flake.nix` and commit its lockfile; do not install project tools globally. `npm run format` formats application source and scenarios with the pinned formatter.
+The flake supplies Git, GitHub CLI, Node/npm, Java, curl, ripgrep, actionlint, libwebp, pinned Chromium and fonts. JavaScript tools and libraries have exact versions in the npm lockfile. Add future system tools to `flake.nix` and commit its lockfile; do not install project tools globally. `npm run format` formats application source and scenarios with the pinned formatter.
 
 ## Verify and contribute
 

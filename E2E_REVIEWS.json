@@ -1,362 +1,386 @@
 {
   "tests/e2e/001-coming-soon/screenshots/000-splash-desktop.png": {
-    "sha256": "41235c084b8f0518acc6f7980f00de4413cf2111eb2f010b5a0099ce18b3a307",
-    "review": "Visually inspected final desktop: Original submarine art, clear Create room action, secondary invite/help links and three game facts fit with readable attribution."
+    "sha256": "9129dd3f71ac61e01bf6dcc1fdb8f6d1e624512a580816164952cf07ee16efbc",
+    "review": "Visually inspected against arrival mockup: illustrated ocean and submarine above a rounded ivory form; teal create action, invite field, readable name focus and game facts fit this viewport."
   },
   "tests/e2e/001-coming-soon/screenshots/000-splash-phone.png": {
-    "sha256": "48f5323f8a22298e6f4f58c36e9a7695c9f1127a5db9c2cf57ab345f026f2cc4",
-    "review": "Visually inspected final phone: Original submarine art, clear Create room action, secondary invite/help links and three game facts fit with readable attribution."
+    "sha256": "119d785ef0739aa9b29a7029268676a49178395a9abce2607722fd146e0f3b6b",
+    "review": "Visually inspected against arrival mockup: illustrated ocean and submarine above a rounded ivory form; teal create action, invite field, readable name focus and game facts fit this viewport."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-desktop.png": {
-    "sha256": "50504e38169d4269ac30d4e600d43d78f422063f4211373bfa3abc475a103d0a",
-    "review": "Visually inspected desktop: The ivory help dialog explains shared oxygen and treasure risk in player language. Text and focused close control fit."
+    "sha256": "90ca1731611af5134042579b51a36876b027e51d3b57a95b55fccd41d2851591",
+    "review": "Visually inspected: ivory help dialog dims the arrival scene, wraps both rules paragraphs cleanly, and keeps the gold focus outline and teal close button fully visible."
   },
   "tests/e2e/001-coming-soon/screenshots/001-game-brief-phone.png": {
-    "sha256": "e9bbda6ade9eb0be048ebb87994de61abce3040b92add4e986bf964a89cbcfe4",
-    "review": "Visually inspected phone: The ivory help dialog explains shared oxygen and treasure risk in player language. Text and focused close control fit."
+    "sha256": "1764b381050323cee074e190c5fca963b968d681bfd3ae4ef066d7cbd6708abf",
+    "review": "Visually inspected: ivory help dialog dims the arrival scene, wraps both rules paragraphs cleanly, and keeps the gold focus outline and teal close button fully visible."
   },
   "tests/e2e/001-coming-soon/screenshots/002-return-desktop.png": {
-    "sha256": "024429cd838ebbb2f4450b6a80faf4df8baaf269a34863de24305a587e70e203",
-    "review": "Visually inspected final desktop: Closing the brief restores the gold About focus outline; Create room, Join with invite, submarine and game facts fit."
+    "sha256": "a9156429b67ef9bf8da3bef63204bc9c9bba32f0999a78432c8e4a7da1f2cb04",
+    "review": "Visually inspected: closing help retains Mira in the ivory arrival form and restores a clear gold focus ring to How to play; invite and create actions remain unobstructed."
   },
   "tests/e2e/001-coming-soon/screenshots/002-return-phone.png": {
-    "sha256": "7f755fb91743d6fccdfbf6b1f9519ea429508a879ae44b3ef886fccff6d984e4",
-    "review": "Visually inspected final phone: Closing the brief restores the gold About focus outline; Create room, Join with invite, submarine and game facts fit."
+    "sha256": "d99c878412520336b68de511246d7ea3ff254718d72d0566e5f25401ad36dd6e",
+    "review": "Visually inspected: closing help retains Mira in the ivory arrival form and restores a clear gold focus ring to How to play; invite and create actions remain unobstructed."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-desktop.png": {
-    "sha256": "66059cb083f455a57b3c7bdb2ae1841d258d6fa5f6baae3d5a29c642b846af2c",
-    "review": "Visually inspected desktop: The host, readiness, invitation and first-diver controls fit with a readable reason beside the disabled Start dive."
+    "sha256": "c384ee455c1cdf404db16488021168c09721fd601b827e70edd02ee385ea292d",
+    "review": "Visually inspected against crew mockup: one-player lobby shows Mira’s numbered marker, host identity, amber readiness pill, mint invite action, first-diver selector and disabled Start with its reason."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-phone.png": {
-    "sha256": "bc76afa4252015665ab8691abbe8cefc8ef63135054919495b638ccd407dd443",
-    "review": "Visually inspected phone: The host, readiness, invitation and first-diver controls fit with a readable reason beside the disabled Start dive."
+    "sha256": "1f758dd4c0d64ebe4ac93ad175bada10eba8f0642bb6697e23852c92cb267d7c",
+    "review": "Visually inspected against crew mockup: one-player lobby shows Mira’s numbered marker, host identity, amber readiness pill, mint invite action, first-diver selector and disabled Start with its reason."
   },
-  "tests/e2e/002-room-foundation/screenshots/000-joined-guest-desktop.png": {
-    "sha256": "0a10363762fca553656e6e26dbde4a7a5b300f0ea76af8b7c4c4062ed5a6d31d",
-    "review": "Visually inspected desktop baseline: Sol has a clearly labelled seat and ready status; the guest has no start control and the host-start explanation fits. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  "tests/e2e/002-room-foundation/screenshots/000-invited-guest-desktop.png": {
+    "sha256": "83616f541555e2a4723875a13780e9480b9b4d22d8992a2eca2a6e36a8dc470e",
+    "review": "Visually inspected: the direct invitation identifies Mira’s crew before joining; the only requested information is a name, and the empty-form Join action is visibly disabled."
   },
-  "tests/e2e/002-room-foundation/screenshots/000-joined-guest-phone.png": {
-    "sha256": "65a77557cdef36268b4cfd4c3fdc8e740a39b4958a755749f7d78490e22793c6",
-    "review": "Visually inspected phone baseline: Sol has a clearly labelled seat and ready status; the guest has no start control and the host-start explanation fits. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+  "tests/e2e/002-room-foundation/screenshots/000-invited-guest-phone.png": {
+    "sha256": "b178c50f38b7c0d1f76b53d8c971333a51e1f26ae6352d5d6161589db01b1d19",
+    "review": "Visually inspected: the direct invitation identifies Mira’s crew before joining; the only requested information is a name, and the empty-form Join action is visibly disabled."
   },
   "tests/e2e/002-room-foundation/screenshots/000-joined-third-desktop.png": {
-    "sha256": "9b7256e2ee63cbf37db5313754191a3ea67bfd0e0500c383b2780182442962ab",
-    "review": "Visually inspected desktop baseline: All three names fit; Ada is labelled You and the roster visibly resets readiness for all three players. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "8ec0ec7dbd961d7dba5b34584fa29313ed8fe7952f04918de94ed68d809f04b3",
+    "review": "Visually inspected: three numbered, differently colored crew markers and amber readiness pills align in the ivory lobby; Ada is marked You and the guest sees the host-start explanation."
   },
   "tests/e2e/002-room-foundation/screenshots/000-joined-third-phone.png": {
-    "sha256": "dc3b142ab5b27f6b7977b42a43cb6491312e52d199bd15e6bd6b8c6b8514d76c",
-    "review": "Visually inspected phone baseline: All three names fit; Ada is labelled You and the roster visibly resets readiness for all three players. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "6fc8b4facf3d7943631e2f13cd66058e6e987c26b6e40b99b932cc54a2ab0cde",
+    "review": "Visually inspected: three numbered, differently colored crew markers and amber readiness pills align in the ivory lobby; Ada is marked You and the guest sees the host-start explanation."
   },
-  "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-desktop.png": {
-    "sha256": "006262c2b6b2c3aafa53e4585dfc987142b850fc9411fcd46d83e40f95c8b7bd",
-    "review": "Visually inspected final desktop: Sol has the clear gold Roll dice action at 25 oxygen; all three crew names are readable over a solid backplate, and ocean, level-I triangles and persistent tools fit."
+  "tests/e2e/002-room-foundation/screenshots/001-joined-guest-desktop.png": {
+    "sha256": "334df7fd343d057c678c9dc01f0a4678f58d77a2ed2a640d217949607d39ecb0",
+    "review": "Visually inspected: Sol’s green Ready pill and mint You are ready banner clearly differ from Mira’s amber state; the outlined readiness toggle and leave link stay reachable."
   },
-  "tests/e2e/002-room-foundation/screenshots/001-reloaded-guest-phone.png": {
-    "sha256": "4af1ed3133dcdfe3c6ca771c5580a12d037a32aa2400ccaf32e1db437017a5af",
-    "review": "Visually inspected final phone: Sol has the clear gold Roll dice action at 25 oxygen; all three crew names are readable over a solid backplate, and ocean, level-I triangles and persistent tools fit."
+  "tests/e2e/002-room-foundation/screenshots/001-joined-guest-phone.png": {
+    "sha256": "7bca763620618e4a219923f76a7838afc9657267d08fad94870e83da4608b57e",
+    "review": "Visually inspected: Sol’s green Ready pill and mint You are ready banner clearly differ from Mira’s amber state; the outlined readiness toggle and leave link stay reachable."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-desktop.png": {
-    "sha256": "49293e83a38c2b7015f11d3a3086acacd3136bc5a52bcac505af509063ec13d8",
-    "review": "Visually inspected final desktop: The board names Sol as the active friend, shows all three crew members aboard and keeps the shared oxygen and follow-turn card clear over the ocean art."
+    "sha256": "9ff82f2d695ce91d82fa1f15d1d7d1d36f5274d01d3a1d58ecae8c3cafc13300",
+    "review": "Visually inspected against turn mockup: three-person first dive shows the submarine and curved concealed path, full oxygen and visible empty cargo. Desktop has crew/tools beneath the board; phone keeps the turn, oxygen and action cards around its scrolling path."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-phone.png": {
-    "sha256": "5210c57512ad54ff2bb992df70c6d4fa78df17a38f0d61d5bbbba9e1872d97a2",
-    "review": "Visually inspected final phone: The board names Sol as the active friend, shows all three crew members aboard and keeps the shared oxygen and follow-turn card clear over the ocean art."
+    "sha256": "eb2903911e4607e4776ff6d2c96fcb15468906c0ae97af961347046b0f65bd63",
+    "review": "Visually inspected against turn mockup: three-person first dive shows the submarine and curved concealed path, full oxygen and visible empty cargo. Desktop has crew/tools beneath the board; phone keeps the turn, oxygen and action cards around its scrolling path."
+  },
+  "tests/e2e/002-room-foundation/screenshots/002-reloaded-guest-desktop.png": {
+    "sha256": "df7798f0a4245dcf01da21aef885c6ace129d75cec4000ab1bcf2a62a1cea0cc",
+    "review": "Visually inspected: restored Sol view keeps all three divers aboard, full oxygen and its labeled turn-cost preview; the teal Roll dice action is prominent beside/below the curved path."
+  },
+  "tests/e2e/002-room-foundation/screenshots/002-reloaded-guest-phone.png": {
+    "sha256": "27b62d1f78a55204f3a8f8c6a4b6a1abfc571f36a8e813c5ef294e5506db18b0",
+    "review": "Visually inspected: restored Sol view keeps all three divers aboard, full oxygen and its labeled turn-cost preview; the teal Roll dice action is prominent beside/below the curved path."
   },
   "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-desktop.png": {
-    "sha256": "6c14a8b29f9cfbb4666a65651ceb73cc71cd9e291061150d1fe08b61c8e947bd",
-    "review": "Visually inspected desktop: The started-room explanation wraps cleanly and explains the original browser identity and new-room option."
+    "sha256": "e40c2b050ca0d4de221535c7898b26bb25055b284694273f9550bccb39da5cf8",
+    "review": "Visually inspected: started-room explanation fits the ivory card, with separate Try another invite and Create another room links."
   },
   "tests/e2e/003-two-player-start/screenshots/000-late-invite-late-phone.png": {
-    "sha256": "7fa94e3da586dddecabfe1758728628552ff9ccc867632ae7cbcf57093e0edcd",
-    "review": "Visually inspected phone: The started-room explanation wraps cleanly and explains the original browser identity and new-room option."
+    "sha256": "016b3c07d2bbce5bbaa67ca8883793f0149ff10f4e4a46bf304460e9616e3e9e",
+    "review": "Visually inspected: Started-room explanation remains readable with separate Try another invite and Create another room links; rounded card fits this viewport."
   },
   "tests/e2e/003-two-player-start/screenshots/000-left-guest-desktop.png": {
-    "sha256": "60d5afe0a02bb477b6de7ff5649000ed34079147b6aac02395b20e872179fa19",
-    "review": "Visually inspected desktop baseline: The released guest seat is absent and the rejoin form retains Sol’s name with a clear leave explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "f59decdd0f532e706554138ed83d42e49a02700244def5e7d26314282c854eef",
+    "review": "Visually inspected: Rejoin form preserves Sol's name; crew status, explanation and teal Join room fit the rounded ivory card."
   },
   "tests/e2e/003-two-player-start/screenshots/000-left-guest-phone.png": {
-    "sha256": "57220a294a49fd85fe9043f48c23611bf5d65c36ba78d6f962d264fe0fd701f2",
-    "review": "Visually inspected phone baseline: The released guest seat is absent and the rejoin form retains Sol’s name with a clear leave explanation. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "554ece27b92734893c9fa006060b6a417c3e26b85a7b5048fff9b4f1a9cb7393",
+    "review": "Visually inspected: Rejoin form preserves Sol's name; crew status, explanation and teal Join room fit the rounded ivory card."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-desktop.png": {
-    "sha256": "a8fd6c8b26cc2f5c167c3278e80523d2e7ad28917570995ec62d3f26fd4d6b0a",
-    "review": "Visually inspected final desktop: The two-person crew is aboard at 25 oxygen; the original ocean, distinct level-I triangles and gold first-roll action remain readable with the persistent navigation and help controls."
+    "sha256": "d6f2fbe9d8b997f350646227d508505ab84dcb09a5cd928f5f88568a4dde9424",
+    "review": "Visually inspected: Started dive has clear oxygen, cargo and persistent Roll dice; curved ocean path and submarine fit the desktop/sidebar and phone/stack layouts."
   },
   "tests/e2e/003-two-player-start/screenshots/000-started-host-phone.png": {
-    "sha256": "238c9724dab0c3daa4df35cc118c74fb07d3c34f0c74361dbce844d494c06a19",
-    "review": "Visually inspected final phone: The two-person crew is aboard at 25 oxygen; the original ocean, distinct level-I triangles and gold first-roll action remain readable with the persistent navigation and help controls."
+    "sha256": "5a92735b7f21f3f90263f05580f8ffaeaf1f001737ad0ac72eaab6cf4b40fc8e",
+    "review": "Visually inspected: Started dive has clear oxygen, cargo and persistent Roll dice; curved ocean path and submarine fit the desktop/sidebar and phone/stack layouts."
   },
   "tests/e2e/004-closed-room/screenshots/000-closed-guest-desktop.png": {
-    "sha256": "c0b40f6d129198168e75eb246ad6a546dd7dba97d83f8f3d5075989bde25c7e7",
-    "review": "Visually inspected desktop baseline: The closed-room explanation and new-room link are readable with no stale join or ready controls. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "4e947844ea1f654ee9efcc1b934a506f3ce2fa02958fb74f909e743ef467ffb9",
+    "review": "Visually inspected: Room closure explanation remains readable with separate Try another invite and Create another room links; rounded card fits this viewport."
   },
   "tests/e2e/004-closed-room/screenshots/000-closed-guest-phone.png": {
-    "sha256": "be3e339e4e9765762e75936feabfa261864a4523d2d79ca04d3131d5e5d4d483",
-    "review": "Visually inspected phone baseline: The closed-room explanation and new-room link are readable with no stale join or ready controls. Reviewed the revised square card edges and unchanged readable controls; no clipping."
+    "sha256": "0515280703b9f0628b55ee4c263ee8911cf01ab87a99116dd1ba9285a0360e6b",
+    "review": "Visually inspected: Room closure explanation remains readable with separate Try another invite and Create another room links; rounded card fits this viewport."
   },
   "tests/e2e/004-closed-room/screenshots/000-confirm-host-desktop.png": {
-    "sha256": "8ece7a35ef5d331d991f9539bbf326971a5538e9767a512fcb36fc23efb025d9",
-    "review": "Visually inspected desktop: The closure explanation, Close room and Stay controls fit below the two-player roster and start reason."
+    "sha256": "454fc7d128fe4fbf868c6ad11c2e1716d3995b63564b1d6449c175209bdd3678",
+    "review": "Visually inspected: centered ivory closure dialog explains the effect on everyone, with separate Close room and Stay buttons over the retained lobby."
   },
   "tests/e2e/004-closed-room/screenshots/000-confirm-host-phone.png": {
-    "sha256": "299391d2d215bcdcaa0010c7b7e81c9d0f4941e4cd967a89ddabdf4a5ebda081",
-    "review": "Visually inspected phone: The closure explanation, Close room and Stay controls fit below the two-player roster and start reason."
-  },
-  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-phone.png": {
-    "sha256": "fa30ef254267a486f4d369a7435cd9802f071b6e9f27dde4410b0d7e5f453ee5",
-    "review": "Visually inspected final phone: The highlighted level-I landing and Mira label are visible; original 3-and-3 dice match the six-space text, and pickup/leave controls fit above cargo, history and help."
-  },
-  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-desktop.png": {
-    "sha256": "7a5a3c062973eb199d8948728039bd099106a1cf75f9c274455bf80f7263629c",
-    "review": "Visually inspected final desktop: The highlighted level-I landing and Mira label are visible; original 3-and-3 dice match the six-space text, and pickup/leave controls fit above cargo, history and help."
-  },
-  "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-phone.png": {
-    "sha256": "fa4d1a6e9ec91c3537a9f8e48b168d2fe0d2804b847d82672a4a43cb99dcbd4f",
-    "review": "Visually inspected final phone: Sol sees the next turn and unchanged 25 oxygen; the submarine anchors the path and the gold Roll dice action remains clear above the persistent tools."
+    "sha256": "5cc15cc38edd878b4a7829c722733207bd07ad8d3739017b88a7710ee8e3fa66",
+    "review": "Visually inspected: centered ivory closure dialog explains the effect on everyone, with separate Close room and Stay buttons over the retained lobby."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-desktop.png": {
-    "sha256": "bd569019613eb9782502a8ad71597643781fe69c96cd56a9b6ab607a88834ff4",
-    "review": "Visually inspected final desktop: Sol sees the next turn and unchanged 25 oxygen; the submarine anchors the path and the gold Roll dice action remains clear above the persistent tools."
+    "sha256": "344428731f994b68ff55916d50996e437c5a139827844595065f6aed080e0bc3",
+    "review": "Visually inspected: Next player sees persistent oxygen and roll action, with crew identity retained in the desktop footer and phone inspector."
   },
-  "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-phone.png": {
-    "sha256": "b8f1a2b7cc5a7d4894a7b3aadec0ac42cd9d84f78418dacd648da70bacb1a621",
-    "review": "Visually inspected final phone: Zero oxygen, the last-turn instruction and stationary Sol are visible together. The empty-space choice, five-unit cargo deduction and disabled unselected drop have readable explanations."
+  "tests/e2e/005-multiplayer-turn/screenshots/000-next-turn-guest-phone.png": {
+    "sha256": "c889e1a5f474af0fc5b8581b5a30becd99b5b37313e445375d4c40e49bbdb569",
+    "review": "Visually inspected: Next player sees persistent oxygen and roll action, with crew identity retained in the desktop footer and phone inspector."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-desktop.png": {
+    "sha256": "442348f4d59bfaf26f13fb77559267067d7181885ee64108f48f595daedfdca5",
+    "review": "Visually inspected: Confirmed dice and highlighted landing appear with Pick up treasure and Leave it; phone preserves a scrollable board above cargo/actions."
+  },
+  "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-phone.png": {
+    "sha256": "e7295ab5e58798aaf474d9bdc5a19961315e339c0e67512ccec77f4c7beec079",
+    "review": "Visually inspected: Confirmed dice and highlighted landing appear with Pick up treasure and Leave it; phone preserves a scrollable board above cargo/actions."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-desktop.png": {
-    "sha256": "2c54e703ed26be89ffbe91550088d986dd60576bf52ad88af29bb957567f342e",
-    "review": "Visually inspected final desktop: Zero oxygen, the last-turn instruction and stationary Sol are visible together. The empty-space choice, five-unit cargo deduction and disabled unselected drop have readable explanations."
+    "sha256": "d62baab7f20e7ebbfd9b74e367518ea4ff3fd962f690502e36d5f09b3b7c0cb9",
+    "review": "Visually inspected: Empty oxygen, five concealed cargo cards and last-turn instructions are readable; whole-unit selector and disabled drop action fit without clipping."
   },
-  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-phone.png": {
-    "sha256": "dd206c5a0bf094e4afddbe3c97e17ca8432f24c02cf3f07c8c0a63aeedcca867",
-    "review": "Visually inspected final phone: The ivory cleanup panel distinguishes unit, level, tile count and stack position. Earlier/Later controls and the persistent gold Confirm order action are readable; the long list scrolls independently."
-  },
-  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-desktop.png": {
-    "sha256": "e177696ebaff53e3795b396ba773cc963b1210bd20b132bb50b8c8dabb32fa75",
-    "review": "Visually inspected final desktop: The ivory cleanup panel distinguishes unit, level, tile count and stack position. Earlier/Later controls and the persistent gold Confirm order action are readable; the long list scrolls independently."
-  },
-  "tests/e2e/006-dive-resolution/screenshots/000-review-host-phone.png": {
-    "sha256": "c4584ca5d276837873c1db816d27e51ae7f478fc95e8c19dc2915d4bb16bc574",
-    "review": "Visually inspected final phone: The ivory haul table separates Mira’s two saved points from Sol’s loss; saved treasure and history have visible disclosure symbols, and Sol’s next-start instruction sits beside the reachable continuation action."
+  "tests/e2e/006-dive-resolution/screenshots/000-last-turn-guest-phone.png": {
+    "sha256": "df403d56c8e22b2887fda0e04ea68b06257588e865e9559723239d480fbe00bc",
+    "review": "Visually inspected: Empty oxygen, five concealed cargo cards and last-turn instructions are readable; whole-unit selector and disabled drop action fit without clipping."
   },
   "tests/e2e/006-dive-resolution/screenshots/000-review-host-desktop.png": {
-    "sha256": "9952a69216a983a4cab5cc4f8ca6fb83dc0df6ac81a1b1a98394b365cc5dac5f",
-    "review": "Visually inspected final desktop: The ivory haul table separates Mira’s two saved points from Sol’s loss; saved treasure and history have visible disclosure symbols, and Sol’s next-start instruction sits beside the reachable continuation action."
+    "sha256": "532f392fab37498379f1dba7e5b42c2294b532fd42853208aee1326e104d5613",
+    "review": "Visually inspected: Dive scorecard distinguishes returned/lost treasure by text and color, with clear next diver and persistent Continue/history footer."
   },
-  "tests/e2e/007-complete-game/screenshots/000-first-review-host-phone.png": {
-    "sha256": "4d22dc570f71cee272379e4c4f4be7b1b96e025ac96bc307fa2e7f8b5c534938",
-    "review": "Visually inspected final phone: Both returned divers have distinct This dive and Total columns, readable saved-treasure disclosures and a clear Mira-starts-next instruction with gold continuation."
+  "tests/e2e/006-dive-resolution/screenshots/000-review-host-phone.png": {
+    "sha256": "e4d1681c4a4f1068e11ec2e9bc9cd1337877d2a37803639f35d76194da4ef771",
+    "review": "Visually inspected: Dive scorecard distinguishes returned/lost treasure by text and color, with clear next diver and persistent Continue/history footer."
   },
-  "tests/e2e/007-complete-game/screenshots/000-first-review-host-desktop.png": {
-    "sha256": "767a169e17bc84ef3f121ba344ec9be577482f4b3c2a35cc38b87704846689b9",
-    "review": "Visually inspected final desktop: Both returned divers have distinct This dive and Total columns, readable saved-treasure disclosures and a clear Mira-starts-next instruction with gold continuation."
+  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-desktop.png": {
+    "sha256": "b32a75eb52ca9f0f3ab1ebc11b209429e16fb2edb8f4eddc4a4cb336101299e8",
+    "review": "Visually inspected: Lost-cargo order uses concealed unit cards and Earlier/Later controls; phone scrolls the unit list while Confirm order remains reachable."
   },
-  "tests/e2e/007-complete-game/screenshots/000-final-result-guest-phone.png": {
-    "sha256": "80f4f13fffb247ceee65434319db7929dba70eacf19b279363f0e195da6d32af",
-    "review": "Visually inspected final phone: Sol’s 12-point victory, Mira’s two points and all three dive columns are readable. The level-IV tiebreak line, history disclosure and gold Play again action fit."
+  "tests/e2e/006-dive-resolution/screenshots/001-lost-order-guest-phone.png": {
+    "sha256": "b4ee0eda9a67e633ca167273dee961dc388e265f7afab4eb0dceee4fc33e7921",
+    "review": "Visually inspected: Lost-cargo order uses concealed unit cards and Earlier/Later controls; phone scrolls the unit list while Confirm order remains reachable."
   },
   "tests/e2e/007-complete-game/screenshots/000-final-result-guest-desktop.png": {
-    "sha256": "911668a5adf22fce2ad5feaefa841b287389314ad6d97b3c2ea285ae04ee1810",
-    "review": "Visually inspected final desktop: Sol’s 12-point victory, Mira’s two points and all three dive columns are readable. The level-IV tiebreak line, history disclosure and gold Play again action fit."
+    "sha256": "c9a1c976376b4070876e3399ec4e46cac55c4d10a272bbb33ff1e8be982b7c40",
+    "review": "Visually inspected: Final result presents gold trophy, Sol's victory and per-dive totals; teal Play again and outlined history match the reference hierarchy."
   },
-  "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-phone.png": {
-    "sha256": "e1fdb8ef120eda3afba56558f23899106cb1d56687107c808745034f9f60ff99",
-    "review": "Visually inspected phone: The fresh two-person lobby restores Mira as host with unready players, invitation controls and a disabled start explanation."
+  "tests/e2e/007-complete-game/screenshots/000-final-result-guest-phone.png": {
+    "sha256": "853bdef2a628ec335df9d3c124e4a9d4ed67d1eb96c144431bf57c583d203082",
+    "review": "Visually inspected: Final result presents gold trophy, Sol's victory and per-dive totals; teal Play again and outlined history match the reference hierarchy."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-first-review-host-desktop.png": {
+    "sha256": "4b5b968cf439de259076ed54bdbf96c05990208be909b908a7f159f42c2facd4",
+    "review": "Visually inspected: Returned divers' scores and saved-treasure disclosures are clear; next diver banner and Continue/history footer fit."
+  },
+  "tests/e2e/007-complete-game/screenshots/000-first-review-host-phone.png": {
+    "sha256": "ed4b72136d4e1a768401ecd9b94c830b642bcf8250d1954d799d3aaa7e11858f",
+    "review": "Visually inspected: Returned divers' scores and saved-treasure disclosures are clear; next diver banner and Continue/history footer fit."
   },
   "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-desktop.png": {
-    "sha256": "f763ffc528944f7503170a1764539a8e8ddee37637178c1ea6bf2b0654ef8114",
-    "review": "Visually inspected desktop: The fresh two-person lobby restores Mira as host with unready players, invitation controls and a disabled start explanation."
+    "sha256": "70509a45361d813fd5b93b6b3462f57df4a245223c880b69cf1dbd084197ca3a",
+    "review": "Visually inspected: Play again restores the illustrated lobby with both names, reset readiness and a new invite action."
   },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-kai-desktop.png": {
-    "sha256": "bf68209c5493770a3e4b16c614f1348865092ec5bcd90b61abc05246e01132a3",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-kai-phone.png": {
-    "sha256": "aa210b126eaa117cb71ae5aecfab4288cf5751efd689246b8b1c4c270d253878",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-luz-desktop.png": {
-    "sha256": "f7a97d6d1d525045b3fd064962c1dfe5a8ce55ee7248e1d1f0cf54b4836d3e0b",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-luz-phone.png": {
-    "sha256": "73855e8caaaac4b8ff2f901d2972f5e49ee9edba3a9eed4931bc2604d73613eb",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-mira-desktop.png": {
-    "sha256": "16b7862ff9ac57965a9c5d067530a7003092428f17167814ca1e3a50bb090384",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-mira-phone.png": {
-    "sha256": "2b23496c1e139cada65c5078b2b8c37f78579b68ed75232509c4bd525255da61",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-nori-desktop.png": {
-    "sha256": "0e1fe0251d4df14ba5c3f59f27e53759ef0b86a9e1ae89b59b48d3ed0b6d6238",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-nori-phone.png": {
-    "sha256": "522431ccbc9d28a9ab365e508ca4bfa33908762d2c0a0d1a92067a44ecce6ae9",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-pip-desktop.png": {
-    "sha256": "635ef512158033299248a84db16a4aff8000181294a81b5a71c57a306dcae8b7",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-pip-phone.png": {
-    "sha256": "5f1abd5ef18342aee024463e40a91a4778a4d6525bdf50a5ceed0e19fc53d20b",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-sol-desktop.png": {
-    "sha256": "c802ce3e59a04ef9dd200c3663a0c4d6652f17a5361c9a55549f4584a9489a1d",
-    "review": "Visually inspected final desktop: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/008-six-player-game/screenshots/000-shared-result-sol-phone.png": {
-    "sha256": "25b90c14deea63243c972cb2ff7bd351ef469fcf4e347a86b6a3ad7e0b6e7937",
-    "review": "Visually inspected final phone: All six names appear in the shared-victory heading. The three-dive score columns are spaced clearly in the independently scrolling ivory report; the persistent gold Play again action and fresh-invite explanation remain reachable."
-  },
-  "tests/e2e/009-recovery/screenshots/000-offline-host-desktop.png": {
-    "sha256": "108cbc5fec8cb6b3506323109823fd79f8502b25914bb8e92b7374d93d817bde",
-    "review": "Visually inspected final desktop: Offline and Last known oxygen are explicit at 24; the confirmed two-and-two dice and highlighted level-II landing remain readable while both move controls are disabled."
-  },
-  "tests/e2e/009-recovery/screenshots/000-offline-host-phone.png": {
-    "sha256": "bb1ea44232313dc19d2e603bd5e065f40c62dc1111ffd1e0b2fa3c7d1aa58fba",
-    "review": "Visually inspected final phone: Offline and Last known oxygen are explicit at 24; the confirmed two-and-two dice and highlighted level-II landing remain readable while both move controls are disabled."
-  },
-  "tests/e2e/009-recovery/screenshots/000-one-charge-guest-desktop.png": {
-    "sha256": "8d6e78f09589fabef172760516bb26891477d2ac6a61edb5b26c623ca68f18e1",
-    "review": "Visually inspected final desktop: Sol’s highlighted level-I space and direction radios are readable at 24 oxygen; the gold roll action, zero-unit cargo summary, history and help fit."
-  },
-  "tests/e2e/009-recovery/screenshots/000-one-charge-guest-phone.png": {
-    "sha256": "b67dc097901ca413c858a3a98f4482944ae8a5c0f0742d9cbb2974887fcd72bd",
-    "review": "Visually inspected final phone: Sol’s highlighted level-I space and direction radios are readable at 24 oxygen; the gold roll action, zero-unit cargo summary, history and help fit."
-  },
-  "tests/e2e/009-recovery/screenshots/000-restored-tab-desktop.png": {
-    "sha256": "14e285b47b9ca1bb51c50bf4cbf9f150dc8157e94ea6bb093c474a1f90312dd5",
-    "review": "Visually inspected final desktop: The reconnected tab names Sol’s next turn, shows Mira on the empty pickup space, and reports two carried units without exposing their values. Oxygen remains 24."
-  },
-  "tests/e2e/009-recovery/screenshots/000-restored-tab-phone.png": {
-    "sha256": "8955d0552a70cc9f48fccfa98ac3f1d2e6ed71a8bf2d7344518010c70931e91c",
-    "review": "Visually inspected final phone: The reconnected tab names Sol’s next turn, shows Mira on the empty pickup space, and reports two carried units without exposing their values. Oxygen remains 24."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-desktop.png": {
-    "sha256": "11b4f7bf65e07f613a80c0e232fb7e5e184c3b0456f1cfd5c2eecf5d406a2f7f",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-phone.png": {
-    "sha256": "a5d86797ae3af769f857a1cbf70b97a1e9b737541db3a00fea2bcf84db2c80f3",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-desktop.png": {
-    "sha256": "69779179d08fbe9271d78438db366e7f71e70ead492041a6db9c1cc9ac7d3b26",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-phone.png": {
-    "sha256": "1f1974d20afae41c0266408275e9cee52438dd5ad36351275d12d3d4c592e8c7",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-desktop.png": {
-    "sha256": "7ba1d47a40443252452532e7306b481cab592a5748ce77bf661ac6f3dbbad7d5",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-phone.png": {
-    "sha256": "2aef4bbe877f408f7364a425f586a5a6164c1b57e539388aaeb40cada92bbee6",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-desktop.png": {
-    "sha256": "cd8e8f3b9c949a836728dd08e1326a17fd055f5b0e96f31150660a23eb1f2e47",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-phone.png": {
-    "sha256": "da43323f68e54409aaa0192a29f0360dc2f312acc4df2245255ed21bd92c4b93",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-desktop.png": {
-    "sha256": "5740534c9a0862ada9882e692e1c209235c3519415eb8bd1772dbd193a55ab0f",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-phone.png": {
-    "sha256": "9aa54ef6bb4ab24d1d0252c14d580020546bfcf7a1836e647afe3863e699c157",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-loser-desktop.png": {
-    "sha256": "0a957289721de3e7c16869e079f19c6195f5a569c0dd7de3c034d92aad711739",
-    "review": "Visually inspected desktop: The full six-seat roster is followed by Room full and Create another room; no readiness control suggests the losing contender is seated."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-seated-winner-desktop.png": {
-    "sha256": "f53867256387c62277f94ce27aa87b50e9b3c6404dac82cbd3afdaf4e7348aee",
-    "review": "Visually inspected desktop: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-seated-winner-phone.png": {
-    "sha256": "67f64c651b767a5dcff5701e7b449c8a32367305caadf959009c8abef8ddd307",
-    "review": "Visually inspected phone: All six roster rows fit with the local You label, readiness and copy controls, and host-start explanation. The host view also fits its first-diver selector and start button."
-  },
-  "tests/e2e/010-last-seat/screenshots/000-full-loser-phone.png": {
-    "sha256": "63a1a852c349acdaf1141d5d3014bdfaf5849fe128c0e17efeb41193d4cb873b",
-    "review": "Visually inspected phone: All six names fit above Room full and the new-room link. The full-room explanation replaces an irrelevant stale-turn notice, with no readiness control suggesting a seat."
-  },
-  "tests/e2e/010-last-seat/screenshots/001-six-divers-mira-phone.png": {
-    "sha256": "7d010ebdea52243dc93a5f176e63013bcff80a28d88ef435f18b8fb962fbd644",
-    "review": "Visually inspected final phone: Six named, numbered diver buttons and their status/cargo lines are readable in the scrollable inspector. Mira’s concealed single tile is described without a value; the close action stays reachable."
-  },
-  "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-phone.png": {
-    "sha256": "aa8a619bf7867a65399879909ea7956f055fea6aed8a84cf6e2d0cd23e2cc02e",
-    "review": "Visually inspected final phone: The native selector names one unit containing two level-II tiles; focus is on the enabled gold drop action. Mira’s empty deep-end space, dice and one-unit movement deduction remain visible."
-  },
-  "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-phone.png": {
-    "sha256": "18c1e1c774242ede312e104c6e0c1b56ab1e48ff6b6b1ebe4b1ddb36713fe74e",
-    "review": "Visually inspected final phone: The deep path visibly distinguishes the three-tile stack from Mira’s returned two-tile stack. The observing player’s Back aboard message and persistent tools remain readable."
-  },
-  "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-desktop.png": {
-    "sha256": "4f088ac99156e6228996c0f3f5e6804b9bf30c37ccd570dce9a19dbbf9752214",
-    "review": "Visually inspected final desktop: The native selector names one unit containing two level-II tiles; focus is on the enabled gold drop action. Mira’s empty deep-end space, dice and one-unit movement deduction remain visible."
-  },
-  "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-desktop.png": {
-    "sha256": "3a6e18d7972bab4a73aa24ba16742d1cf5daff8610e6202a47e44222652ce9a1",
-    "review": "Visually inspected final desktop: The deep path visibly distinguishes the three-tile stack from Mira’s returned two-tile stack. The observing player’s Back aboard message and persistent tools remain readable."
-  },
-  "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-desktop.png": {
-    "sha256": "1fba06b39ae71e0aaa7e6704e5ff4072c1d852d56c2e79811dbd6363766a47a8",
-    "review": "Visually inspected final desktop: The forty-character host name wraps within the lobby; Sol’s seat, readiness controls, invite action and host-start explanation remain readable."
-  },
-  "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-phone.png": {
-    "sha256": "8e21ef45b8a3dc5c5e64daab97e93bdfd0a39589c7754938e2248f86d0e8de68",
-    "review": "Visually inspected final phone: The forty-character host name wraps within the lobby; Sol’s seat, readiness controls, invite action and host-start explanation remain readable."
-  },
-  "tests/e2e/012-keyboard-and-help/screenshots/000-help-host-phone.png": {
-    "sha256": "e85024e03a6e182e0991eb37b0d91588a3f8e11bef401361ef009f3d5d552721",
-    "review": "Visually inspected final phone: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
-  },
-  "tests/e2e/012-keyboard-and-help/screenshots/001-cargo-host-phone.png": {
-    "sha256": "7ef7254152400ed1f2de6c1bf8f273164294bed366e0e8af5dc94afae915ad81",
-    "review": "Visually inspected final phone: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
-  },
-  "tests/e2e/012-keyboard-and-help/screenshots/002-history-host-phone.png": {
-    "sha256": "f6dfa9c91270a433142bb6e0efb7b8bbde3f4336a17ebb11dad2145ad4b25759",
-    "review": "Visually inspected final phone: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
+  "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-phone.png": {
+    "sha256": "1ac8d1ae2ed9f539c949c4540629bf08865beff8186baea79bfbd593bae37612",
+    "review": "Visually inspected: Play again restores the illustrated lobby with both names, reset readiness and a new invite action."
   },
   "tests/e2e/007-complete-game/screenshots/001-saved-dive-guest-desktop.png": {
-    "sha256": "daf0d174117b53e6f3660594e10b33574061db6c0aea97456db21be631a42ee1",
-    "review": "Visually inspected final desktop: The opened first dive clearly shows Mira’s zero-point saved tile and Sol’s three-point tile, with named divers, focus outline and readable later-dive disclosures. Play again stays reachable outside the scrolling history."
+    "sha256": "58301967ffac94e78a31f0bcdc2c1132dfd17d6b8076779044a20f1cce57de13",
+    "review": "Visually inspected: History dialog uses readable navy text on ivory, expandable saved dives, scrollable moves and persistent Back to results."
   },
   "tests/e2e/007-complete-game/screenshots/001-saved-dive-guest-phone.png": {
-    "sha256": "36a8f734879c0d3c2a0af2aaac541f522d75ab5d5e94c4add41f85bcfc13de62",
-    "review": "Visually inspected final phone: The opened first dive clearly shows Mira’s zero-point saved tile and Sol’s three-point tile, with named divers, focus outline and readable later-dive disclosures. Play again stays reachable outside the scrolling history."
+    "sha256": "ddbdb2f14e98e245337720ab0d2c484e3a7c860c1e79d61ef2a38e0813a38905",
+    "review": "Visually inspected: History dialog uses readable navy text on ivory, expandable saved dives, scrollable moves and persistent Back to results."
   },
-  "tests/e2e/010-last-seat/screenshots/001-six-divers-mira-desktop.png": {
-    "sha256": "0d911ec95e38ee82aa2a41b8e7868593624aa263a4fed250d1c41e8d8f8ed47c",
-    "review": "Visually inspected final desktop: Six named, numbered diver buttons and their status/cargo lines are readable in the scrollable inspector. Mira’s concealed single tile is described without a value; the close action stays reachable."
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-kai-desktop.png": {
+    "sha256": "0997d3eb7368d82781e5717047a1822f5dbb09647a5b2429b2ae614f2b5558c1",
+    "review": "Reviewed Kai’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
   },
-  "tests/e2e/012-keyboard-and-help/screenshots/000-help-host-desktop.png": {
-    "sha256": "0ce09451860a93bb777073871850e33f6be42f68eadd2cb3a7d77e0d3ca79006",
-    "review": "Visually inspected final desktop: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-kai-phone.png": {
+    "sha256": "84edd20628fa4e6925debedd8777d7d91bf1929e3b66cd5c66fe4337f264832d",
+    "review": "Reviewed Kai’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
   },
-  "tests/e2e/012-keyboard-and-help/screenshots/001-cargo-host-desktop.png": {
-    "sha256": "c3104e6d2746c32f4ebe61889a2032c1747b15a19739b70d1b907ff88adc6717",
-    "review": "Visually inspected final desktop: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-luz-desktop.png": {
+    "sha256": "0be630e92a59485b7e51cf2ff0f44853c6f558fe52486e87da883700d0db9e50",
+    "review": "Reviewed Luz’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
   },
-  "tests/e2e/012-keyboard-and-help/screenshots/002-history-host-desktop.png": {
-    "sha256": "e75f5cec84e4ac87671240cad5766776b8f5c5f128336b289b44d61485140fc4",
-    "review": "Visually inspected final desktop: The rules dialog fits with clear paragraphs about shared oxygen, whole units, return, exhaustion and ties. The Back to the dive button has a visible keyboard focus outline."
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-luz-phone.png": {
+    "sha256": "cccbd6fe844d23b3b8106a37acacc49d76dba363103f0f3f2ed648cc4e5f4051",
+    "review": "Reviewed Luz’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-mira-desktop.png": {
+    "sha256": "efe04fe978c1f4fac84d334091758dde0a0554e8348b188eb33aa0669aa691be",
+    "review": "Reviewed Mira’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-mira-phone.png": {
+    "sha256": "7ede2c599d67196d4efc3c3dcf84af6ca451686cc0d061025d4ff1c310b890fb",
+    "review": "Reviewed Mira’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-nori-desktop.png": {
+    "sha256": "57d63eb8eca73b900d02b2a0eb35b625f8dce20cf558c7f0a9a72c90f217af35",
+    "review": "Reviewed Nori’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-nori-phone.png": {
+    "sha256": "c1b9cdc419efedd0ccb31918b958de62d022f96625bbf7b10aea63b3da978bcb",
+    "review": "Reviewed Nori’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-pip-desktop.png": {
+    "sha256": "a2d1ca18a5990fd25586c47dcf91a241ae4578dfe210662adaa5cdc25056bddc",
+    "review": "Reviewed Pip’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-pip-phone.png": {
+    "sha256": "a949a94062554622e57b7ccce82bc5bd9de1e64199e85cc7ac3a2cb8b9176c6d",
+    "review": "Reviewed Pip’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-sol-desktop.png": {
+    "sha256": "7abddc68dcf9de82ce2fcf13eb30a9f30c4cfc585d78656813c586d882890b43",
+    "review": "Reviewed Sol’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/008-six-player-game/screenshots/000-shared-result-sol-phone.png": {
+    "sha256": "c8a031817c64f93dbd3aa6fc4e4c3a42c3c0227c1576d99ed1ce2085b91b5981",
+    "review": "Reviewed Sol’s final result: all six numbered crew rows, all three dives and totals fit with the gold trophy, shared-victory explanation, local You label, teal Play again and history footer."
+  },
+  "tests/e2e/009-recovery/screenshots/000-offline-host-desktop.png": {
+    "sha256": "f3e96e1da960f1ccfffbb2970ca365120b5b3bdc95f141025cbe6f2965a0eacf",
+    "review": "Visually inspected: Amber reconnect banner clearly labels last-known oxygen and disabled moves while preserving the board/cargo; phone layout remains reachable."
+  },
+  "tests/e2e/009-recovery/screenshots/000-offline-host-phone.png": {
+    "sha256": "01ae5886ed02a9ad70f456b07ab23ea37595e803b3ff3e6a74482eb9343d7d82",
+    "review": "Visually inspected: Amber reconnect banner clearly labels last-known oxygen and disabled moves while preserving the board/cargo; phone layout remains reachable."
+  },
+  "tests/e2e/009-recovery/screenshots/000-one-charge-guest-desktop.png": {
+    "sha256": "04a44e4596c90aa85e8a25f81c865594d9ef593551b8d87cd1ae2547dc741020",
+    "review": "Visually inspected: Recovered state shows oxygen charged once and distinct selected Keep diving/Turn back cards above Roll dice."
+  },
+  "tests/e2e/009-recovery/screenshots/000-one-charge-guest-phone.png": {
+    "sha256": "4d415451a4dd27a64be1b8c0fb39b4f6e9c8449717989f6142f4befce3d9ee32",
+    "review": "Visually inspected: Recovered state shows oxygen charged once and distinct selected Keep diving/Turn back cards above Roll dice."
+  },
+  "tests/e2e/009-recovery/screenshots/000-restored-tab-desktop.png": {
+    "sha256": "3446e9449c2f072b1295acc2a7621900808108997f9a60604e6530a7393b63ef",
+    "review": "Visually inspected: Restored tab retains Mira's two concealed units and position while explaining Sol's turn; no duplicate move controls appear."
+  },
+  "tests/e2e/009-recovery/screenshots/000-restored-tab-phone.png": {
+    "sha256": "238d98a3673d3560812d85c0461bc3c20c0198f8b9ee7474eed7cb2f6328bf1d",
+    "review": "Visually inspected: Restored tab retains Mira's two concealed units and position while explaining Sol's turn; no duplicate move controls appear."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-desktop.png": {
+    "sha256": "63093ab8671bfe594fa1ea139259dfd0172c18b41d72e56aa1f68ca8e4f60f6a",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-phone.png": {
+    "sha256": "3eeef99ceacee2fac94c0c2a637652fa6d7d7b130bb87d5ab65c4cd88de14af0",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-desktop.png": {
+    "sha256": "21c9949b1aae7dd6e2db2946a097806d35ef362a26f1203db2d98458a2bf68b7",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-phone.png": {
+    "sha256": "6067762f155d241b27748beeae40f896672daf2b5dedea178ed25bbd41fa3a9f",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-desktop.png": {
+    "sha256": "77e86c8cd30b822fea5857f11a32d7a6f56775000227dc1adfde5ba2589f1ebf",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-phone.png": {
+    "sha256": "d1b327d082184868515bc6ee6ab790b23a1c79ae9f9def144daaf2a3f0b263c6",
+    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-desktop.png": {
+    "sha256": "9e4a2edd0953c1a17ab505b91f5f8362a787d91450e8790a6a8f4ad3936c51f7",
+    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-phone.png": {
+    "sha256": "8b86ed6836e1bab6eacce773096880b14609def566111bdc8658399ae31aaef2",
+    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-desktop.png": {
+    "sha256": "bfe05685c5b4521aa11562e25aece9bcc2520628b0bfde9024a36d204f95df08",
+    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-phone.png": {
+    "sha256": "00d1797fb308dbb2921c03ffbabd055edf2ab0d5329222f975b819908990911e",
+    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-loser-desktop.png": {
+    "sha256": "efca1e182af6211783d5b2870de89734d68a99de22d9ab75e94b9e7812369c50",
+    "review": "Visually inspected: full-room notice follows all six seats and offers both Try another invite and Create another room; the illustrated ivory card fits."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-full-loser-phone.png": {
+    "sha256": "1299bc725c3027d97a977df56a2c92ba385980e6950d6c099a486bf65df01b4b",
+    "review": "Visually inspected: full-room notice follows all six seats and offers both Try another invite and Create another room; the illustrated ivory card fits."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-seated-winner-desktop.png": {
+    "sha256": "e54b6e5fdebd7959f0842d551f3fb136f99244823c981b2e44a0bb8c1ee86ed1",
+    "review": "Visually inspected: Nori occupies exactly one clearly identified final seat; compact illustrated lobby retains readable readiness and departure controls."
+  },
+  "tests/e2e/010-last-seat/screenshots/000-seated-winner-phone.png": {
+    "sha256": "1b5a48a84ba79cb0643fc0fcbece5d5ebbf9339d422c0782ff80244bd9ae9abf",
+    "review": "Visually inspected: Nori occupies exactly one clearly identified final seat; compact illustrated lobby retains readable readiness and departure controls."
+  },
+  "tests/e2e/010-last-seat/screenshots/001-ready-crew-mira-desktop.png": {
+    "sha256": "118e61a462e1e03c00e6eb2eec24b39eab86106aeb74a94505c3b632170e44d6",
+    "review": "Visually inspected desktop: copied invite, all six ready seats, own-ready banner and enabled First diver/Start dive row fit the ivory card with Leave room visible."
+  },
+  "tests/e2e/010-last-seat/screenshots/001-ready-crew-mira-phone.png": {
+    "sha256": "f51d093091f7d95ba89a4c2ed06f5550d6ffda1ee513d28af8f5096ad72193f5",
+    "review": "Visually inspected phone: all six green readiness pills, copied-invite confirmation, own-ready banner, first-diver selector and enabled Start dive fit; Leave room remains reachable."
+  },
+  "tests/e2e/010-last-seat/screenshots/002-six-divers-mira-desktop.png": {
+    "sha256": "608b9244a3a68958a637a8a82ce9f7b5324d435dd273a82171a9eff169729ffb",
+    "review": "Visually inspected desktop: six crew and cargo rows fit the scrollable ivory inspector, with concealed unit details, saved totals and persistent Back to dive."
+  },
+  "tests/e2e/010-last-seat/screenshots/002-six-divers-mira-phone.png": {
+    "sha256": "a1862ce52f7e2d234c9d8eb4b161e9339242438f7fff022f676a51cbf4d5243c",
+    "review": "Visually inspected phone: six-person cargo dialog clearly separates carried units and saved points, with persistent Back to dive."
+  },
+  "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-desktop.png": {
+    "sha256": "579c74215e9eb7c7696a0165a7a92f9cdafa315cb7d5159c5301a9a438710b39",
+    "review": "Visually inspected: Deep-end stacks display tile counts and tier shapes; returned diver sees Back aboard and can continue following the crew."
+  },
+  "tests/e2e/011-whole-stack/screenshots/000-stack-returned-guest-phone.png": {
+    "sha256": "7132deca9eea13acc0735e95749c3624e0c8f1056d8a4e3240ae7f7ea676e043",
+    "review": "Visually inspected: Deep-end stacks display tile counts and tier shapes; returned diver sees Back aboard and can continue following the crew."
+  },
+  "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-desktop.png": {
+    "sha256": "eb91e35608c977f73ffa6252dcfa12098e2a95b9e32b3eb45112af01f97119bc",
+    "review": "Visually inspected: Whole-stack selector shows two tiles as one unit, hidden cargo face preserves level/count, and gold keyboard focus clearly marks Drop selected treasure."
+  },
+  "tests/e2e/011-whole-stack/screenshots/000-whole-unit-host-phone.png": {
+    "sha256": "22c205c1db4982c7d88d5b001fb3d4efd31b544393c22715323528ffb8379b40",
+    "review": "Visually inspected: Whole-stack selector shows two tiles as one unit, hidden cargo face preserves level/count, and gold keyboard focus clearly marks Drop selected treasure."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/000-direction-host-desktop.png": {
+    "sha256": "addbab53315a51d5ac9ed5595ea454083d6c6d1083df530bb98791563383d9d8",
+    "review": "Visually inspected: Long diver name wraps legibly in its expanded board label; selected Turn back has both teal fill and visible gold keyboard focus, with roll and cargo reachable."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/000-direction-host-phone.png": {
+    "sha256": "6d3d6ca98b2e60cd30440ada8faa42d66ad3f37d03750a87a493a941565ff8b7",
+    "review": "Visually inspected: Long diver name wraps legibly in its expanded board label; selected Turn back has both teal fill and visible gold keyboard focus, with roll and cargo reachable."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-desktop.png": {
+    "sha256": "1b4d00641b64e35acce0b695cfa067eac91b5a8d7a448af091910f65b74aecf4",
+    "review": "Visually inspected: Long host name wraps in the room heading and seat row without displacing readiness controls; guest can copy invite or ready up."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-phone.png": {
+    "sha256": "42f441f472d58b7571e1fd3be0d5202329bdbac0999d25924aa0235c7e47e5aa",
+    "review": "Visually inspected: Long host name wraps in the room heading and seat row without displacing readiness controls; guest can copy invite or ready up."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/001-help-host-desktop.png": {
+    "sha256": "c45fdbca9ef5bee28e687a856111830ac838aa202e42f1fbc58d1417a965ee14",
+    "review": "Visually inspected: Help dialog preserves selected direction behind the backdrop, explains the full turn flow in readable prose, and highlights keyboard return control."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/001-help-host-phone.png": {
+    "sha256": "4e92bfec7788b3dfbd86bcae47612052edf16a9df98bd9028165c3b2eff6e386",
+    "review": "Visually inspected: Help dialog preserves selected direction behind the backdrop, explains the full turn flow in readable prose, and highlights keyboard return control."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/002-cargo-host-desktop.png": {
+    "sha256": "6a337b9091783264dc2d0e5469c983f9196212972d7dc4c70490778b5df530e5",
+    "review": "Visually inspected: Cargo inspector wraps the long name, separates hidden cargo from saved points and exposes a focused scroll region with reachable Back to dive."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/002-cargo-host-phone.png": {
+    "sha256": "6f99359c02bd3f9e0c248d074a3a5b2bf43f05418fede4a1868885f8af3c7b27",
+    "review": "Visually inspected: Cargo inspector wraps the long name, separates hidden cargo from saved points and exposes a focused scroll region with reachable Back to dive."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/003-history-host-desktop.png": {
+    "sha256": "9d463e73d609a4a1002d5e0e8dc57be7e21160af36a86c9ad5eeb6881ec34995",
+    "review": "Visually inspected: History gives readable player-language move records, including the long name; gold focus outline and return control remain inside the viewport."
+  },
+  "tests/e2e/012-keyboard-and-help/screenshots/003-history-host-phone.png": {
+    "sha256": "d1f9e2ac87575a793061c0c076b828156958ef7d1977574d18b79cc97c229420",
+    "review": "Visually inspected: History gives readable player-language move records, including the long name; gold focus outline and return control remain inside the viewport."
   }
 }

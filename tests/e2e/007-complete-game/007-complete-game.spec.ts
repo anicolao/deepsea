@@ -164,7 +164,7 @@ test("friends complete three dives and play again without losing the result", as
       else
         await expect(
           actor.getByRole("heading", {
-            name: /^(Back aboard|Dive [123] complete|The haul is in)$/,
+            name: /^(Back aboard|Dive [123] complete|Game complete)$/,
           }),
         ).toBeVisible();
     }

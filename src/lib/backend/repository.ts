@@ -1,5 +1,5 @@
 import {
-  replay,
+  createProjector,
   sameEnvelope,
   supported,
   validEnvelope,
@@ -168,7 +168,8 @@ export class RoomRepository {
       this.storage.removeItem(`${this.prefix}pending:${pending.gameId}`);
   }
   watch(gameId: string, next: (state: RoomState) => void) {
-    let last = replay(gameId, []),
+    const project = createProjector(gameId);
+    let last = project([]),
       lastSynchronized = false;
     const notify = () =>
       next({
@@ -185,7 +186,7 @@ export class RoomRepository {
       gameId,
       (events, synchronized) => {
         lastSynchronized = synchronized;
-        const projection = replay(gameId, events);
+        const projection = project(events);
         last = projection;
         let pending: PendingEvent | null;
         try {

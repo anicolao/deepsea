@@ -50,6 +50,8 @@ test('every canonical configuration field is checked, including nested overrides
     ["reducedMotion: 'reduce'", "reducedMotion: 'no-preference'"],
     ['width: 393', 'width: 400'], ['workers: 1', 'workers: 2'],
     ["launchOptions: {", "launchOptions: { executablePath: '/usr/bin/chromium',"],
+    ["'--disable-partial-raster', ", ""],
+    ["'--disable-skia-runtime-opts', ", ""],
     ["toHaveScreenshot: {", "toHaveScreenshot: { mask: [],"],
   ];
   for (const [before, after] of variants) {

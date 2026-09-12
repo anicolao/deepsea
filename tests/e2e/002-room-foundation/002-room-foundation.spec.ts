@@ -32,7 +32,6 @@ test("friends create, join, ready and start a room through real browser actions"
     "room",
   );
   await host.goto("./");
-  await host.getByRole("link", { name: "Create room", exact: true }).click();
   await host.getByLabel("Your name").fill("Mira");
   await host.getByRole("button", { name: "Create room", exact: true }).click();
   await hostSteps.step("created", "The host invites friends", [
@@ -56,6 +55,25 @@ test("friends create, join, ready and start a room through real browser actions"
   await expect(host.getByText("Invite copied", { exact: true })).toBeVisible();
   const invite = await players.readInvite(host);
   await guest.goto(invite);
+  await guestSteps.step(
+    "invited",
+    "The invitation names the crew before joining",
+    [
+      {
+        description:
+          "The invite shows Mira’s room and asks only for the guest’s name.",
+        assert: async () => {
+          await expect(
+            guest.getByRole("heading", { name: "Mira’s room", exact: true }),
+          ).toBeVisible();
+          await expect(guest.getByLabel("Your name")).toBeVisible();
+          await expect(
+            guest.getByRole("button", { name: "Join room", exact: true }),
+          ).toBeDisabled();
+        },
+      },
+    ],
+  );
   await guest.getByLabel("Your name").fill("Sol");
   await guest.getByRole("button", { name: "Join room" }).click();
   await guest.getByRole("button", { name: "Ready up" }).click();

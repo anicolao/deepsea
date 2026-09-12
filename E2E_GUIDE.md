@@ -20,6 +20,8 @@ The flake supplies Node, the Playwright browser distribution, and font configura
 
 Canonical screenshots use **x86_64-linux**, pinned Chromium, headless mode, local bundled fonts, device scale 1, `en-CA`, UTC, dark color scheme, and reduced motion. The two projects are phone (393 × 852) and desktop (1280 × 900). Other platforms can develop the app, but must use this Linux environment or CI for baseline verification. Browser and font changes require deliberate baseline review.
 
+Chromium runs with `--disable-partial-raster` to redraw complete raster tiles and `--disable-skia-runtime-opts` to use Skia's baseline CPU math. These pin rendering inputs for curved controls and tokens while keeping exact, unmasked comparisons. Both flags are part of the enforced launch contract, with regression cases rejecting removal. See Chromium's [renderer switches](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/blink/common/switches.cc) and Skia's [precise baseline math](https://skia.googlesource.com/skia/+/e5fda8472b21/src/opts/SkRasterPipeline_opts.h).
+
 ## Non-negotiable rules
 
 1. **No explicit waits.** No sleeps, timers, `waitForTimeout`, manual polling, `waitFor*` readiness calls, or `networkidle`. Use locator actions and web-first assertions against observable state: `await expect(button).toBeEnabled()` followed by `await button.click()`. Playwright's built-in actionability and assertion retrying are allowed; arbitrary elapsed time is not evidence.
@@ -110,7 +112,7 @@ CI installs the locked dependencies inside Nix and runs the same verification on
 
 ## First scenario acceptance
 
-The initial test proves that the nested-path production build loads on phone and desktop, advertises the future multiplayer game without offering unfinished room controls, hydrates its About button, opens the brief with the keyboard, and restores focus when Escape closes it. All three states have zero-tolerance screenshots. There are no Firebase requests or credentials in this slice.
+The arrival scenario now verifies the finished name-entry and invitation card on phone and desktop. It uses the configured backend, preserves the entered name while opening help with the keyboard, and restores focus after Escape. All three states have zero-tolerance screenshots. Multiplayer scenarios create rooms directly from this arrival form through real player actions.
 
 ## Working preview requirement
 

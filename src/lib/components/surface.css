@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 50% 0, #164f6c, #061e32 85%);
+  color: #102f46;
+  font-family: "Atkinson Hyperlegible", sans-serif;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+:focus-visible {
+  outline: 3px solid #c47710;
+  outline-offset: 3px;
+}
+button:disabled {
+  cursor: default;
+}
+dialog::backdrop {
+  background: #031b2bba;
+}
+
