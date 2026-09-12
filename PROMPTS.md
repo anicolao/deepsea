@@ -73,3 +73,9 @@ logged in, let's get the test PR working.
 ## Prompt 18: Complete Finished MVP
 
 OK that's rebased and merged. Let's start a new branch for all the remaining implementation steps. Do each step in a sequence of logical commits with green CI. Don't wait for CI before starting the next step; but check that it was green before stacking a commit on top of a bad commit and keep it as green as possible. Done is the complete MVP with a green commit ready for final review. Be sure to make real assets and follow the UX design -- this is not a prototype, it is meant to be the finished game. Ensure tests are thorough adn the visual design looks good. Make sure all UI speaks to the players, not to the implementor or debugger. Continue until youv'e completed these objectives and then report.
+
+## Prompt 19: Confirm Existing Login
+
+> Firebase has no authenticated account on this machine, which prevents provisioning the live PR backend. Please run `cd /home/anicolao/projects/deepsea && nix develop -c npm exec -- firebase login --no-localhost`, complete Google sign-in, and tell me when it’s done. I’ll continue implementing the lobby and preview checks meanwhile.
+
+this was already done.

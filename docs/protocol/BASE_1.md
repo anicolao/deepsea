@@ -11,11 +11,11 @@ The project accepts the proposed resolutions in RULES_SUMMARY under `rulesetVers
 - Count individual banked level-4 tiles to break a points tie; an equal count remains a shared victory.
 - With no treasure left on the path, remaining dives add zero points and the game resolves its final score.
 
-[rules-fixtures.json](rules-fixtures.json) records concrete expected outcomes for movement, oxygen exhaustion, repeated stack loss, starter selection, empty paths, and ties. These are accepted specifications for subsequent gameplay work, not a claim that the full gameplay reducer exists now.
+[rules-fixtures.json](rules-fixtures.json) records concrete expected outcomes for movement, oxygen exhaustion, repeated stack loss, starter selection, empty paths, and ties. These accepted specifications are exercised by the engine, resolution, completion and race suites under tests/unit.
 
 ## Versions and validation
 
-The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 5`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 5 includes atomic turns, resolved dives and complete three-dive games; earlier reducer versions require their retained compatible app. Never reinterpret an older room with a newer reducer.
+The initial envelope uses integer `schemaVersion: 1`, integer `reducerVersion: 6`, and `rulesetVersion: "base-1"`. Missing/invalid envelopes are diagnosed and ignored. A structurally valid incompatible version blocks further interaction; it is never interpreted as the current version. Reducer 6 includes atomic turns, resolved dives, complete three-dive games and structured public move history; earlier reducer versions require their retained compatible app. Never reinterpret an older room with a newer reducer.
 
 Canonical event fields are `schemaVersion`, `reducerVersion`, `rulesetVersion`, `type`, `payload`, `actorUid`, `clientId`, `clientSeq`, and server-assigned `createdAt`. IDs and timestamps are added by the repository adapter to replay input. Unknown envelope fields are rejected. Payloads are bounded JSON maps; the creation payload contains only the room ID and a trimmed, nonempty host name of at most 40 characters.
 

@@ -115,6 +115,8 @@ Recovery evidence: scenarios 006 and 009 exercise reconnect during cleanup and l
 
 ### 9. Close the UX and accessibility acceptance checklist
 
+Implemented: UX_ACCEPTANCE.md maps all twelve browser journeys to phone/desktop evidence, original artwork, keyboard flows, readable cargo/history, measured text contrast and the remaining physical-device review boundary. The rules suite covers 200 complete games across every supported crew size.
+
 Audit the complete journeys in UX_DESIGN against the working application. Verify two- and six-player layouts at both canonical viewports, a readable full path, reachable persistent actions, Find my diver/Show submarine, distinguishable divers without color alone, and clear cargo-unit versus tile counts.
 
 Exercise keyboard-only lobby, direction, landing, lost-unit ordering, help, review, and replay-again flows. Verify focus restoration, announced turn/connection/result changes, explanations beside disabled controls, touch target sizes, actual text contrast, and reduced-motion behavior. Add automated checks where the property is measurable and record the remaining human review rather than treating screenshots as accessibility certification.
