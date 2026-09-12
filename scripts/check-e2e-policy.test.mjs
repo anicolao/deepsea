@@ -102,3 +102,12 @@ test('random initialization never permits scenario response fulfillment', () => 
   assert.ok(policyErrors("route.fulfill({ json: { board: 'fake' } });", 'tests/e2e/helpers/fixture.ts').length);
   assert.ok(policyErrors("route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed }, preview: config.preview ? { ...config.preview, initialSeed: seed } : null } });", 'tests/e2e/example.spec.ts').length);
 });
+
+test('isolated initialization permits exactly seed and test-run configuration in the fixture', () => {
+  const source = 'route.fulfill({ response, json: { ...config, local: { ...config.local, initialSeed: seed, testRun }, preview: config.preview ? { ...config.preview, initialSeed: seed, testRun } : null } })';
+  assert.deepEqual(policyErrors(source, 'tests/e2e/helpers/fixture.ts'), []);
+  for (const altered of [source.replace('testRun },', 'testRun, roomId: "ABCDE" },'), source.replace('initialSeed: seed', 'initialSeed: seed, board: []'), source.replace('...config, local:', '...config, production: { initialSeed: seed }, local:'), source.replace('testRun },', 'testRun, namespace: "production" },')]) {
+    assert.ok(policyErrors(altered, 'tests/e2e/helpers/fixture.ts').length);
+  }
+  assert.ok(policyErrors(source, 'tests/e2e/example.spec.ts').length);
+});

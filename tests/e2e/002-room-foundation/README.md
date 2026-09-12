@@ -10,7 +10,7 @@ Mira creates a room from the home screen, invites friends, chooses a first diver
 
 ## The host invites friends
 
-- Mira is seated as host and cannot start alone.
+- Mira sees the room code beside Copy invite and cannot start alone.
 
 ![Desktop: The host invites friends](screenshots/000-created-host-desktop.png)
 

@@ -2,13 +2,15 @@
   import "@fontsource/atkinson-hyperlegible/400.css";
   import "@fontsource/atkinson-hyperlegible/700.css";
   import "./surface.css";
-  import { createCodedRoom, invitationRoom } from "$lib/backend/room-code";
+  import {
+    createCodedRoom,
+    invitationRoom,
+    roomCodeGenerator,
+  } from "$lib/backend/room-code";
   import Submarine from "./Submarine.svelte";
   import Diver from "./Diver.svelte";
-  let brief: HTMLDialogElement,
-    closure: HTMLDialogElement,
-    sharing: HTMLDialogElement;
-  let codeCopied = false;
+  let brief: HTMLDialogElement, closure: HTMLDialogElement;
+  let generateRoomCode = roomCodeGenerator();
   import Review from "$lib/components/Review.svelte";
   import Game from "$lib/components/Game.svelte";
   import { onMount } from "svelte";
@@ -108,6 +110,9 @@
           new URL(location.href),
         );
         initialSeed = config.initialSeed;
+        generateRoomCode = roomCodeGenerator(
+          config.testRun ? initialSeed : undefined,
+        );
         const backend = await connectBackend(config);
         close = backend.close;
         if (disposed) {
@@ -147,7 +152,7 @@
     busy = true;
     error = "";
     try {
-      await createCodedRoom(repository, name, undefined, (id) => {
+      await createCodedRoom(repository, name, generateRoomCode, (id) => {
         observe(id);
         replaceState(base + "/rooms/?room=" + id, {});
       });
@@ -197,7 +202,7 @@
     closure.close();
     try {
       state = null;
-      await createCodedRoom(repository, localName, undefined, (id) => {
+      await createCodedRoom(repository, localName, generateRoomCode, (id) => {
         observe(id);
         replaceState(base + "/rooms/?room=" + id, {});
       });
@@ -393,13 +398,11 @@
     <section class="lobby" aria-label="Room lobby">
       <h2 class="room-context">{room.hostName}’s room</h2>
       {#if me}<div class="actions share-actions">
+          <div class="room-code-block">
+            <span class="room-code-label">Room code</span>
+            <strong class="room-code" aria-label="Room code">{roomId}</strong>
+          </div>
           <button
-            class="secondary"
-            on:click={() => {
-              codeCopied = false;
-              sharing.showModal();
-            }}>Room code</button
-          ><button
             class="copy-invite secondary"
             aria-label="Copy invite"
             on:click={copy}
@@ -523,22 +526,6 @@
       >Reload</button
     >{/if}
 </main>
-<dialog bind:this={sharing} aria-labelledby="sharing-title">
-  <h2 id="sharing-title">Invite your crew</h2>
-  <p>Open Deep Sea on this table and choose Join with code.</p>
-  <p class="room-code" aria-label="Room code">{roomId}</p>
-  <button
-    on:click={async () => {
-      try {
-        await navigator.clipboard.writeText(roomId);
-        codeCopied = true;
-      } catch {
-        codeCopied = false;
-      }
-    }}>{codeCopied ? "Code copied" : "Copy room code"}</button
-  >
-  <form method="dialog"><button class="secondary">Back to crew</button></form>
-</dialog>
 <dialog bind:this={closure} aria-labelledby="close-title">
   <div role="group" aria-label="Confirm room closure">
     <h2 id="close-title">Leave your crew?</h2>
@@ -570,17 +557,33 @@
 </dialog>
 
 <style>
-  .room-code {
-    font-size: 42px;
-    letter-spacing: 0.15em;
+  .room-code-block {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .room-code-label {
+    font-size: 11px;
+    line-height: 14px;
     font-weight: bold;
-    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .room-code {
+    font-size: 30px;
+    line-height: 34px;
+    letter-spacing: 0.1em;
     overflow-wrap: anywhere;
   }
   .share-actions {
+    align-items: center;
     margin-bottom: 8px;
   }
   .share-actions button {
+    flex: 1;
+    width: auto;
     margin: 0;
   }
   .invite-options {

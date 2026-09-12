@@ -24,12 +24,12 @@
     "review": "Visually inspected: closing help retains Mira in the ivory arrival form and restores a clear gold focus ring to How to play; invite and create actions remain unobstructed. Reviewed code-or-link entry, Find room action, retained name and help focus on the ivory arrival card."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-desktop.png": {
-    "sha256": "68fc17fe8c79dc3ee9d42fc16ce5016ab43cea2fd841ff1a6e34e7f5908ec1f5",
-    "review": "Visually inspected against crew mockup: one-player lobby shows Mira’s numbered marker, host identity, amber readiness pill, mint invite action, first-diver selector and disabled Start with its reason. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "f5044d1ecaab1ad3754dcf16495b977bb2dfabd3f27235907faf9a6ecb1575b7",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/000-created-host-phone.png": {
-    "sha256": "e13b14cf24fbcb102bbf06fede474fa9754ed62cc47e92ec172b7a1cb7e05a2b",
-    "review": "Visually inspected against crew mockup: one-player lobby shows Mira’s numbered marker, host identity, amber readiness pill, mint invite action, first-diver selector and disabled Start with its reason. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "683a31a65fd6530ca6165924369a07c0a6a0f12d96e1d5bea06d20a154c8c3c7",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/000-invited-guest-desktop.png": {
     "sha256": "83616f541555e2a4723875a13780e9480b9b4d22d8992a2eca2a6e36a8dc470e",
@@ -40,20 +40,20 @@
     "review": "Visually inspected: the direct invitation identifies Mira’s crew before joining; the only requested information is a name, and the empty-form Join action is visibly disabled."
   },
   "tests/e2e/002-room-foundation/screenshots/000-joined-third-desktop.png": {
-    "sha256": "48939b1deb2970a717d692ee302679f3f3e36f215e1a088c28ea62b3140ac684",
-    "review": "Visually inspected: three numbered, differently colored crew markers and amber readiness pills align in the ivory lobby; Ada is marked You and the guest sees the host-start explanation. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "33d0daa6b82f324db5aa9a54e8710e4372ae611e481e5c43b3ddcb8b6ca00498",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/000-joined-third-phone.png": {
-    "sha256": "4abfee25696eebd63db96726d5ae7590c4204012c330acebee90932a6250563d",
-    "review": "Visually inspected: three numbered, differently colored crew markers and amber readiness pills align in the ivory lobby; Ada is marked You and the guest sees the host-start explanation. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "2b66ce6f20e3a6458ff3636bf91ad89941724b28caf4deca80d3c6d2fc3dc7e2",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/001-joined-guest-desktop.png": {
-    "sha256": "06a09191b0c7f49e6c2c566bba06dffc7813f13e985dd8df532070b4701aec1b",
-    "review": "Visually inspected: Sol’s green Ready pill and mint You are ready banner clearly differ from Mira’s amber state; the outlined readiness toggle and leave link stay reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "02001a8cacf26a39c1617634fdaf3c3a30244c5ec4ca3344dd44bfe79a0d5a7f",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/001-joined-guest-phone.png": {
-    "sha256": "61b53ab761912be4905b60d84f1c9b2493e47a4ab2a23a37360469e868b11125",
-    "review": "Visually inspected: Sol’s green Ready pill and mint You are ready banner clearly differ from Mira’s amber state; the outlined readiness toggle and leave link stay reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "b1463946b4ced1cafc11d82d2d6380047d65436e8262c642cb67118e7770c3f2",
+    "review": "Visually inspected this lobby: LFJZL appears in large navy type under Room code, beside the mint Copy invite button. Crew labels, readiness and host-only controls remain aligned without clipping."
   },
   "tests/e2e/002-room-foundation/screenshots/001-started-host-desktop.png": {
     "sha256": "b6da46c547edd45a5a95a09bd6e65b77d4d716cb261768d3965404ed1677ff04",
@@ -104,12 +104,12 @@
     "review": "Visually inspected: Room closure explanation remains readable with separate Try another invite and Create another room links; rounded card fits this viewport."
   },
   "tests/e2e/004-closed-room/screenshots/000-confirm-host-desktop.png": {
-    "sha256": "5e19bb41332e7f52bee99779c5ed73e115985ecd6ece32162ad360c349fe313c",
-    "review": "Visually inspected: centered ivory closure dialog explains the effect on everyone, with separate Close room and Stay buttons over the retained lobby. Reviewed the close/stay confirmation with the code-sharing lobby behind its backdrop; both choices fit clearly."
+    "sha256": "42a3472e636da57cbaa37b2b84ffbb86079bc3af54f197c346eb3a2d0f70f065",
+    "review": "Visually inspected the closure dialog on both viewports: Close room and Stay remain readable and separate; the newly visible code and Copy invite are correctly dimmed with the lobby behind the modal."
   },
   "tests/e2e/004-closed-room/screenshots/000-confirm-host-phone.png": {
-    "sha256": "7bcb7a0811f609110ddaa29fa20144d2a140fa9a36458a02518d0a5bd6143cae",
-    "review": "Visually inspected: centered ivory closure dialog explains the effect on everyone, with separate Close room and Stay buttons over the retained lobby. Reviewed the close/stay confirmation with the code-sharing lobby behind its backdrop; both choices fit clearly."
+    "sha256": "37a073d00642a23c3079e62403540a3712b4b5753e9ce18e215f8700fb8ddccc",
+    "review": "Visually inspected the closure dialog on both viewports: Close room and Stay remain readable and separate; the newly visible code and Copy invite are correctly dimmed with the lobby behind the modal."
   },
   "tests/e2e/005-multiplayer-turn/screenshots/000-rolled-host-desktop.png": {
     "sha256": "bf8a2f45661760f292d5b402d54e2fc196002aec9334e2a3c2bfc66051bd1992",
@@ -160,12 +160,12 @@
     "review": "Visually inspected: Returned divers' scores and saved-treasure disclosures are clear; next diver banner and Continue/history footer fit."
   },
   "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-desktop.png": {
-    "sha256": "8c53a542e7f1edeb915ea6cfc7d6e93accb5696db55f9113daea41ca2ba7cd3c",
-    "review": "Visually inspected: Play again restores the illustrated lobby with both names, reset readiness and a new invite action. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "337f4ea8f67412e84cd2c79fd32e35acc34dcc4a6dd36f3e0747ff0b2b4feef4",
+    "review": "Visually inspected the rematch lobby: the fresh VGGYC code is large beside Copy invite; both retained player names, unready states and disabled Start dive fit cleanly."
   },
   "tests/e2e/007-complete-game/screenshots/001-fresh-room-host-phone.png": {
-    "sha256": "2be10d6d568a451267df3d2c9bda58526c8618de218dc1da85dac2255bbf7d4e",
-    "review": "Visually inspected: Play again restores the illustrated lobby with both names, reset readiness and a new invite action. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "8921f066d4f8400334a49accb08b986dd9aa267eaa037a9ab703b48bbc91ea4a",
+    "review": "Visually inspected the rematch lobby: the fresh VGGYC code is large beside Copy invite; both retained player names, unready states and disabled Start dive fit cleanly."
   },
   "tests/e2e/007-complete-game/screenshots/001-saved-dive-guest-desktop.png": {
     "sha256": "58301967ffac94e78a31f0bcdc2c1132dfd17d6b8076779044a20f1cce57de13",
@@ -248,44 +248,44 @@
     "review": "Visually inspected phone screenshot: Restored Mira tab shows two concealed cargo units and Sol’s turn; the empty ninth-space diver plate and level-II path remain clear over the depth artwork. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork. Reviewed the confirmed one-air charge, current crew-load forecast and latest dice through this recovery state; reconnect messaging and disabled landing controls remain separate from the footer where offline, while restored views retain recent pickup feedback."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-desktop.png": {
-    "sha256": "cfb5e4908837dc669cb5e6b934d41cb62fac4ba119f920915a6aa036a56042c0",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "f3a8575d172b0307736d2cc361179ff88c9bf734d6810b228093371a739bd67b",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-kai-phone.png": {
-    "sha256": "728eaf30489b4b1237909f1ebe90996d361a415c22351c5297498d791d8bfafb",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "14e0da9ac488786e80b29270dc6805dd0ad6f5240f1348063d51d5174cd134d0",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-desktop.png": {
-    "sha256": "742b785fafb062d3d81d18e3e39fe77a9cf7e76b19feb8ccd4a81add64ebf69c",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "10fd89da25d6b8dbcb72a6ccd3ec4ec8300f6a1bd527fc35b3e0cc3f67d9a575",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-luz-phone.png": {
-    "sha256": "10d254214dd1581cbb15e07a4464507cdd4e8d005982fafae7bf3100f83d62e2",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "8f0227a8be4c70bd42fdbaf15d6f9848535cba14668e30cb0f0fb5ccc0dd7df4",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-desktop.png": {
-    "sha256": "07b745a2608942f1265dae4080e402b2032685fb32c8c360b3a8fb7a1a6047a3",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "40d5318e6c679bb3e56f196c3805a48f34448c3c9e960b8a99be25051f5fa991",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-mira-phone.png": {
-    "sha256": "ebd38a5bacc563357df8d6da012c7ec40eb72226e56e4a5fe6d6f4e494a7b21d",
-    "review": "Visually inspected: compact illustrated full-crew header and six numbered readiness rows fit the rounded ivory lobby. Local identity and host controls are clear; Ready up and Leave room remain reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "56e1dd4157d19e4e90a8ea485554d5c5e4dd63034fd1dc4ea787432cae0192ad",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-desktop.png": {
-    "sha256": "da1fb606933cd9b4c7c65b15d3319c24bfda70af15070a98912dec3ad38d0848",
-    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "f17dc34fe97b86a9bd25539b5fdb644c577b9cf47767fc6a5a0043fb9e4ad5bd",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-pip-phone.png": {
-    "sha256": "e46cd39e1326c8de261c3cc494764f435acbe55af3debdb8609e62c0e44c53a0",
-    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "18687b729d9f4416b532cfedd33e8247ee0f445db06d188672fe353dec4d7e01",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-desktop.png": {
-    "sha256": "fb284df233291c86144bb0d0157bb7bc66cde41f8c6dd47e5c4eb1b83f7b5da2",
-    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "f5d5ebdb3834d9511bcbf3447de1d0a4a1892fa2fe8ac33b566921940562c501",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-crew-sol-phone.png": {
-    "sha256": "557cd2a4c63440569196e7419ff3e206e75aec8ce08c591f79708f9ff0fabbaf",
-    "review": "Visually inspected: six compact colored seats identify Pip/Sol locally, with clear readiness pills and reachable Copy invite/Ready up/Leave room. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "6cb0bb6cd6ee06f2880fc24b0645a033906b988f6309c9cd7812ffd3de8954ed",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-full-loser-desktop.png": {
     "sha256": "efca1e182af6211783d5b2870de89734d68a99de22d9ab75e94b9e7812369c50",
@@ -296,20 +296,20 @@
     "review": "Visually inspected: full-room notice follows all six seats and offers both Try another invite and Create another room; the illustrated ivory card fits."
   },
   "tests/e2e/010-last-seat/screenshots/000-seated-winner-desktop.png": {
-    "sha256": "eea0d366d82586ce4a64496a492f8fc56226db3faeaaf19642256206de40c81f",
-    "review": "Visually inspected: Nori occupies exactly one clearly identified final seat; compact illustrated lobby retains readable readiness and departure controls. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "6777f553879869f26cd730e03d669d4671846cd83579d9912e1bbfbdbbda5aa1",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/000-seated-winner-phone.png": {
-    "sha256": "bc709fb460f79fed71ff8dee9b34359bab9c73148152f5591df2a66eb3401e2a",
-    "review": "Visually inspected: Nori occupies exactly one clearly identified final seat; compact illustrated lobby retains readable readiness and departure controls. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "4ff46983a68ba95495d55e799befb16445b0551d6e6eb6ab35578fc70851a628",
+    "review": "Visually inspected this full-crew lobby: LFJZL is prominent beside Copy invite; all six seats and the current player marker remain readable, with readiness controls and Leave room inside the viewport."
   },
   "tests/e2e/010-last-seat/screenshots/001-ready-crew-mira-desktop.png": {
-    "sha256": "ccb7e2d5bf6d3b3202538dade83f0457e65cfef3ed628a7ef21faf7034f8cc5c",
-    "review": "Visually inspected desktop: copied invite, all six ready seats, own-ready banner and enabled First diver/Start dive row fit the ivory card with Leave room visible. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "9a479bcb5242f9a307c9387a9f94da15c9bf10a640eac508c12cf1f22ec2a778",
+    "review": "Visually inspected the ready six-player lobby: the large LFJZL code remains beside Invite copied, all six readiness badges fit, and the first-diver selector, enabled Start dive and Leave room remain visible."
   },
   "tests/e2e/010-last-seat/screenshots/001-ready-crew-mira-phone.png": {
-    "sha256": "25a4be20f0cc8ea3eb3d58ae4d86522c758e9d4e12b8e326e804bd3b86b60c7b",
-    "review": "Visually inspected phone: all six green readiness pills, copied-invite confirmation, own-ready banner, first-diver selector and enabled Start dive fit; Leave room remains reachable. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "9183a485f3b627984634bbb16e761497c410dc131cf12eae7244ca48025048f7",
+    "review": "Visually inspected the ready six-player lobby: the large LFJZL code remains beside Invite copied, all six readiness badges fit, and the first-diver selector, enabled Start dive and Leave room remain visible."
   },
   "tests/e2e/010-last-seat/screenshots/002-six-divers-mira-desktop.png": {
     "sha256": "f18b4e6524284d2464b5ca7fdc878abe91aafcb35756a18f5da3f80a533d1475",
@@ -344,12 +344,12 @@
     "review": "Visually inspected phone screenshot: The long diver name wraps within its navy plate over shallow fish; the Turn back radio retains visible keyboard focus and Roll dice stays reachable. Reviewed the final background-gradient rendering with the same readable controls and depth-specific artwork. Reviewed long-name wrapping, preserved return-direction focus and the latest Sol roll/crew-air forecast; help, cargo and history dialogs retain readable content and reachable close controls in their respective states."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-desktop.png": {
-    "sha256": "875dadb6f2679c49bf50c0cbeed20b0abd8f587faa8ed2998ccd9d5d4f99799d",
-    "review": "Visually inspected: Long host name wraps in the room heading and seat row without displacing readiness controls; guest can copy invite or ready up. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "6f16d54a7e817c4f2cae0c9019a54bbcb77338131a5091af984f36338a2c21da",
+    "review": "Visually inspected the long-name guest lobby: the host name wraps without colliding with the always-visible LFJZL code and Copy invite row; crew names and Ready up remain readable."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/000-joined-guest-phone.png": {
-    "sha256": "349327789384848a3223a3bac4357f377006276b6f4d111fea969e82031e7340",
-    "review": "Visually inspected: Long host name wraps in the room heading and seat row without displacing readiness controls; guest can copy invite or ready up. Reviewed the Room code and Copy invite controls above this crew: names, readiness, join/start or leave actions remain legible and separated, including the full roster where shown."
+    "sha256": "f725b48bb3eae19cdfff3e8f528f3b96615e5666e742c2dc05f4af127a0b6154",
+    "review": "Visually inspected the long-name guest lobby: the host name wraps without colliding with the always-visible LFJZL code and Copy invite row; crew names and Ready up remain readable."
   },
   "tests/e2e/012-keyboard-and-help/screenshots/001-help-host-desktop.png": {
     "sha256": "a7f661e419c1c2505253a1b2f6c6d4d60bea1ddd6263dacb050d825903b6e053",

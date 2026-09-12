@@ -1,6 +1,7 @@
 export type BackendConfig = {
   mode: "local" | "preview" | "production";
   initialSeed?: number;
+  testRun?: string;
   namespace?: string;
   projectId: string;
   apiKey: string;
@@ -11,6 +12,7 @@ export type BackendConfig = {
 };
 type Hosted = {
   initialSeed?: number;
+  testRun?: string;
   projectId: string;
   apiKey: string;
   appId: string;
@@ -19,6 +21,7 @@ type Hosted = {
 export type DeploymentConfig = {
   local: {
     initialSeed?: number;
+    testRun?: string;
     projectId: string;
     authHost: string;
     firestoreHost: string;
@@ -26,6 +29,24 @@ export type DeploymentConfig = {
   preview: Hosted | null;
   production: Hosted | null;
 };
+function initialization(config: { initialSeed?: number; testRun?: string }) {
+  if (
+    config.initialSeed !== undefined &&
+    (!Number.isInteger(config.initialSeed) ||
+      config.initialSeed < 0 ||
+      config.initialSeed > 0xffffffff)
+  )
+    throw new Error("Invalid initialization seed.");
+  if (
+    config.testRun !== undefined &&
+    (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
+      config.testRun,
+    ) ||
+      config.initialSeed === undefined)
+  )
+    throw new Error("Invalid isolated test run.");
+  return config.testRun ? `-e2e-${config.testRun}` : "";
+}
 export function selectConfig(
   config: DeploymentConfig,
   url: URL,
@@ -42,7 +63,7 @@ export function selectConfig(
     return {
       ...config.local,
       mode: "local",
-      namespace: "local",
+      namespace: "local" + initialization(config.local),
       apiKey: "local-emulator-key",
     };
   }
@@ -73,18 +94,16 @@ export function selectConfig(
       config.preview.projectId === config.production.projectId)
   )
     throw new Error("Invalid room environment configuration.");
-  if (mode === "production" && selected.initialSeed !== undefined)
-    throw new Error("Production games require fresh randomness.");
   if (
-    selected.initialSeed !== undefined &&
-    (!Number.isInteger(selected.initialSeed) ||
-      selected.initialSeed < 0 ||
-      selected.initialSeed > 0xffffffff)
+    mode === "production" &&
+    (selected.initialSeed !== undefined || selected.testRun !== undefined)
   )
-    throw new Error("Invalid initialization seed.");
+    throw new Error("Production games require fresh randomness.");
+  const suffix = initialization(selected);
   return {
     ...selected,
     mode,
-    namespace: mode === "preview" ? url.pathname.split("/")[2] : "production",
+    namespace:
+      (mode === "preview" ? url.pathname.split("/")[2] : "production") + suffix,
   };
 }

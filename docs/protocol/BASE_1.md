@@ -53,13 +53,13 @@ Seeds are not secrets in this architecture. The start action generates game-star
 
 Joining and leaving clear every readiness flag and advance rosterRevision to the accepted event ID. Separate players can ready concurrently against the same roster revision. A stale readiness or start is rejected without partial state changes. Start freezes the seated roster in seat order and records the selected first diver; later lobby actions are rejected. A confirmed but rejected submission produces an actionable conflict message.
 
-Namespaces are local, pr followed by its numeric PR number, or production. Each retained preview selects its own namespace and the dedicated preview project. These boundaries prevent accidental cross-environment writes; this trusted-group design does not make namespaces an authorization boundary.
+Namespaces are local, pr followed by its numeric PR number, or production. Isolated browser tests append `-e2e-` and a validated per-scenario UUID beneath local or preview namespaces. Each retained preview selects its own namespace and the dedicated preview project. These boundaries prevent accidental cross-environment writes; this trusted-group design does not make namespaces an authorization boundary.
 
 ## Turn actions (reducer 3)
 
 `turn/rolled {direction, expectedActionId}` validates the active player, roll phase, first departure and locked returning direction. It commits cargo oxygen cost, addressed dice and occupied-space-skipping movement together. `turn/landed {choice, expectedActionId, unitId?}` accepts pickup, pass, or a whole-unit drop. Only drop includes unitId. Both require the latest accepted action ID, so concurrent submissions cannot charge twice. Tile conservation is checked after every accepted transition.
 
-E2E supplies seed 2026 through the configuration-loading boundary for local and preview games only. The shared fixture does not create rooms or write events. Ordinary deployed games use browser cryptographic randomness; production rejects a configured fixed seed.
+E2E supplies seed 2026 and an isolated test-run UUID through the configuration-loading boundary for local and preview games only. In these isolated runs, the seed also initializes room-code entropy; atomic creation and normal collision handling still apply. The shared fixture does not create rooms or write events. Ordinary deployed games use browser cryptographic randomness; production rejects a configured fixed seed or test-run override.
 
 ## Dive resolution (reducer 4)
 
