@@ -2,9 +2,9 @@
 
 ## Starting point and destination
 
-This plan starts from the implementation merged in PR #3. Steps 1–8 are implemented on the multiplayer branch, including a live Firebase preview backend. The required deployed browser check verifies each reviewed revision before merge. Steps 9–10 are being implemented in logical commits on the complete-MVP branch.
+This plan starts from the implementation merged in PR #3. Steps 1–10 are implemented, including complete multiplayer play, the finished player interface, recovery, isolated live backends and operating documentation. The required deployed browser check verifies each reviewed revision before merge. PR #6 retains the complete-MVP review build; the production root publishes through the normal workflow after merge.
 
-Already implemented: the coming-soon screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The shared board and atomic turns are implemented; dive resolution, lost-cargo ordering and scoring at dive review are implemented; three-dive completion, tiebreaks and a fresh-room replay flow are implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
+Already implemented: the home screen and game brief; pinned Nix/npm tooling and verification; retained Pages previews; accepted `base-1` decisions and deterministic randomness; local Auth/Firestore emulators; anonymous browser identities; immutable creation/retry/replay; and a complete create/invite/join/ready/start flow with phone/desktop multi-context tests. The shared board and atomic turns are implemented; dive resolution, lost-cargo ordering and scoring at dive review are implemented; three-dive completion, tiebreaks and a fresh-room replay flow are implemented. Hosted room provisioning is a current delivery requirement, not deferred work.
 
 Evidence for steps 1–4: [BASE_1.md](docs/protocol/BASE_1.md), the protocol/repository unit suites under `tests/unit/`, real SDK and rules checks under `tests/integration/`, and the [multiplayer browser walkthrough](tests/e2e/002-room-foundation/README.md). Rules edge-case fixtures are accepted expected outcomes for subsequent engine work, not executable proof of unimplemented gameplay.
 
@@ -26,8 +26,8 @@ Every PR must expose its implemented behavior on a retained preview, include rep
 | 6 (implemented; deployed verification required per PR) | A complete dive resolves returns, losses, and cleanup | 5; cleanup rules from 1 |
 | 7 (implemented; deployed verification required per PR) | Three dives produce final results and a new-game flow | 6; starter/tie rules from 1 |
 | 8 (implemented; deployed verification required per PR) | Interrupted and competing clients recover consistently | 7, with recovery checks added from 3 onward |
-| 9 | All required journeys work on phones, desktop, and keyboard | 7–8, with accessibility built into every UI step |
-| 10 | The verified MVP works on its deployed URLs | 8–9; environment configuration prepared in 2 |
+| 9 (implemented) | All required journeys work on phones, desktop, and keyboard | 7–8, with accessibility built into every UI step |
+| 10 (implemented; exact-head deployed checks required) | The verified MVP works on its deployed URLs | 8–9; environment configuration prepared in 2 |
 
 The user accepted all proposed open rule resolutions as reasonable project conventions for step 1. There are no remaining `base-1` decision blockers. Any later correction requires a documented version change, not a silent reinterpretation of existing games.
 
@@ -127,6 +127,8 @@ Audit board, cargo, history, help, error states, and accessible text for hidden-
 
 ### 10. Validate deployment and accept the MVP
 
+Implemented: OPERATIONS.md records reproducible Nix setup, environment selection, authentication, immutable retries, compatibility, publication and rollback. The dedicated production project was provisioned and its anonymous sign-in, authorized hosting domain, native Firestore database and active rules release were verified on 2026-09-12. Configuration tests prove that the root selects production, retained previews select their own namespace, and production rejects fixed seeds. GitHub records the exact commit, date and result of deployed browser checks. Physical-device and screen-reader review is explicitly separate from the independent automated browser contexts.
+
 Complete dedicated preview and production Firebase configuration with isolated projects or namespaces, anonymous Auth setup, deployed Firestore rules, and documented environment selection. Ensure retained preview builds continue to target preview data even after production moves forward. A wrong/missing configuration must not send preview traffic to production. Keep privileged deployment credentials out of browser bundles and fork workflows.
 
 Use the existing exact-tested-build publication pipeline. Verify room invites, reloads, assets, and navigation from `/deepsea/` and `/deepsea/pr<N>/`, including opening an invitation on another device. Document initial setup, verification, deployment, version compatibility, and rollback behavior. Old rooms must either remain readable under supported versions or clearly block incompatible clients; never silently reinterpret their events.
@@ -138,15 +140,17 @@ Run automated verification only against emulators. Separately perform a named li
 ## MVP acceptance checklist
 
 - [x] All rulebook blockers are closed by accepted project conventions, explicitly documented and versioned.
-- [ ] Two through six players can join, ready, and play three dives from separate browsers.
-- [ ] Rules fixtures cover movement, oxygen, treasure conservation, stacks, cleanup, starter selection, scoring, and ties.
-- [ ] Event ordering, attribution, immutable retries, stale conflicts, and version handling pass repository and emulator-rules tests.
-- [ ] Complete two- and six-player E2E games pass; other clients' confirmed results are asserted, not merely the actor's screen.
-- [ ] Reload, offline state, lost acknowledgements, multiple tabs, and cleanup recovery preserve seats and accepted decisions.
-- [ ] Players can understand turns, losses, scores, shared wins, and how to start again using phone, desktop, touch, and keyboard.
-- [ ] Normal UI, accessible labels, and history conceal unrevealed information within the documented trusted-client model.
-- [ ] Every E2E rule retains pre-commit enforcement and negative regression coverage; walkthroughs and baseline review records match.
-- [ ] Live preview/production boundaries, nested invites, deployment, compatibility, and rollback instructions are verified and recorded.
+- [x] Two through six players can join, ready, and play three dives from separate browsers.
+- [x] Rules fixtures cover movement, oxygen, treasure conservation, stacks, cleanup, starter selection, scoring, and ties.
+- [x] Event ordering, attribution, immutable retries, stale conflicts, and version handling pass repository and emulator-rules tests.
+- [x] Complete two- and six-player E2E games pass; other clients' confirmed results are asserted, not merely the actor's screen.
+- [x] Reload, offline state, lost acknowledgements, multiple tabs, and cleanup recovery preserve seats and accepted decisions.
+- [x] Players can understand turns, losses, scores, shared wins, and how to start again using the canonical phone/desktop layouts and keyboard controls; 44-pixel targets are checked. Physical touch-device review remains a human check.
+- [x] Normal UI, accessible labels, and history conceal unrevealed information within the documented trusted-client model.
+- [x] Every E2E rule retains pre-commit enforcement and negative regression coverage; walkthroughs and baseline review records match.
+- [x] Live preview/production boundaries, nested invites, deployment, compatibility, and rollback instructions are verified and recorded.
+
+The automated acceptance evidence is 53 enforcement regressions, 250 unit cases (including 200 complete games across two through six players), five real emulator authorization cases, and twelve browser journeys on each of two viewports. The same journeys run against the retained live PR preview. UX_ACCEPTANCE.md records screenshot review, contrast and keyboard evidence without claiming a physical-device or screen-reader audit. The final PR must retain green exact-head checks before review.
 
 ## Working rules for each delivery
 

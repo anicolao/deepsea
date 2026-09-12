@@ -4,7 +4,7 @@
 
 Friends join a room from their own browsers and explore the same underwater path. At any moment, a player should understand whose turn it is, how much oxygen remains, what they are carrying, and what choice they can make next.
 
-This is a proposed experience for the multiplayer MVP in [MVP_DESIGN.md](MVP_DESIGN.md). Game behavior follows [RULES_SUMMARY.md](RULES_SUMMARY.md), including its outstanding rulebook checks. The generated mockups explore layout and hierarchy; they are not working screens or exact board fixtures. The text below defines behavior when an illustrative detail is ambiguous.
+This describes the multiplayer MVP in [MVP_DESIGN.md](MVP_DESIGN.md). Game behavior follows the accepted base-1 conventions in [RULES_SUMMARY.md](RULES_SUMMARY.md). The generated mockups explore layout and hierarchy; they are not exact board fixtures. [UX_ACCEPTANCE.md](UX_ACCEPTANCE.md) links the implemented journeys, final artwork, keyboard checks and reviewed browser screenshots. The text below defines behavior when an illustrative detail is ambiguous.
 
 ## Use cases
 
@@ -60,7 +60,7 @@ Players control only their own readiness. The host selects **First diver**, with
 
 The two screens show successive phases, not conflicting simultaneous state. Before committing the roll, label the oxygen preview explicitly: **Oxygen 12 / 25** and **After your turn cost: 10 / 25**. After confirmation, show **Oxygen 10 / 25**. Never visually subtract oxygen twice.
 
-The main board has a single path from the submarine into deeper water. Divers use both a shape and a name/initial; facing and a text label show whether they are diving or returning. A roster lists cargo unit counts and who is aboard. Selecting a diver locates them on the path without making a game move.
+The main board has a single path from the submarine into deeper water. Divers use both a seat number and a name; an arrow and text label show whether they are diving or returning. Treasure levels have distinct shapes and labels. A roster lists cargo unit counts and who is aboard. Selecting a diver locates them on the path without making a game move.
 
 Cargo shows concealed treasure units, their visible levels, and the carrying cost. A stack is presented as one selectable unit with its tile count. No carried or underwater numerical value appears, even to its owner; do not offer a peek interaction. Previously banked scores may be visible.
 
@@ -68,7 +68,7 @@ Cargo shows concealed treasure units, their visible levels, and the carrying cos
 
 On a player's turn, bring the action area into view and announce “Your turn.” Show **Keep diving** and **Turn back** as a direction choice before **Roll dice**. Continuing is the initial selection. Once returning, replace the chooser with “Returning to the submarine”; on the first departure, show “Diving out.” The roll is the commitment point.
 
-While saving, disable repeat submission and label the action **Sending…**. Display dice only after the roll is confirmed. Show the two dice, cargo deduction, and resulting movement together. Animate movement briefly, respecting skipped occupied spaces, with an equivalent text description. Reduced-motion mode moves directly to the result. Never offer another roll because animation was skipped or the page reloaded.
+While saving, disable repeat submission and announce the pending move in the status area. Display dice only after the roll is confirmed. Show the two dice, cargo deduction, and resulting movement together. Briefly emphasize the confirmed landing with an equivalent text description; movement follows the rules for skipping occupied spaces. Reduced-motion mode shows the result directly. Never offer another roll because animation was skipped or the page reloaded.
 
 ### Landing choice
 
@@ -134,4 +134,4 @@ Use native controls, visible keyboard focus, meaningful headings, at least 44 CS
 
 ## Mockup assets
 
-The three embedded sheets were generated with the built-in image generation tool. Their exact generation prompts are recorded in [docs/ux/IMAGE_PROMPTS.md](docs/ux/IMAGE_PROMPTS.md). The navy/ivory/teal treatment is a proposed visual direction, not a finalized art system. Board paths are illustrative; implement the complete rules-driven path and validate actual UI states with browser tests.
+The three embedded sheets were generated with the built-in image generation tool. Their exact generation prompts are recorded in [docs/ux/IMAGE_PROMPTS.md](docs/ux/IMAGE_PROMPTS.md). They establish the navy/ivory/teal hierarchy; the final browser artwork and measured palette are recorded in [UX_ACCEPTANCE.md](UX_ACCEPTANCE.md) and [static/art/README.md](static/art/README.md). Board paths in these mockups are illustrative; browser walkthroughs show the complete rules-driven path and actual UI states.
