@@ -5,3 +5,5 @@
 Generation prompt:
 
 > Use case: illustration-story. Asset type: finished browser board game atmospheric ocean backdrop, portrait 1024x1536. Original elegant editorial cut-paper and fine screenprint underwater illustration for a friendly deep-sea treasure diving game. Dark midnight navy ocean, softly illuminated teal light rays from the top, sparse small bubble trails, delicate kelp and coral silhouettes framing lower corners, small pale fish silhouettes near margins. Very subtle grain, restrained ivory and muted teal accents. The middle 70 percent must remain quiet dark navy negative space to support a readable game path overlay. No text, letters, numbers, logos, user interface, tiles or diver characters. Polished sophisticated tabletop-game art, not photorealistic.
+
+The browser delivers `ocean.webp`, a lossless copy of the original 1024 × 1536 image (1,550,324 bytes). The PNG remains the source artwork. Reproduce it with the flake-provided encoder: `nix develop -c cwebp -lossless -z 9 static/art/ocean.png -o static/art/ocean.webp`. This changes encoding only; it does not redraw or resize the art. The app preloads this delivery file on arrival.
