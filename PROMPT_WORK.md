@@ -13,3 +13,5 @@ Prompt 19 | 81d22e7ac3b858c64f6cfd4b30fe45c2de8f47443d443d9a17c1de2d81546aa4 | C
 Prompt 19 | 81d22e7ac3b858c64f6cfd4b30fe45c2de8f47443d443d9a17c1de2d81546aa4 | Step 10: verify isolated production services, document deployment and rollback, and prepare the complete MVP for final review.
 
 Prompt 30 | be38396e042cdd29a01d962712d9ac91ed16f1a8446a2188d2ec85d5146778ad | Release follow-up: show the invitation name field while Firebase authentication and room loading continue, preserving typed input and the strict browser deadlines.
+
+Prompt 30 | be38396e042cdd29a01d962712d9ac91ed16f1a8446a2188d2ec85d5146778ad | Preserve a keyboard join request entered during connection setup and submit it once the synchronized lobby is available.
