@@ -394,9 +394,11 @@
         connected={connected && online}
         {act}
       />{:else}<Review {room} {uid} {enabled} {act} {playAgain} />{/if}
-  {:else if room}
+  {:else if room || (!state?.synchronized && !error)}
     <section class="lobby" aria-label="Room lobby">
-      <h2 class="room-context">{room.hostName}’s room</h2>
+      <h2 class="room-context">
+        {room ? room.hostName + "’s room" : "Join your friends"}
+      </h2>
       {#if me}<div class="actions share-actions">
           <div class="room-code-block">
             <span class="room-code-label">Room code</span>
@@ -412,15 +414,15 @@
           >
         </div>{/if}
       <ul aria-label="Crew">
-        {#each room.members as member}<li>
+        {#each room?.members ?? [] as member}<li>
             <Diver seat={member.seat} />
             <span
               >{member.name}{member.uid === uid ? " (You)" : ""}{member.uid ===
-              room.hostUid
+              room?.hostUid
                 ? " · Host"
                 : ""}</span
             ><strong class:ready={member.ready}
-              >{room.phase === "started"
+              >{room?.phase === "started"
                 ? `Seat ${member.seat}`
                 : member.ready
                   ? "Ready"
@@ -428,7 +430,7 @@
             >
           </li>{/each}
       </ul>
-      {#if me}
+      {#if me && room}
         {#if me.ready}<p class="ready-banner">✓ You are ready</p>{/if}
         <div class="actions readiness">
           <button
@@ -479,7 +481,7 @@
           on:click={() => (host ? closure.showModal() : act("lobby/left", {}))}
           >Leave room</button
         >
-      {:else if room.members.length >= 6}<h3>Room full</h3>
+      {:else if room && room.members.length >= 6}<h3>Room full</h3>
         <p>All six seats are taken.</p>
         <div class="invite-options">
           <a data-sveltekit-reload href={`${base}/rooms/?join=1`}
