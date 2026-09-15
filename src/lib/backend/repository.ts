@@ -31,6 +31,7 @@ export type RoomState = Projection & {
 };
 export class RoomRepository {
   private submitted = new Map<string, PendingEvent>();
+  private confirmations = new Map<string, Set<() => void>>();
   private pendingListeners = new Map<string, Set<() => void>>();
   private announcePending(gameId: string) {
     for (const notify of this.pendingListeners.get(gameId) ?? []) notify();
@@ -170,8 +171,23 @@ export class RoomRepository {
       JSON.stringify(pending),
     );
     this.submitted.set(pending.gameId, pending);
+    const key = `${pending.gameId}:${pending.id}`;
+    const listeners = this.confirmations.get(key) ?? new Set<() => void>();
+    let confirm!: () => void;
+    const confirmed = new Promise<void>((resolve) => {
+      confirm = resolve;
+    });
+    listeners.add(confirm);
+    this.confirmations.set(key, listeners);
     this.announcePending(pending.gameId);
-    await this.transport.create(pending);
+    try {
+      // The subscription proves the immutable write arrived. Its HTTP response
+      // may still be stalled; it must not hold the player's controls hostage.
+      await Promise.race([this.transport.create(pending), confirmed]);
+    } finally {
+      listeners.delete(confirm);
+      if (!listeners.size) this.confirmations.delete(key);
+    }
     const current = this.pending(pending.gameId);
     if (current && sameEnvelope(current.envelope, pending.envelope))
       this.storage.removeItem(`${this.prefix}pending:${pending.gameId}`);
@@ -224,6 +240,10 @@ export class RoomRepository {
                 "The room changed before your action was accepted. Check the room and try again.";
             this.storage.removeItem(`${this.prefix}pending:${gameId}`);
             this.submitted.delete(gameId);
+            for (const confirm of this.confirmations.get(
+              `${gameId}:${confirmed.id}`,
+            ) ?? [])
+              confirm();
             pending = null;
           } else
             error =
