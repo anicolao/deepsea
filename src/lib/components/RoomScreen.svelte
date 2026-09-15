@@ -47,6 +47,7 @@
     left = false;
   let state: RoomState | null = null;
   let repository: RoomRepository;
+  let requestedJoinName: string | null = null;
   let initialSeed: number | undefined;
   let unsubscribe = () => {};
   $: room = state?.room;
@@ -60,6 +61,22 @@
     !state?.blocked &&
     (!roomId || !!state?.synchronized) &&
     !state?.pending;
+  $: if (
+    requestedJoinName &&
+    enabled &&
+    room?.phase === "lobby" &&
+    !me &&
+    room.members.length < 6
+  ) {
+    const joiningName = requestedJoinName;
+    requestedJoinName = null;
+    void act("lobby/joined", { name: joiningName });
+  }
+  function requestJoin() {
+    if (!name.trim() || requestedJoinName || busy || !online || state?.blocked)
+      return;
+    requestedJoinName = name.trim();
+  }
   $: reason =
     !room || room.members.length < 2
       ? "Invite at least one friend to start."
@@ -490,11 +507,7 @@
             >Create another room</a
           >
         </div>
-      {:else}<form
-          class="join"
-          on:submit|preventDefault={() =>
-            act("lobby/joined", { name: name.trim() })}
-        >
+      {:else}<form class="join" on:submit|preventDefault={requestJoin}>
           {#if left}<p>
               You left the room. You can join again while it is open.
             </p>{/if}
@@ -504,7 +517,13 @@
             maxlength="40"
             autocomplete="nickname"
             required
-          /><button disabled={!enabled || !name.trim()}>Join room</button>
+          /><button
+            disabled={busy ||
+              !!requestedJoinName ||
+              !online ||
+              !!state?.blocked ||
+              !name.trim()}>Join room</button
+          >
         </form>{/if}
     </section>
   {:else if state?.synchronized && !state.pending && !busy}<section>
