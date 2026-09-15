@@ -103,3 +103,23 @@ This UI is awful, the room code shouldn't be hidden behind a button. Just show i
 ## Prompt 25: Publish Every Fix
 
 There is no point making changes that don't go on the PR. Always update the PR with fixes.
+
+## Prompt 26: Examine Key Exposure
+
+github is warning about a google API key being exposed in backend.json. Examine the situation and report on the exposure.
+
+## Prompt 27: Store Firebase Secrets
+
+They are appropriately minimal firebase keys. Nonetheless let's embed them as repository secrets (even though ultimately anyone inspecting the served browser bundle can see them) and dismiss the alerts. put this change up as a new PR.
+
+## Prompt 28: Use Linux Host
+
+ssh 34.130.160.175
+
+## Prompt 29: Diagnose Stuck Game
+
+In game https://anicolao.github.io/deepsea/rooms/?room=RLVPC the game got stuck ... please look at firestore and analyze what is going wrong for Guido ... make no changes
+
+## Prompt 30: Deploy Freeze Fix
+
+That is the bug please deploy a fix so that we can complete the game. The UI should never wait for the server.

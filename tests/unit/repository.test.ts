@@ -250,3 +250,56 @@ it("keeps moves pending from preparation until the confirmed projection arrives"
   });
   expect(state?.pending).toBe(false);
 });
+
+it.each(["success", "failure"])(
+  "releases a confirmed move before its HTTP response, ignoring late %s",
+  async (outcome) => {
+    const f = fixture();
+    await f.repository.submit(f.repository.prepareCreation("room", "Mira"));
+    let state: RoomState | undefined;
+    const stop = f.repository.watch("room", (value) => {
+      state = value;
+    });
+    f.publish();
+    let resolve!: () => void;
+    let reject!: (error: Error) => void;
+    const held = new Promise<void>((yes, no) => {
+      resolve = yes;
+      reject = no;
+    });
+    const create = f.transport.create;
+    f.transport.create = async (pending) => {
+      await create(pending);
+      await held;
+    };
+    const action = f.repository.prepareAction("room", "lobby/ready", {
+      ready: true,
+      rosterRevision: "created",
+    });
+    const submission = f.repository.submit(action);
+    expect(state?.pending).toBe(true);
+    f.publish();
+    await submission;
+    expect(state?.pending).toBe(false);
+    expect(state?.room?.members[0].ready).toBe(true);
+    const next = f.repository.prepareAction("room", "lobby/ready", {
+      ready: false,
+      rosterRevision: "created",
+    });
+    if (outcome === "success") resolve();
+    else
+      reject(
+        new Error("Late HTTP failure after the stream confirmed the move"),
+      );
+    await held.catch(() => {});
+    expect(f.repository.pending("room")).toEqual(next);
+    expect(state?.pending).toBe(true);
+    expect(state?.error).toBeNull();
+    f.transport.create = create;
+    await f.repository.submit(next);
+    f.publish();
+    expect(state?.pending).toBe(false);
+    expect(state?.room?.members[0].ready).toBe(false);
+    stop();
+  },
+);
