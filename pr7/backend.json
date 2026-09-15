@@ -1,0 +1,19 @@
+{
+  "local": {
+    "projectId": "demo-deepsea",
+    "authHost": "127.0.0.1:9099",
+    "firestoreHost": "127.0.0.1:8080"
+  },
+  "preview": {
+    "projectId": "deepsea-preview-anicolao",
+    "apiKey": "AIzaSyB_xWvMXki9zAlFgpUF60BK23vKCNORZeg",
+    "appId": "1:525530073386:web:a7dce8ef430509da1c3653",
+    "authDomain": "deepsea-preview-anicolao.firebaseapp.com"
+  },
+  "production": {
+    "projectId": "deepsea-game-anicolao",
+    "apiKey": "AIzaSyBQn2Jryb8N4F3LJn7XJS9mb8iYbOafUvc",
+    "appId": "1:111149358557:web:f745cdf04e81cb76872a34",
+    "authDomain": "deepsea-game-anicolao.firebaseapp.com"
+  }
+}
